@@ -25,6 +25,11 @@ GTAG='''<script async src="https://www.googletagmanager.com/gtag/js?id=GTM-NFGVB
 LD={"@context":"https://schema.org","@type":"ProfessionalService","name":"Torall Ventures","url":D+"/","telephone":"+1-213-606-5711","email":"info@torallventures.com","description":"Websites, mobile apps and custom software for businesses.","priceRange":"$$","address":{"@type":"PostalAddress","addressLocality":"Miami","addressRegion":"FL","addressCountry":"US"},"areaServed":"Miami, Florida"}
 import html as H
 tpl=open(R+'/_src/site.html').read()
+from es import ES
+import hashlib
+esj='window.ES='+json.dumps(ES,ensure_ascii=False,separators=(',',':'))+';\n'
+open(R+'/es.js','w').write(esj)
+tpl=tpl.replace('{{ESV}}',hashlib.md5(esj.encode()).hexdigest()[:8])
 e=H.escape
 chips='<button class="tchip" data-i="all" aria-pressed="true">All</button>'+''.join(f'<button class="tchip" data-i="{e(i)}" aria-pressed="false">{e(i)}</button>' for i in INDS)
 cards=''.join(f'<a class="tcard" href="/tips/{q["slug"]}/" data-i="{e(q["ind"])}"><small>{e(q["ind"])}</small><h3>{e(q["title"])}</h3><p>{e(q["ex"])}</p></a>' for q in POSTS)
