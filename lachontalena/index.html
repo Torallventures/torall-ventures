@@ -33,7 +33,7 @@
     </nav>
     <div class="nav-right">
       <div class="lang" role="group" aria-label="Idioma"><button data-l="es" class="on">ES</button><button data-l="en">EN</button></div>
-      <a class="btn solid call" href="tel:+13056039352"><span data-en="Call">Llamar</span> <span class="arr">→</span></a>
+      <a class="btn solid call" href="ordenar.html"><span data-en="Order online">Ordenar en línea</span> <span class="arr">→</span></a>
       <button class="burger" aria-label="Menú"><i></i><i></i></button>
     </div>
   </div>
@@ -44,6 +44,7 @@
   <a class="big" href="menu.html"><span data-en="Menu">Menú</span></a>
   <a class="big" href="nosotros.html"><span data-en="Our story">Nosotros</span></a>
   <a class="big" href="visitanos.html"><span data-en="Visit">Visítanos</span></a>
+  <a class="big" href="ordenar.html"><span data-en="Order online">Ordenar</span></a>
   <div class="mm-foot">
     <span>1366 E 4th Ave, Hialeah, FL 33010</span>
     <a href="tel:+13056039352">(305) 603-9352</a>
@@ -52,6 +53,11 @@
 
 <main>
 <section class="hero">
+  <div class="hero-slides" aria-hidden="true">
+    <div class="slide" style="background-image:url(media/hero-1.jpg)"></div>
+    <div class="slide" style="background-image:url(media/hero-2.jpg)"></div>
+    <div class="slide" style="background-image:url(media/hero-1.jpg);background-position:70% 60%;--kb:1.25"></div>
+  </div>
   <video class="hero-video" autoplay muted loop playsinline preload="auto" aria-hidden="true">
     <source src="media/hero.mp4" type="video/mp4">
   </video>
@@ -81,6 +87,7 @@
   <div class="wrap hero-grid">
     <div>
       <span class="open-pill"><i></i><span>Abierto ahora</span></span>
+      <span class="rey-pill">👑 El Rey Fritanguero 🇳🇮</span>
       <h1>
         <span class="line"><span data-en="Taste of">Sabor a</span></span>
         <span class="line"><span><em>Chontales,</em></span></span>
@@ -88,8 +95,8 @@
       </h1>
       <p class="lead reveal d2" data-en="Authentic Nicaraguan fritanga — tender carne asada, gallo pinto, fried cheese and handmade tortillas. Grab a cajita to go or sit down like you're at the hacienda.">Fritanga nicaragüense auténtica — carne asada tiernita, gallo pinto, queso frito y tortillas hechas a mano. Llévate tu cajita o siéntate como en la hacienda.</p>
       <div class="actions reveal d3">
-        <a class="btn solid" href="menu.html"><span data-en="See the menu">Ver el menú</span> <span class="arr">→</span></a>
-        <a class="btn" href="visitanos.html"><span data-en="How to get here">Cómo llegar</span> <span class="arr">→</span></a>
+        <a class="btn solid" href="ordenar.html"><span data-en="Order online">Ordenar en línea</span> <span class="arr">→</span></a>
+        <a class="btn" href="menu.html"><span data-en="See the menu">Ver el menú</span> <span class="arr">→</span></a>
       </div>
     </div>
     <div class="hero-plate">
@@ -109,24 +116,7 @@
 <section class="intro">
   <div class="wrap intro-grid">
     <div class="frame-wrap reveal">
-      <div class="frame mask-img">
-        <svg viewBox="0 0 400 500" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
-          <rect width="400" height="500" fill="#F2C889"/>
-          <circle cx="280" cy="150" r="60" fill="#E0A73F"/>
-          <path d="M0 300c80-50 160-60 240-30s120 10 160-20v250H0z" fill="#9DB07A"/>
-          <path d="M0 360c100-30 200-40 300-10s70 10 100 0v150H0z" fill="#5E7F4A"/>
-          <!-- hacienda house -->
-          <g transform="translate(70 250)">
-            <path d="M-10 70L130 10l140 60z" fill="#8E3420"/>
-            <rect x="10" y="66" width="240" height="110" fill="#F5EBDA"/>
-            <rect x="0" y="62" width="260" height="10" fill="#B4472B"/>
-            <g fill="#5A3A26"><rect x="34" y="96" width="34" height="44" rx="17"/><rect x="192" y="96" width="34" height="44" rx="17"/><rect x="110" y="100" width="40" height="76"/></g>
-            <g fill="#2E4A2C"><circle cx="-14" cy="160" r="22"/><circle cx="276" cy="156" r="26"/></g>
-            <g stroke="#5A3A26" stroke-width="4"><path d="M-40 176h340"/><path d="M-30 156v20M300 150v26"/></g>
-          </g>
-          <path d="M0 450h400v50H0z" fill="#2E4A2C"/>
-        </svg>
-      </div>
+      <div class="frame mask-img photo"><img src="media/el-rey.jpg" alt="El Rey Fritanguero frente al mural nicaragüense"><span class="frame-cap">👑 El Rey Fritanguero 🇳🇮</span></div>
       <div class="stamp" data-badge="SABOR DE CHONTALES • HECHO CON AMOR • " data-fill="#B4472B"></div>
     </div>
     <div>
@@ -153,23 +143,26 @@
       <a class="btn light reveal" href="menu.html"><span data-en="Full menu">Menú completo</span> <span class="arr">→</span></a>
     </div>
     <div class="dish-row">
-      <article class="dish feature reveal" data-tilt>
-        <span class="num">01</span><span class="price">$24</span>
-        <div class="art" data-art="plate"></div>
-        <h3>Carne Asada</h3>
-        <p data-en="The house signature. Thin, tender and full of flavor, with gallo pinto, fried plantains, fried cheese and salad.">La firma de la casa. Fina, tierna y llena de sabor, con gallo pinto, tajadas, queso frito y ensalada.</p>
+      <article class="dish feature photo reveal" data-tilt>
+        <span class="price">$32</span>
+        <div class="dimg"><img src="media/bowl-sq.jpg" alt="El Chontaleño, platón de la casa"></div>
+        <h3>El Chontaleño</h3>
+        <p data-en="The house platter: grilled meats, chorizo, gallo pinto, plantain chips, fried cheese, enchilada and taco.">El platón de la casa: carnes asadas, chorizo, gallo pinto, tajadas, queso frito, enchilada y taco.</p>
+        <button class="dish-add" data-add="chontaleno"><span data-en="Add to order">Agregar al pedido</span> +</button>
       </article>
       <article class="dish reveal d1" data-tilt>
-        <span class="num">02</span><span class="price">$16</span>
-        <div class="art" data-art="soup"></div>
-        <h3 data-en="Rib Soup">Sopa de Costilla</h3>
-        <p data-en="Slow-simmered beef rib with yuca, plantain and vegetables. Like grandma used to make.">Costilla de res a fuego lento con yuca, plátano y verduras. Como la de la abuela.</p>
+        <span class="num">02</span><span class="price">$24</span>
+        <div class="art" data-art="plate"></div>
+        <h3>Carne Asada</h3>
+        <p data-en="The house signature. Thin, tender and full of flavor, with your choice of 3 sides.">La firma de la casa. Fina, tierna y llena de sabor, con 3 acompañantes a tu gusto.</p>
+        <button class="dish-add" data-add="carne-asada"><span data-en="Add to order">Agregar al pedido</span> +</button>
       </article>
       <article class="dish reveal d2" data-tilt>
         <span class="num">03</span><span class="price">$14</span>
         <div class="art" data-art="tortilla"></div>
         <h3 data-en="Nica Breakfast">Desayuno Nica</h3>
         <p data-en="Gallo pinto, eggs, fried cheese, sweet plantain, cream and handmade tortillas. Served all day.">Gallo pinto, huevo, queso frito, maduro, crema y tortillas hechas a mano. Servido todo el día.</p>
+        <button class="dish-add" data-add="desayuno-nica"><span data-en="Add to order">Agregar al pedido</span> +</button>
       </article>
     </div>
   </div>
@@ -202,6 +195,23 @@
   <span data-en="Nica breakfast all day">Desayuno nica todo el día</span><span data-en="Handmade tortillas">Tortillas hechas a mano</span><span data-en="Catering &amp; events">Catering y eventos</span><span data-en="Family platters">Platones familiares</span>
 </div></div>
 
+<section class="order-promo">
+  <div class="wrap op-grid">
+    <div class="op-img reveal"><img src="media/leaf-tall.jpg" alt="Caballo Bayo, platón familiar"><span class="op-badge" data-badge="ORDENA EN LÍNEA • RECOGE CALIENTITO • " data-fill="#B4472B"></span></div>
+    <div>
+      <span class="eyebrow reveal" data-en="Order online">Ordena en línea</span>
+      <h2 class="split" style="margin:1rem 0 1.4rem" data-en="Your way, <em>down to the rice.</em>">A tu manera, <em>hasta el arroz.</em></h2>
+      <p class="lead reveal d1" data-en="Pick your meats and sides, ask for less rice or extra chilero, and choose ASAP or a pickup time. We'll have it ready.">Escoge tus carnes y acompañantes, pide menos arroz o más chilero, y elige lo antes posible o una hora para recoger. Te lo tenemos listo.</p>
+      <ul class="op-steps reveal d2">
+        <li><b>1</b><span data-en="Build your plate">Arma tu plato</span></li>
+        <li><b>2</b><span data-en="Pick a time">Elige la hora</span></li>
+        <li><b>3</b><span data-en="Pick up hot">Recoge calientito</span></li>
+      </ul>
+      <a class="btn solid reveal d3" href="ordenar.html"><span data-en="Start your order">Empieza tu pedido</span> <span class="arr">→</span></a>
+    </div>
+  </div>
+</section>
+
 <section class="reviews">
   <div class="wrap">
     <span class="eyebrow reveal" data-en="What Hialeah says">Lo que dice Hialeah</span>
@@ -227,6 +237,7 @@
       <h2 class="split" style="margin:1rem 0 1.4rem" data-en="Your cajita <em>is waiting.</em>">Tu cajita <em>te espera.</em></h2>
       <p class="lead reveal d1" style="color:rgba(245,235,218,.85)" data-en="1366 E 4th Ave, Hialeah. Open every day from 8 AM.">1366 E 4th Ave, Hialeah. Abierto todos los días desde las 8 AM.</p>
       <div class="actions reveal d2" style="display:flex;gap:.8rem;flex-wrap:wrap;margin-top:2rem">
+        <a class="btn light" href="ordenar.html"><span data-en="Order online">Ordenar en línea</span> <span class="arr">→</span></a>
         <a class="btn light" href="tel:+13056039352"><span data-en="Call (305) 603-9352">Llamar (305) 603-9352</span> <span class="arr">→</span></a>
         <a class="btn light" href="visitanos.html"><span data-en="Hours &amp; directions">Horario y dirección</span> <span class="arr">→</span></a>
       </div>
@@ -258,7 +269,9 @@
         <ul>
           <li><a href="menu.html" data-en="Menu">Menú</a></li>
           <li><a href="nosotros.html" data-en="Our story">Nosotros</a></li>
-          <li><a href="visitanos.html" data-en="Catering &amp; events">Catering y eventos</a></li>
+          <li><a href="ordenar.html" data-en="Order online">Ordenar en línea</a></li>
+          <li><a href="visitanos.html#opinion" data-en="Leave feedback">Déjanos tu opinión</a></li>
+          <li><a href="visitanos.html#catering" data-en="Catering &amp; events">Catering y eventos</a></li>
           <li><a href="https://www.google.com/maps/search/?api=1&query=Fritanga+La+Chontale%C3%B1a+1366+E+4th+Ave+Hialeah+FL" target="_blank" rel="noopener">Google Maps ↗</a></li>
         </ul>
       </div>
@@ -271,6 +284,8 @@
   </div>
 </footer>
 
+<script src="menu-data.js"></script>
 <script src="app.js"></script>
+<script src="order.js"></script>
 </body>
 </html>

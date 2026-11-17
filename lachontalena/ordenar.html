@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Ordenar en línea · Fritanga La Chontaleña</title>
+<meta name="description" content="Fritanga La Chontaleña — auténtica comida nicaragüense en Hialeah. Carne asada, gallo pinto, desayunos nicas todo el día. 1366 E 4th Ave, Hialeah, FL.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT,WONK@0,9..144,300..900,0..100,0..1;1,9..144,300..900,0..100,0..1&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body class="is-loading" data-page="order">
+
+<div class="curtain" aria-hidden="true">
+  <div class="panel top"></div><div class="panel bot"></div>
+  <div class="mark"><small>Fritanga</small><b>La Chontaleña</b></div>
+</div>
+
+<header class="nav">
+  <div class="wrap">
+    <a href="index.html" class="logo" aria-label="Fritanga La Chontaleña — inicio">
+      <i data-logo></i><span><small>Fritanga</small><b>La Chontaleña</b></span>
+    </a>
+    <nav aria-label="Principal">
+      <ul>
+        <li><a href="index.html" data-page="home" data-en="Home">Inicio</a></li>
+        <li><a href="menu.html" data-page="menu" data-en="Menu">Menú</a></li>
+        <li><a href="nosotros.html" data-page="about" data-en="Our story">Nosotros</a></li>
+        <li><a href="visitanos.html" data-page="visit" data-en="Visit">Visítanos</a></li>
+      </ul>
+    </nav>
+    <div class="nav-right">
+      <div class="lang" role="group" aria-label="Idioma"><button data-l="es" class="on">ES</button><button data-l="en">EN</button></div>
+      <a class="btn solid call" href="ordenar.html"><span data-en="Order online">Ordenar en línea</span> <span class="arr">→</span></a>
+      <button class="burger" aria-label="Menú"><i></i><i></i></button>
+    </div>
+  </div>
+</header>
+
+<div class="mobile-menu">
+  <a class="big" href="index.html"><span data-en="Home">Inicio</span></a>
+  <a class="big" href="menu.html"><span data-en="Menu">Menú</span></a>
+  <a class="big" href="nosotros.html"><span data-en="Our story">Nosotros</span></a>
+  <a class="big" href="visitanos.html"><span data-en="Visit">Visítanos</span></a>
+  <a class="big" href="ordenar.html"><span data-en="Order online">Ordenar</span></a>
+  <div class="mm-foot">
+    <span>1366 E 4th Ave, Hialeah, FL 33010</span>
+    <a href="tel:+13056039352">(305) 603-9352</a>
+  </div>
+</div>
+
+<main>
+<section class="page-hero order-hero">
+  <div class="oh-img" data-speed="0.08"><img src="media/hero-2.jpg" alt=""></div>
+  <div class="wrap">
+    <span class="eyebrow reveal" data-en="Order online · Pickup">Ordena en línea · Para recoger</span>
+    <h1 class="split" data-en="Build your <em>cajita.</em>">Arma tu <em>cajita.</em></h1>
+    <p class="lead reveal d1" data-en="Customize every plate, add notes for the kitchen, and choose ASAP or a pickup time.">Personaliza cada plato, deja notas para la cocina y elige lo antes posible o una hora para recoger.</p>
+    <div class="pickup-strip reveal d2">
+      <span class="open-pill"><i></i><span>Abierto ahora</span></span>
+      <span>📍 1366 E 4th Ave, Hialeah</span>
+      <span data-en="⏱ Ready in ~20–25 min">⏱ Listo en ~20–25 min</span>
+      <button class="lk-cart" data-open-cart><span data-en="View order">Ver pedido</span> <i data-cart-count>0</i></button>
+    </div>
+  </div>
+</section>
+
+<div class="menu-tabs">
+  <div class="wrap tabs">
+    <button data-target="o-fritanga" class="on">Fritanga</button>
+    <button data-target="o-compartir" data-en="To share">Para compartir</button>
+    <button data-target="o-desayunos" data-en="Breakfast">Desayunos</button>
+    <button data-target="o-sopas" data-en="Soups">Sopas</button>
+    <button data-target="o-bebidas" data-en="Drinks">Refrescos</button>
+    <button data-target="o-postres" data-en="Desserts">Postres</button>
+  </div>
+</div>
+
+<section class="menu-list order-list">
+  <div class="wrap">
+    <div id="orderRoot"></div>
+    <p class="reveal" style="font-size:.85rem;color:var(--brown);text-align:center;margin-top:1rem" data-en="Demo ordering — menu and prices to be confirmed with the restaurant. No payment is taken.">Pedido de demostración — menú y precios por confirmar con el restaurante. No se cobra nada.</p>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <a href="index.html" class="logo"><i data-logo></i><span><small>Fritanga</small><b>La Chontaleña</b></span></a>
+        <p style="margin-top:1.2rem;max-width:32ch" data-en="The flavor of Chontales, Nicaragua — made fresh every day in Hialeah.">El sabor de Chontales, Nicaragua — hecho fresco todos los días en Hialeah.</p>
+      </div>
+      <div>
+        <h4 data-en="Visit">Visítanos</h4>
+        <p>1366 E 4th Ave<br>Hialeah, FL 33010</p>
+        <p style="margin-top:.6rem"><a href="tel:+13056039352">(305) 603-9352</a></p>
+      </div>
+      <div>
+        <h4 data-en="Hours">Horario</h4>
+        <p data-en="Sun–Thu · 8 AM–9 PM<br>Fri · 8 AM–10 PM<br>Sat · 8 AM–11 PM">Dom–Jue · 8 AM–9 PM<br>Vie · 8 AM–10 PM<br>Sáb · 8 AM–11 PM</p>
+      </div>
+      <div>
+        <h4 data-en="Explore">Explora</h4>
+        <ul>
+          <li><a href="menu.html" data-en="Menu">Menú</a></li>
+          <li><a href="nosotros.html" data-en="Our story">Nosotros</a></li>
+          <li><a href="ordenar.html" data-en="Order online">Ordenar en línea</a></li>
+          <li><a href="visitanos.html#opinion" data-en="Leave feedback">Déjanos tu opinión</a></li>
+          <li><a href="visitanos.html#catering" data-en="Catering &amp; events">Catering y eventos</a></li>
+          <li><a href="https://www.google.com/maps/search/?api=1&query=Fritanga+La+Chontale%C3%B1a+1366+E+4th+Ave+Hialeah+FL" target="_blank" rel="noopener">Google Maps ↗</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="foot-word">La Chontaleña</div>
+    <div class="foot-bottom">
+      <span>© <span data-year></span> Fritanga La Chontaleña · Hialeah, FL</span>
+      <span data-en="Demo site by Torall · torallventures.com">Sitio demo por Torall · torallventures.com</span>
+    </div>
+  </div>
+</footer>
+
+<script src="menu-data.js"></script>
+<script src="app.js"></script>
+<script src="order.js"></script>
+</body>
+</html>

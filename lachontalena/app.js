@@ -96,6 +96,7 @@ leaf:`<svg viewBox="0 0 200 200" aria-hidden="true"><path d="M40 160C40 80 100 3
 heart:`<svg viewBox="0 0 200 200" aria-hidden="true"><path d="M100 170C40 128 20 98 24 68c4-26 28-40 50-34 12 3 20 12 26 22 6-10 14-19 26-22 22-6 46 8 50 34 4 30-16 60-76 102z" fill="#B4472B" stroke="${INK}" stroke-width="3"/><path d="M50 72c2-12 12-18 22-16" stroke="#F5EBDA" stroke-width="5" fill="none" stroke-linecap="round"/></svg>`,
 star:`<svg viewBox="0 0 24 24"><path d="M12 2l2.9 6.9 7.1.6-5.4 4.7 1.7 7.3L12 17.8 5.7 21.5l1.7-7.3L2 9.5l7.1-.6z"/></svg>`
 };
+window.LC_ART=ART;
 const logoSVG=`<svg viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="23" fill="#B4472B"/><circle cx="31" cy="17" r="6" fill="#E0A73F"/><path d="M1 30c8-6 14-8 22-4s14 2 24-4v4a23 23 0 01-46 4z" fill="#2E4A2C"/><path d="M4 36c10-4 18-4 26 0s12 2 16-2a23 23 0 01-42 2z" fill="#5E7F4A"/></svg>`;
 const badgeSVG=(txt,fill="#2E4A2C",col="#F5EBDA")=>`<svg viewBox="0 0 200 200" aria-hidden="true"><defs><path id="bc${txt.length}" d="M100 100m-74 0a74 74 0 1 1 148 0a74 74 0 1 1-148 0"/></defs><circle cx="100" cy="100" r="98" fill="${fill}"/><text font-family="Work Sans,sans-serif" font-weight="700" font-size="${Math.min(16,560/txt.length).toFixed(1)}" fill="${col}"><textPath href="#bc${txt.length}" textLength="462" lengthAdjust="spacing">${txt}</textPath></text><g transform="translate(76 76) scale(1)">${logoSVG.replace('viewBox="0 0 48 48"','viewBox="0 0 48 48" width="48" height="48"')}</g></svg>`;
 
@@ -119,6 +120,7 @@ function applyLang(l){
   store.set("lc-lang",l);
   updateOpen(); markToday(); positionPill && positionPill();
   splitAll(true);
+  document.dispatchEvent(new Event("lc:lang"));
 }
 $$(".lang button").forEach(b=>b.addEventListener("click",()=>applyLang(b.dataset.l)));
 
@@ -173,7 +175,8 @@ $$(".nav ul a").forEach(a=>{if(a.dataset.page===page)a.classList.add("active")})
 
 /* ---------------- Reveal on scroll ---------------- */
 const io=new IntersectionObserver(es=>es.forEach(en=>{if(en.isIntersecting){en.target.classList.add("in");io.unobserve(en.target)}}),{threshold:.15,rootMargin:"0px 0px -6% 0px"});
-function observe(){ $$(".reveal,.split,.mask-img,.reviews,[data-count]").forEach(el=>io.observe(el)) }
+function observe(){ $$(".reveal:not(.in),.split:not(.in),.mask-img:not(.in),.reviews:not(.in)").forEach(el=>io.observe(el)) }
+window.LC_observe=observe;
 
 /* ---------------- Counters ---------------- */
 const cio=new IntersectionObserver(es=>es.forEach(en=>{
@@ -248,14 +251,15 @@ if(tabs){
     const t=document.getElementById(b.dataset.target);
     if(t) scrollTo({top:t.getBoundingClientRect().top+scrollY-150,behavior:"smooth"});
   }));
-  const cats=$$(".cat");
   const spy=()=>{
+    const cats=$$(".cat"); if(!cats.length) return;
     let cur=cats[0];cats.forEach(c=>{if(c.getBoundingClientRect().top<220)cur=c});
     btns.forEach(b=>b.classList.toggle("on",b.dataset.target===cur.id));
     const on=$("button.on",tabs); if(on){positionPill(); const l=on.offsetLeft-tabs.clientWidth/2+on.offsetWidth/2; tabs.scrollTo({left:l,behavior:"smooth"})}
   };
   addEventListener("scroll",()=>requestAnimationFrame(spy),{passive:true});
   addEventListener("resize",positionPill);
+  window.LC_refreshTabs=()=>{spy();positionPill()};
   setTimeout(()=>{spy();positionPill()},50);
 }
 
@@ -266,7 +270,7 @@ if(tl){const bar=$(".progress",tl);
 }
 
 /* ---------------- Form ---------------- */
-$$("form").forEach(f=>f.addEventListener("submit",e=>{
+$$("form:not(.fb-form)").forEach(f=>f.addEventListener("submit",e=>{
   e.preventDefault();
   const done=$(".form-done",f);done&&done.classList.add("show");
   f.querySelectorAll("input,textarea").forEach(i=>i.value="");
@@ -274,9 +278,14 @@ $$("form").forEach(f=>f.addEventListener("submit",e=>{
 
 
 /* ---------------- Hero video + floating ingredients ---------------- */
-const hv=$(".hero-video");
+const hv=$(".hero-video"), slides=$$(".hero-slides .slide");
+if(slides.length){
+  document.body.classList.add("has-video");
+  let si=0; slides[0].classList.add("on");
+  setInterval(()=>{ if(document.body.classList.contains("video-on")) return; slides[si].classList.remove("on"); si=(si+1)%slides.length; slides[si].classList.add("on"); },5500);
+}
 if(hv){
-  const on=()=>{document.body.classList.add("has-video")};
+  const on=()=>{document.body.classList.add("has-video","video-on")};
   if(hv.readyState>=2) on(); else hv.addEventListener("loadeddata",on,{once:true});
   const src=$("source",hv); src&&src.addEventListener("error",()=>hv.remove());
 }
@@ -306,6 +315,33 @@ if(fl){
   let mx=0,my=0;
   addEventListener("mousemove",e=>{mx=e.clientX/innerWidth-.5;my=e.clientY/innerHeight-.5},{passive:true});
   (function loop(){const sy=scrollY;pieces.forEach(p=>{const z=+p.dataset.depth;p.style.transform=`translate3d(${mx*-40*z}px,${my*-40*z - sy*0.25*z}px,0)`});requestAnimationFrame(loop)})();
+}
+
+
+/* ---------------- Feedback ---------------- */
+const fbf=$(".fb-form");
+if(fbf){
+  let rating=0;
+  const stars=$$(".rate button",fbf),lbl=$(".rate-lbl",fbf);
+  const words={es:["","Mala","Regular","Buena","Muy buena","¡Excelente!"],en:["","Poor","Okay","Good","Very good","Excellent!"]};
+  const paint=n=>stars.forEach((b,i)=>b.classList.toggle("on",i<n));
+  stars.forEach(b=>{
+    b.addEventListener("mouseenter",()=>paint(+b.dataset.r));
+    b.addEventListener("mouseleave",()=>paint(rating));
+    b.addEventListener("click",()=>{rating=+b.dataset.r;paint(rating);lbl.textContent=words[lang][rating];b.classList.remove("pop");void b.offsetWidth;b.classList.add("pop")});
+  });
+  $$(".fbc",fbf).forEach(c=>c.addEventListener("click",()=>c.classList.toggle("on")));
+  fbf.addEventListener("submit",e=>{
+    e.preventDefault();
+    const err=$(".err",fbf);
+    if(!rating){err.hidden=false;err.textContent=lang==="en"?"Please pick a star rating.":"Elige una calificación de estrellas.";return}
+    const done=$(".fb-done");fbf.hidden=true;done.hidden=false;
+    $(".fb-msg",done).textContent = rating>=4
+      ? (lang==="en"?"We're so glad you enjoyed it. Would you share it on Google? It really helps a family business.":"Nos alegra muchísimo que te haya gustado. ¿Nos ayudas con una reseña en Google? Significa mucho para un negocio familiar.")
+      : (lang==="en"?"Thanks for being honest. The owner will read this personally and we'll make it right.":"Gracias por tu sinceridad. El dueño lo leerá personalmente y lo vamos a mejorar.");
+    $(".fb-google",done).hidden = rating<4;
+    done.scrollIntoView({behavior:"smooth",block:"center"});
+  });
 }
 
 /* ---------------- Year ---------------- */

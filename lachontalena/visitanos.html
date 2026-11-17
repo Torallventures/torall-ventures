@@ -33,7 +33,7 @@
     </nav>
     <div class="nav-right">
       <div class="lang" role="group" aria-label="Idioma"><button data-l="es" class="on">ES</button><button data-l="en">EN</button></div>
-      <a class="btn solid call" href="tel:+13056039352"><span data-en="Call">Llamar</span> <span class="arr">→</span></a>
+      <a class="btn solid call" href="ordenar.html"><span data-en="Order online">Ordenar en línea</span> <span class="arr">→</span></a>
       <button class="burger" aria-label="Menú"><i></i><i></i></button>
     </div>
   </div>
@@ -44,6 +44,7 @@
   <a class="big" href="menu.html"><span data-en="Menu">Menú</span></a>
   <a class="big" href="nosotros.html"><span data-en="Our story">Nosotros</span></a>
   <a class="big" href="visitanos.html"><span data-en="Visit">Visítanos</span></a>
+  <a class="big" href="ordenar.html"><span data-en="Order online">Ordenar</span></a>
   <div class="mm-foot">
     <span>1366 E 4th Ave, Hialeah, FL 33010</span>
     <a href="tel:+13056039352">(305) 603-9352</a>
@@ -108,6 +109,42 @@
   </div>
 </section>
 
+<section class="feedback" id="opinion">
+  <div class="wrap">
+    <div class="fb-card reveal">
+      <div class="fb-intro">
+        <span class="eyebrow" data-en="Your opinion">Tu opinión</span>
+        <h2 style="font-size:clamp(2.2rem,5vw,3.6rem);margin:1rem 0" data-en="How did <em>we do?</em>">¿Cómo <em>te fue?</em></h2>
+        <p style="color:var(--brown);max-width:34ch" data-en="Tell us straight — what you loved and what we can do better. The owner reads every message.">Dinos la verdad — lo que te encantó y lo que podemos mejorar. El dueño lee cada mensaje.</p>
+      </div>
+      <form class="fb-form" novalidate>
+        <div class="rate" role="radiogroup" aria-label="Calificación">
+          <button type="button" data-r="1" aria-label="1">★</button><button type="button" data-r="2" aria-label="2">★</button><button type="button" data-r="3" aria-label="3">★</button><button type="button" data-r="4" aria-label="4">★</button><button type="button" data-r="5" aria-label="5">★</button>
+          <span class="rate-lbl" data-en="Tap to rate">Toca para calificar</span>
+        </div>
+        <div class="fb-chips">
+          <span class="fb-q" data-en="What stood out?">¿Qué destacó?</span>
+          <button type="button" class="fbc" data-en="Food">Comida</button><button type="button" class="fbc" data-en="Service">Servicio</button><button type="button" class="fbc" data-en="Speed">Rapidez</button><button type="button" class="fbc" data-en="Cleanliness">Limpieza</button><button type="button" class="fbc" data-en="Portions">Porciones</button><button type="button" class="fbc" data-en="Price">Precio</button>
+        </div>
+        <label class="fl full"><span data-en="Tell us more">Cuéntanos más</span><textarea rows="4" maxlength="600" data-en-ph="1" placeholder="Ej. la carne asada estaba buenísima, pero tardaron un poco…"></textarea></label>
+        <div class="fb-row">
+          <label class="fl"><span data-en="Name (optional)">Nombre (opcional)</span><input name="fbname"></label>
+          <label class="fl"><span data-en="Phone or email (optional)">Teléfono o email (opcional)</span><input name="fbcontact"></label>
+        </div>
+        <button class="btn solid" type="submit"><span data-en="Send feedback">Enviar opinión</span> <span class="arr">→</span></button>
+        <p class="err" hidden></p>
+      </form>
+      <div class="fb-done" hidden>
+        <div class="fb-heart" data-art="heart"></div>
+        <h3 data-en="Thank you!">¡Gracias!</h3>
+        <p class="fb-msg"></p>
+        <a class="btn solid fb-google" hidden href="https://www.google.com/maps/search/?api=1&query=Fritanga+La+Chontale%C3%B1a+1366+E+4th+Ave+Hialeah+FL" target="_blank" rel="noopener"><span data-en="Leave a Google review">Déjanos una reseña en Google</span> <span class="arr">↗</span></a>
+        <p class="demo-note" data-en="Demo: on the live site this goes straight to the owner.">Demo: en el sitio real esto le llega directo al dueño.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
 <section class="form-sec" id="catering">
   <div class="wrap">
     <div class="form-card reveal">
@@ -153,7 +190,9 @@
         <ul>
           <li><a href="menu.html" data-en="Menu">Menú</a></li>
           <li><a href="nosotros.html" data-en="Our story">Nosotros</a></li>
-          <li><a href="visitanos.html" data-en="Catering &amp; events">Catering y eventos</a></li>
+          <li><a href="ordenar.html" data-en="Order online">Ordenar en línea</a></li>
+          <li><a href="visitanos.html#opinion" data-en="Leave feedback">Déjanos tu opinión</a></li>
+          <li><a href="visitanos.html#catering" data-en="Catering &amp; events">Catering y eventos</a></li>
           <li><a href="https://www.google.com/maps/search/?api=1&query=Fritanga+La+Chontale%C3%B1a+1366+E+4th+Ave+Hialeah+FL" target="_blank" rel="noopener">Google Maps ↗</a></li>
         </ul>
       </div>
@@ -166,6 +205,8 @@
   </div>
 </footer>
 
+<script src="menu-data.js"></script>
 <script src="app.js"></script>
+<script src="order.js"></script>
 </body>
 </html>

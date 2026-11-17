@@ -33,7 +33,7 @@
     </nav>
     <div class="nav-right">
       <div class="lang" role="group" aria-label="Idioma"><button data-l="es" class="on">ES</button><button data-l="en">EN</button></div>
-      <a class="btn solid call" href="tel:+13056039352"><span data-en="Call">Llamar</span> <span class="arr">→</span></a>
+      <a class="btn solid call" href="ordenar.html"><span data-en="Order online">Ordenar en línea</span> <span class="arr">→</span></a>
       <button class="burger" aria-label="Menú"><i></i><i></i></button>
     </div>
   </div>
@@ -44,6 +44,7 @@
   <a class="big" href="menu.html"><span data-en="Menu">Menú</span></a>
   <a class="big" href="nosotros.html"><span data-en="Our story">Nosotros</span></a>
   <a class="big" href="visitanos.html"><span data-en="Visit">Visítanos</span></a>
+  <a class="big" href="ordenar.html"><span data-en="Order online">Ordenar</span></a>
   <div class="mm-foot">
     <span>1366 E 4th Ave, Hialeah, FL 33010</span>
     <a href="tel:+13056039352">(305) 603-9352</a>
@@ -86,10 +87,23 @@
   </div>
 </section>
 
+<section class="rey">
+  <div class="wrap rey-grid">
+    <div class="rey-img reveal"><img src="media/el-rey.jpg" alt="El Rey Fritanguero con la bandera de Nicaragua"><span class="rey-crown">👑</span></div>
+    <div>
+      <span class="eyebrow reveal" data-en="Meet the king">Conoce al rey</span>
+      <h2 class="split rey-title" style="margin:1rem 0 1.4rem">👑 El Rey Fritanguero 🇳🇮</h2>
+      <p class="lead reveal d1" data-en="Crown on, flag on his shoulders and more Nica than gallo pinto. He's the heart behind the grill and the reason every plate leaves the kitchen with pride.">Con corona, la bandera en los hombros y más nica que el gallo pinto. Él es el corazón detrás de la parrilla y la razón por la que cada plato sale de la cocina con orgullo.</p>
+      <p class="reveal d2" style="margin-top:1rem;color:var(--brown)" data-en="Follow along for daily specials, new dishes and plenty of Nica pride.">Síguelo para los especiales del día, platos nuevos y mucho orgullo nica.</p>
+      <a class="btn solid reveal d3" style="margin-top:2rem" href="ordenar.html"><span data-en="Order from the king">Ordénale al rey</span> <span class="arr">→</span></a>
+    </div>
+  </div>
+</section>
+
 <section class="quote">
   <div class="wrap">
     <blockquote class="split" data-en="“I always wanted a business that involves my whole family.”">“Siempre quise un negocio que involucre a toda mi familia.”</blockquote>
-    <cite class="reveal d2">— James Reyes</cite>
+    <cite class="reveal d2">— James Reyes · 👑 El Rey Fritanguero 🇳🇮</cite>
   </div>
 </section>
 
@@ -107,13 +121,13 @@
 
 <section class="sister">
   <div class="wrap">
-    <div class="sister-card reveal">
-      <div>
+    <div class="sister-card photo reveal">
+      <div class="sc-img"><img src="media/kissimmee.jpg" alt="Fritanga Managüita en Kissimmee"></div>
+      <div class="sc-txt">
         <span class="eyebrow" data-en="The family">La familia</span>
-        <h2 style="font-size:clamp(2rem,4.5vw,3.4rem);margin:1rem 0" data-en="Also visit <em>Fritanga Managüita</em>">Visita también <em>Fritanga Managüita</em></h2>
-        <p class="lead" data-en="Our sister restaurant in Kissimmee, named after James's grandfather — complete with a pulpería of Nicaraguan goods.">Nuestro restaurante hermano en Kissimmee, con el nombre del abuelo de James — y con pulpería de productos nicas.</p>
+        <h2 style="font-size:clamp(2rem,4.5vw,3.2rem);margin:1rem 0" data-en="Also visit <em>Fritanga Managüita</em>">Visita también <em>Fritanga Managüita</em></h2>
+        <p class="lead" data-en="Our sister restaurant in Kissimmee, named after James's grandfather — mural, pulpería and all.">Nuestro restaurante hermano en Kissimmee, con el nombre del abuelo de James — con mural, pulpería y todo.</p>
       </div>
-      <div style="width:min(220px,50vw)" data-badge="FRITANGA MANAGÜITA • KISSIMMEE • " data-fill="#2A1A12"></div>
     </div>
   </div>
 </section>
@@ -141,7 +155,9 @@
         <ul>
           <li><a href="menu.html" data-en="Menu">Menú</a></li>
           <li><a href="nosotros.html" data-en="Our story">Nosotros</a></li>
-          <li><a href="visitanos.html" data-en="Catering &amp; events">Catering y eventos</a></li>
+          <li><a href="ordenar.html" data-en="Order online">Ordenar en línea</a></li>
+          <li><a href="visitanos.html#opinion" data-en="Leave feedback">Déjanos tu opinión</a></li>
+          <li><a href="visitanos.html#catering" data-en="Catering &amp; events">Catering y eventos</a></li>
           <li><a href="https://www.google.com/maps/search/?api=1&query=Fritanga+La+Chontale%C3%B1a+1366+E+4th+Ave+Hialeah+FL" target="_blank" rel="noopener">Google Maps ↗</a></li>
         </ul>
       </div>
@@ -154,6 +170,8 @@
   </div>
 </footer>
 
+<script src="menu-data.js"></script>
 <script src="app.js"></script>
+<script src="order.js"></script>
 </body>
 </html>
