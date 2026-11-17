@@ -10,6 +10,10 @@ const N=o=>o?(L()==="en"?o.en:o.es):"";
 const money=n=>"$"+n.toFixed(2);
 const esc=s=>String(s).replace(/[&<>"]/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[m]));
 const ITEM=id=>D.ITEMS.find(i=>i.id===id);
+const store=()=>{const id=ls.get("lc-store",null);return D.STORES.find(x=>x.id===id)||D.STORES[0]};
+const storeById=id=>D.STORES.find(x=>x.id===id);
+const mapsUrl=st=>"https://www.google.com/maps/dir/?api=1&destination="+encodeURIComponent((st.id==="hialeah"?"Fritanga La Chontaleña ":"Fritanga Managüita ")+st.addr+" "+st.cityLine);
+const storeLabel=st=>`${st.name} · ${st.city}`;
 const DOW_ES=["dom","lun","mar","mié","jue","vie","sáb"],DOW_EN=["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
 function todayDow(){return ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"].indexOf(new Intl.DateTimeFormat("en-US",{timeZone:"America/New_York",weekday:"short"}).format(new Date()))}
 function avail(it){
@@ -58,7 +62,7 @@ function closeDrawer(){dw.classList.remove("open");dw.setAttribute("aria-hidden"
 fab.addEventListener("click",openDrawer);
 $(".dz-back").addEventListener("click",closeDrawer);$(".drawer .x").addEventListener("click",closeDrawer);
 function showToast(msg){toast.textContent=msg;toast.classList.add("show");clearTimeout(showToast.t);showToast.t=setTimeout(()=>toast.classList.remove("show"),2200)}
-document.addEventListener("keydown",e=>{if(e.key==="Escape"){if(co.classList.contains("open"))closeCheckout();else if(cz.classList.contains("open"))closeCz();else closeDrawer()}});
+document.addEventListener("keydown",e=>{if(e.key==="Escape"){if(sp.classList.contains("open"))closeStores();else if(co.classList.contains("open"))closeCheckout();else if(cz.classList.contains("open"))closeCz();else closeDrawer()}});
 
 function renderFab(){
   const n=count(); if(typeof renderMbar==="function"&&mbar) renderMbar();
@@ -84,7 +88,7 @@ function pickupText(){
 }
 function renderDrawer(){
   $(".drawer h3").textContent=T("Tu pedido","Your order");
-  $(".drawer .pick").innerHTML=`<svg viewBox="0 0 24 24" width="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s-7-6.2-7-11a7 7 0 0114 0c0 4.8-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg><span>${T("Para recoger en","Pickup at")} <b>1366 E 4th Ave, Hialeah</b></span>`;
+  $(".drawer .pick").innerHTML=`<svg viewBox="0 0 24 24" width="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s-7-6.2-7-11a7 7 0 0114 0c0 4.8-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg><span>${T("Recoger en","Pickup at")} <b>${esc(storeLabel(store()))}</b><small>${esc(store().addr)}</small></span><button class="lk chg" data-store-open>${T("Cambiar","Change")}</button>`;
   const box=$(".drawer .lines"),ft=$(".drawer footer");
   if(!cart.length){
     const lastO=orders()[0];
@@ -182,7 +186,7 @@ czs.addEventListener("click",e=>{
 czs.addEventListener("input",e=>{if(e.target.matches("textarea")){cs.note=e.target.value;$(".cc span",czs).textContent=cs.note.length}});
 
 /* ---------------- Hours / slots ---------------- */
-const HOURS={0:[8,21],1:[8,21],2:[8,21],3:[8,21],4:[8,21],5:[8,22],6:[8,23]};
+const HOURS=new Proxy({},{get:(_,k)=>store().hours[k]});
 function miami(){
   const f=new Intl.DateTimeFormat("en-US",{timeZone:"America/New_York",weekday:"short",hour:"numeric",minute:"numeric",hour12:false}).formatToParts(new Date());
   const g=t=>f.find(p=>p.type===t).value;
@@ -225,7 +229,9 @@ function renderCo(){
   const s=ck.step; let body="";
   if(s===1){
     const ok=asapOK();
-    body=`<h3>${T("¿Cuándo lo quieres?","When do you want it?")}</h3>
+    const st=store();
+    body=`<div class="co-store"><span class="pin">📍</span><div><small>${T("Recoger en","Pickup at")}</small><b>${esc(storeLabel(st))}</b><span>${esc(st.addr)}, ${esc(st.cityLine)}</span></div><button class="lk" data-store-open>${T("Cambiar","Change")}</button></div>
+    <h3>${T("¿Cuándo lo quieres?","When do you want it?")}</h3>
     <div class="modes">
       <button class="mode ${ck.mode==="asap"?"on":""} ${ok?"":"off"}" data-m="asap" ${ok?"":"disabled"}><b>${T("Lo antes posible","ASAP")}</b><span>${ok?T("Listo en ~20–25 min","Ready in ~20–25 min"):(cartDays().length<7?T("Tu pedido tiene platos de fin de semana","Your order has weekend-only dishes"):T("Cerrado ahora","Closed right now"))}</span></button>
       <button class="mode ${ck.mode==="later"?"on":""}" data-m="later"><b>${T("Programar","Schedule")}</b><span>${T("Elige día y hora","Pick a day & time")}</span></button>
@@ -265,7 +271,7 @@ function renderCo(){
       <div class="row big"><span>Total</span><b>${money(t.t)}</b></div>
     </div>
     <p class="legal-line">${T("Al hacer tu pedido aceptas los","By placing your order you agree to the")} <a href="terminos/" target="_blank">${T("Términos","Terms")}</a> ${T("y la","and")} <a href="privacidad/" target="_blank">${T("Política de privacidad","Privacy Policy")}</a>.</p>
-    <div class="recap"><b>${T("Recoger","Pickup")}:</b> ${ck.mode==="asap"?T("Lo antes posible (~20–25 min)","ASAP (~20–25 min)"):slotLabel(ck.day,ck.min)} · <b>${esc(ck.name)}</b></div>`;
+    <div class="recap"><b>📍</b> ${esc(storeLabel(store()))} · <b>${T("Recoger","Pickup")}:</b> ${ck.mode==="asap"?T("Lo antes posible (~20–25 min)","ASAP (~20–25 min)"):slotLabel(ck.day,ck.min)} · <b>${esc(ck.name)}</b></div>`;
   }
   if(s===4){
     const o=ck.order;
@@ -276,8 +282,8 @@ function renderCo(){
       <div class="when"><small>${T("Listo para recoger","Ready for pickup")}</small><b>${o.when}</b></div>
       <ul class="olist">${o.lines.map(l=>`<li><span>${l.qty}× ${esc(l.name)}</span><span>${money(l.price)}</span></li>`).join("")}<li class="tt"><span>Total</span><b>${money(o.total)}</b></li></ul>
       ${o.club!=null?`<div class="club-done"><span>👑 +1 ${T("corona","crown")}</span><div class="crowns sm">${crownsHTML(o.club)}</div><small>${o.club>=D.CLUB.goal?T("¡Tu próximo pedido tiene descuento!","Your next order has a discount!"):T(`Llevas ${o.club} de ${D.CLUB.goal}`,`${o.club} of ${D.CLUB.goal}`)}</small></div>`:""}
-      <p class="muted">${o.sms?T("Te mandamos un texto cuando esté listo.","We'll text you when it's ready."):""} ${T("Recoge en","Pick up at")} 1366 E 4th Ave, Hialeah.</p>
-      <div class="dbtns"><a class="btn solid" href="https://www.google.com/maps/dir/?api=1&destination=Fritanga+La+Chontale%C3%B1a+1366+E+4th+Ave+Hialeah+FL" target="_blank" rel="noopener">${T("Cómo llegar","Directions")} <span class="arr">↗</span></a><button class="btn close-done">${T("Listo","Done")}</button></div>
+      <p class="muted">${o.sms?T("Te mandamos un texto cuando esté listo.","We'll text you when it's ready."):""} ${T("Recoge en","Pick up at")} <b>${esc(o.storeName)}</b>, ${esc(o.storeAddr)}.</p>
+      <div class="dbtns"><a class="btn solid" href="${o.maps}" target="_blank" rel="noopener">${T("Cómo llegar","Directions")} <span class="arr">↗</span></a><button class="btn close-done">${T("Listo","Done")}</button></div>
       ${o.guest?`<div class="save-acct"><b>${T("¿La próxima vez en un toque?","Next time in one tap?")}</b><span>${T("Crea tu cuenta con tu teléfono y guarda este pedido.","Create an account with your phone and save this order.")}</span><button class="btn sm" data-acct>${T("Crear cuenta","Create account")}</button></div>`:""}
       <p class="sig">👑 ${T("Gracias por tu pedido — El Rey Fritanguero","Thanks for your order — El Rey Fritanguero")} 🇳🇮</p>
       <p class="demo-note">${T("Demo: este pedido no se envió al restaurante.","Demo: this order was not sent to the restaurant.")}</p>
@@ -311,11 +317,12 @@ cos.addEventListener("click",e=>{
     }
     if(ck.step===3){
       const t=totals();
-      ck.order={no:"LC-"+Math.floor(1000+Math.random()*9000),when:ck.mode==="asap"?T("En ~20–25 minutos","In ~20–25 minutes"):slotLabel(ck.day,ck.min),
+      const st0=store();
+      ck.order={store:st0.id,storeName:storeLabel(st0),storeAddr:st0.addr+", "+st0.cityLine,maps:mapsUrl(st0),no:"LC-"+Math.floor(1000+Math.random()*9000),when:ck.mode==="asap"?T("En ~20–25 minutos","In ~20–25 minutes"):slotLabel(ck.day,ck.min),
         lines:cart.map(l=>({qty:l.qty,name:N(ITEM(l.id)),price:linePrice(l)})),total:t.t,sms:ck.sms};
       let c=club();
       if(c||ck.join){ c=c||{name:ck.name,phone:ck.phone,stamps:0,sms:false}; if(t.disc) c.stamps-=D.CLUB.goal; c.stamps+=1; ls.set("lc-club",c); ck.order.club=c.stamps; }
-      const hist=orders(); hist.unshift({no:ck.order.no,date:Date.now(),total:t.t,lines:cart.map(l=>({id:l.id,qty:l.qty,sel:l.sel,note:l.note}))}); ls.set("lc-orders",hist.slice(0,10));
+      const hist=orders(); hist.unshift({no:ck.order.no,store:st0.id,date:Date.now(),total:t.t,lines:cart.map(l=>({id:l.id,qty:l.qty,sel:l.sel,note:l.note}))}); ls.set("lc-orders",hist.slice(0,10));
       const u0=user(); if(u0) ls.set("lc-known-"+u0.phone.replace(/\D/g,""),u0);
       ck.order.guest=!u0;
       ls.set("lc-last-order",ck.order); cart=[]; save(); renderClub(); renderReorder();
@@ -362,8 +369,8 @@ function renderMbar(){
   const onOrder=document.body.dataset.page==="order";
   mbar.classList.toggle("empty-hide",!n&&onOrder);
   if(!n&&onOrder){mbar.innerHTML="";return}
-  mbar.innerHTML=n?`<button class="mb-main" data-open-cart><span class="mb-c">${n}</span><span>${T("Ver pedido","View order")}</span><b>${money(subtotal())}</b></button><a class="mb-call" href="tel:+13056039352" aria-label="${T("Llamar","Call")}">📞</a>`
-    :`<a class="mb-main" href="ordenar/"><span>${T("Ordenar en línea","Order online")}</span><span class="arr">→</span></a><a class="mb-call" href="tel:+13056039352" aria-label="${T("Llamar","Call")}">📞</a>`;
+  mbar.innerHTML=n?`<button class="mb-main" data-open-cart><span class="mb-c">${n}</span><span>${T("Ver pedido","View order")}</span><b>${money(subtotal())}</b></button><a class="mb-call" href="tel:+1${store().phone.replace(/\D/g,"")}" aria-label="${T("Llamar","Call")}">📞</a>`
+    :`<a class="mb-main" href="ordenar/"><span>${T("Ordenar en línea","Order online")}</span><span class="arr">→</span></a><a class="mb-call" href="tel:+1${store().phone.replace(/\D/g,"")}" aria-label="${T("Llamar","Call")}">📞</a>`;
 }
 
 
@@ -383,7 +390,7 @@ const dateFmt=t=>new Intl.DateTimeFormat(L()==="en"?"en-US":"es-US",{month:"shor
 function orderCard(o){
   const names=o.lines.map(l=>{const it=ITEM(l.id);return it?`${l.qty}× ${N(it)}`:""}).filter(Boolean);
   const pics=o.lines.slice(0,3).map(l=>{const it=ITEM(l.id);return it?`<span class="op">${media(it)}</span>`:""}).join("");
-  return `<div class="ocard-mini"><div class="opics">${pics}</div><div class="oinfo"><b>${esc(names.join(", "))}</b><small>${dateFmt(o.date)} · ${money(o.total)}</small></div><button class="btn solid sm" data-reorder="${o.no}">${T("Pedir de nuevo","Order again")}</button></div>`;
+  return `<div class="ocard-mini"><div class="opics">${pics}</div><div class="oinfo"><b>${esc(names.join(", "))}</b><small>${dateFmt(o.date)} · ${money(o.total)}${o.store&&storeById(o.store)?" · "+esc(storeById(o.store).city):""}</small></div><button class="btn solid sm" data-reorder="${o.no}">${T("Pedir de nuevo","Order again")}</button></div>`;
 }
 function renderAcct(){
   const u=user(); let h="";
@@ -450,6 +457,7 @@ as.addEventListener("paste",e=>{const t=e.target;if(t.dataset&&t.dataset.otp!=nu
 
 function reorder(no){
   const o=orders().find(x=>x.no===no); if(!o) return;
+  if(o.store&&storeById(o.store)&&o.store!==store().id){ls.set("lc-store",o.store);storeChanged(true)}
   let added=0,skipped=0;
   o.lines.forEach(l=>{const it=ITEM(l.id); if(it&&avail(it).ok){cart.push({uid:Date.now().toString(36)+Math.random().toString(36).slice(2,5),id:l.id,qty:l.qty,sel:JSON.parse(JSON.stringify(l.sel||{})),note:l.note||""});added++} else skipped++;});
   save(); bump();
@@ -467,6 +475,91 @@ function renderReorder(){
   root.innerHTML=`<div class="reorder reveal in"><div class="ro-head"><h3>${T("Pide de nuevo","Order again")} ⚡</h3><small>${T("Tus últimos pedidos, en un toque","Your recent orders, in one tap")}</small></div><div class="olist2">${os.map(orderCard).join("")}</div></div>`;
 }
 document.addEventListener("click",e=>{const b=e.target.closest("[data-acct]");if(b){e.preventDefault();openAcct()}const r=e.target.closest("#reorderRoot [data-reorder], .drawer [data-reorder]");if(r){reorder(r.dataset.reorder)}});
+
+/* ---------------- Store picker ---------------- */
+const sp=document.createElement("div");sp.className="co storep";sp.setAttribute("aria-hidden","true");
+sp.innerHTML='<div class="cz-back"></div><div class="co-sheet sp-sheet" role="dialog" aria-modal="true"></div>';
+document.body.appendChild(sp);
+const sps=$(".sp-sheet",sp);
+let spState={origin:ls.get("lc-origin",null),msg:"",busy:false};
+function km(a,b){const R=6371,r=x=>x*Math.PI/180,dl=r(b[0]-a[0]),dn=r(b[1]-a[1]);const h=Math.sin(dl/2)**2+Math.cos(r(a[0]))*Math.cos(r(b[0]))*Math.sin(dn/2)**2;return 2*R*Math.asin(Math.sqrt(h))}
+const mi=k=>k*0.621371;
+function storeOpen(st){const n=miami(),[o,c]=st.hours[n.dow];return n.min>=o*60&&n.min<c*60}
+function todayHours(st){const n=miami(),[o,c]=st.hours[n.dow];return `${tfmt(o*60)} – ${tfmt((c%24)*60)}`}
+function sortedStores(){
+  const o=spState.origin; const list=D.STORES.map(st=>({st,d:o?mi(km(o,[st.lat,st.lng])):null}));
+  if(o) list.sort((a,b)=>a.d-b.d);
+  return list;
+}
+function openStores(){renderSp();sp.classList.add("open");sp.setAttribute("aria-hidden","false");lock(true)}
+function closeStores(){sp.classList.remove("open");sp.setAttribute("aria-hidden","true");if(!co.classList.contains("open")&&!dw.classList.contains("open"))lock(false)}
+$(".cz-back",sp).addEventListener("click",closeStores);
+function renderSp(){
+  const cur=store().id, list=sortedStores(), nearest=spState.origin?list[0].st.id:null;
+  sps.innerHTML=`<button class="cz-x" aria-label="Cerrar">✕</button>
+  <h3>${T("¿Dónde recoges?","Where are you picking up?")}</h3>
+  <p class="muted" style="margin:-.6rem 0 1rem">${T("La familia Reyes tiene 4 tiendas en Florida. Elige la tuya.","The Reyes family has 4 stores in Florida. Pick yours.")}</p>
+  <div class="sp-find">
+    <button class="btn solid sm" data-geo ${spState.busy?"disabled":""}>📍 ${spState.busy?T("Buscando…","Locating…"):T("Usar mi ubicación","Use my location")}</button>
+    <span class="or-s">${T("o","or")}</span>
+    <label class="zip"><input inputmode="numeric" maxlength="5" placeholder="${T("Código postal","ZIP code")}" data-zip aria-label="ZIP"><button data-zipgo aria-label="${T("Buscar","Search")}">→</button></label>
+  </div>
+  ${spState.msg?`<p class="sp-msg">${esc(spState.msg)}</p>`:""}
+  <div class="sp-list">${list.map(({st,d})=>{const op=storeOpen(st);return `<button class="sp-card ${st.id===cur?"on":""}" data-store="${st.id}">
+    <div class="sp-top"><b>${esc(st.name)}</b>${st.id===nearest?`<span class="near">${T("Más cercana","Nearest")}</span>`:""}${st.id===cur?`<span class="sel">✓ ${T("Seleccionada","Selected")}</span>`:""}</div>
+    <div class="sp-city">${esc(st.city)}${d!=null?` · <b>${d<10?d.toFixed(1):Math.round(d)} mi</b>`:""}</div>
+    <div class="sp-addr">${esc(st.addr)}, ${esc(st.cityLine)}</div>
+    <div class="sp-meta"><span class="st-dot ${op?"open":""}"></span>${op?T("Abierto","Open"):T("Cerrado","Closed")} · ${T("Hoy","Today")} ${todayHours(st)}${st.hoursOk?"":" *"} · ⭐ ${st.rating}</div>
+  </button>`}).join("")}</div>
+  ${D.STORES.some(x=>!x.hoursOk)?`<p class="sp-note">* ${T("Horario por confirmar.","Hours to be confirmed.")}</p>`:""}`;
+}
+function setOrigin(o,msg){spState.origin=o;spState.msg=msg||"";ls.set("lc-origin",o);renderSp();}
+function storeChanged(silent){
+  renderDrawer(); renderOrderStrip(); if(window.LC_updateOpen) window.LC_updateOpen();
+  if(co.classList.contains("open")&&ck&&ck.step<4){ if(ck.mode==="later"&&!dayAllowed(ck.day)) ck.day=firstDay(); ck.min=null; if(ck.mode==="asap"&&!asapOK()) ck.mode="later"; renderCo(); }
+  if(!silent) showToast(T("Recoger en ","Pickup at ")+storeLabel(store())+" ✓");
+}
+sps.addEventListener("click",e=>{
+  if(e.target.closest(".cz-x")){closeStores();return}
+  const c=e.target.closest("[data-store]");
+  if(c){ls.set("lc-store",c.dataset.store);ls.set("lc-store-chosen",true);closeStores();storeChanged();return}
+  if(e.target.closest("[data-geo]")){
+    if(!navigator.geolocation){spState.msg=T("Tu navegador no comparte la ubicación. Usa tu código postal.","Your browser can't share location. Use your ZIP code.");renderSp();return}
+    spState.busy=true;renderSp();
+    navigator.geolocation.getCurrentPosition(pos=>{spState.busy=false;setOrigin([pos.coords.latitude,pos.coords.longitude],T("Ordenadas por distancia desde ti.","Sorted by distance from you."))},
+      ()=>{spState.busy=false;spState.msg=T("No pudimos obtener tu ubicación. Escribe tu código postal.","We couldn't get your location. Type your ZIP code.");renderSp()},{timeout:8000,maximumAge:600000});
+    return;
+  }
+  if(e.target.closest("[data-zipgo]")) zipGo();
+});
+sps.addEventListener("keydown",e=>{if(e.target.matches("[data-zip]")&&e.key==="Enter")zipGo()});
+sps.addEventListener("input",e=>{if(e.target.matches("[data-zip]")){e.target.value=e.target.value.replace(/\D/g,"").slice(0,5);if(e.target.value.length===5)zipGo()}});
+function zipGo(){
+  const z=($("[data-zip]",sps)||{}).value||"";
+  if(z.length!==5){spState.msg=T("Escribe un código postal de 5 dígitos.","Enter a 5-digit ZIP code.");renderSp();return}
+  const c=D.ZIP3[z.slice(0,3)];
+  if(!c){spState.msg=T("Ese código está fuera de Florida. Elige la tienda en la lista.","That ZIP is outside Florida. Pick a store from the list.");renderSp();return}
+  setOrigin(c,T(`Ordenadas por distancia desde ${z}.`,`Sorted by distance from ${z}.`));
+}
+document.addEventListener("click",e=>{const b=e.target.closest("[data-store-open]");if(b){e.preventDefault();openStores()}});
+function renderOrderStrip(){
+  $$("[data-store-chip]").forEach(el=>{const st=store();el.innerHTML=`📍 <span>${T("Recoger en","Pickup at")} <b>${esc(st.city)}</b></span> <u>${T("Cambiar","Change")}</u>`;});
+  $$("[data-store-list]").forEach(renderStoreList);
+  const ask=$("[data-store-ask]");
+  if(ask){ if(ls.get("lc-store-chosen",false)){ask.hidden=true;ask.innerHTML="";} else { const st=store(); ask.hidden=false;
+    ask.innerHTML=`<span class="sa-ico">📍</span><div><b>${T("¿Recoges en ","Picking up at ")}${esc(storeLabel(st))}?</b><small>${esc(st.addr)}, ${esc(st.cityLine)}</small></div><div class="sa-btns"><button class="btn solid sm" data-ask-yes>${T("Sí","Yes")}</button><button class="btn sm" data-store-open>${T("Cambiar tienda","Change store")}</button></div>`; } }
+}
+document.addEventListener("click",e=>{if(e.target.closest("[data-ask-yes]")){ls.set("lc-store-chosen",true);renderOrderStrip();showToast(T("¡Listo! Recoger en ","Done! Pickup at ")+storeLabel(store()))}});
+function renderStoreList(root){
+  root.innerHTML=D.STORES.map(st=>`<div class="loc-card reveal in">
+    <div class="loc-h"><b>${esc(st.name)}</b><span>${esc(st.city)}</span></div>
+    <p>${esc(st.addr)}<br>${esc(st.cityLine)}</p>
+    <p class="loc-m"><span class="st-dot ${storeOpen(st)?"open":""}"></span>${storeOpen(st)?T("Abierto ahora","Open now"):T("Cerrado","Closed")} · ${T("Hoy","Today")} ${todayHours(st)}${st.hoursOk?"":" *"}</p>
+    <div class="loc-a"><a href="tel:+1${st.phone.replace(/\D/g,"")}">${esc(st.phone)}</a><a href="${mapsUrl(st)}" target="_blank" rel="noopener">${T("Cómo llegar","Directions")} ↗</a></div>
+    <button class="btn solid sm" data-order-store="${st.id}">${T("Ordenar aquí","Order here")} <span class="arr">→</span></button>
+  </div>`).join("");
+}
+document.addEventListener("click",e=>{const b=e.target.closest("[data-order-store]");if(b){ls.set("lc-store",b.dataset.orderStore);ls.set("lc-store-chosen",true);location.href=document.baseURI.replace(/[^/]*$/,"")+"ordenar/"}});
 
 /* ---------------- Page renderers ---------------- */
 function cardHTML(it){
@@ -498,9 +591,9 @@ document.addEventListener("click",e=>{
 });
 document.addEventListener("keydown",e=>{if(e.key==="Enter"&&e.target.classList&&e.target.classList.contains("ocard"))openCz(e.target.dataset.id,$(".add",e.target))});
 
-function renderAll(){renderOrderPage();renderMenuPage();renderClub();renderReorder();renderAcctBtn();renderFab();renderDrawer();if(acc.classList.contains("open"))renderAcct();
+function renderAll(){renderOrderStrip();renderOrderPage();renderMenuPage();renderClub();renderReorder();renderAcctBtn();renderFab();renderDrawer();if(acc.classList.contains("open"))renderAcct();
   if(window.LC_observe) window.LC_observe(); if(window.LC_refreshTabs) window.LC_refreshTabs();}
 renderAll();
-document.addEventListener("lc:lang",()=>{renderAll(); if(cz.classList.contains("open"))renderCz(); if(co.classList.contains("open")&&ck&&ck.step<4)renderCo();});
+document.addEventListener("lc:lang",()=>{renderAll();if(sp.classList.contains("open"))renderSp(); if(cz.classList.contains("open"))renderCz(); if(co.classList.contains("open")&&ck&&ck.step<4)renderCo();});
 window.LC_openCart=openDrawer;
 })();

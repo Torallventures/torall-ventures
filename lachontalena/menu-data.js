@@ -63,5 +63,14 @@ const ITEMS=[
 ];
 const SOCIAL={tiktok:"https://www.tiktok.com/@el_rey_fritanguero_nica",instagram:"https://www.instagram.com/fritangas_managuitas_usa",facebook:"https://www.facebook.com/share/1F8cXYR9hw/"};
 const CLUB={goal:10,reward:15};
-return {G,CATS,ITEMS,TAX:0.07,SOCIAL,CLUB};
+const H=(a,b,c)=>({0:a,1:a,2:a,3:a,4:a,5:b,6:c});
+const STORES=[
+  {id:"hialeah",name:"La Chontaleña",city:"Hialeah",addr:"1366 E 4th Ave",cityLine:"Hialeah, FL 33010",phone:"(305) 603-9352",lat:25.83438,lng:-80.27390,hours:H([8,21],[8,22],[8,23]),hoursOk:true,rating:"4.6"},
+  {id:"kissimmee",name:"Managüita #1",city:"Kissimmee",addr:"1606 W Vine St",cityLine:"Kissimmee, FL 34741",phone:"(407) 530-7992",lat:28.30426,lng:-81.42035,hours:H([7,22],[7,23],[7,24]),hoursOk:true,rating:"4.7"},
+  {id:"haines",name:"Managüita #2",city:"Haines City",addr:"2255 US Hwy 17-92 N",cityLine:"Haines City, FL 33844",phone:"(407) 530-7199",lat:28.12841,lng:-81.61488,hours:H([7,22],[7,23],[7,24]),hoursOk:false,rating:"4.6"},
+  {id:"orlando",name:"Managüita #3",city:"Orlando",addr:"623 N Pine Hills Rd",cityLine:"Orlando, FL 32808",phone:"(407) 530-6602",lat:28.54987,lng:-81.44725,hours:H([7,22],[7,23],[7,24]),hoursOk:false,rating:"4.6"}
+];
+/* Approximate centers of Florida ZIP prefixes, used to guess the nearest store from a ZIP code */
+const ZIP3={"320":[30.33,-81.66],"321":[29.21,-81.02],"322":[30.33,-81.66],"323":[30.44,-84.28],"324":[30.16,-85.66],"325":[30.42,-87.22],"326":[29.65,-82.32],"327":[28.67,-81.21],"328":[28.54,-81.38],"329":[28.08,-80.61],"330":[25.94,-80.24],"331":[25.76,-80.30],"332":[25.77,-80.19],"333":[26.12,-80.14],"334":[26.71,-80.06],"335":[27.95,-82.46],"336":[27.95,-82.46],"337":[27.77,-82.64],"338":[28.04,-81.95],"339":[26.64,-81.87],"341":[26.14,-81.79],"342":[27.34,-82.53],"344":[29.19,-82.14],"346":[28.24,-82.72],"347":[28.29,-81.41],"349":[27.45,-80.33]};
+return {G,CATS,ITEMS,TAX:0.07,SOCIAL,CLUB,STORES,ZIP3};
 })();

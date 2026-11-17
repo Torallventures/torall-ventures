@@ -234,14 +234,17 @@ if(matchMedia("(hover:hover)").matches){
 
 /* ---------------- Hours / open now ---------------- */
 // 0=Sun..6=Sat  [open, close] in hours (24h), America/New_York
-const HOURS={0:[8,21],1:[8,21],2:[8,21],3:[8,21],4:[8,21],5:[8,22],6:[8,23]};
+const HOURS_DEF={0:[8,21],1:[8,21],2:[8,21],3:[8,21],4:[8,21],5:[8,22],6:[8,23]};
+function curStore(){const D=window.LC_DATA;if(!D||!D.STORES)return null;let id=null;try{id=JSON.parse(localStorage.getItem("lc-store"))}catch(e){}return D.STORES.find(x=>x.id===id)||D.STORES[0]}
+const HOURS=new Proxy({},{get:(_,k)=>{const st=curStore();return (st?st.hours:HOURS_DEF)[k]}});
+window.LC_updateOpen=()=>{updateOpen();markToday()};
 function nowMiami(){
   const f=new Intl.DateTimeFormat("en-US",{timeZone:"America/New_York",weekday:"short",hour:"numeric",minute:"numeric",hour12:false}).formatToParts(new Date());
   const g=t=>f.find(p=>p.type===t).value;
   const d=["Sun","Mon","Tue","Wed","Thu","Fri","Sat"].indexOf(g("weekday"));
   return {d,h:(parseInt(g("hour"))%24)+parseInt(g("minute"))/60};
 }
-const fmt=h=>{const ap=h>=12?"PM":"AM";const hh=((h+11)%12)+1;return hh+" "+ap};
+const fmt=h=>{h=h%24;const ap=h>=12?"PM":"AM";const hh=((h+11)%12)+1;return hh+" "+ap};
 function updateOpen(){
   const {d,h}=nowMiami(),[o,c]=HOURS[d],open=h>=o&&h<c;
   $$(".open-pill").forEach(p=>{
@@ -266,8 +269,9 @@ if(tabs){
     if(t) scrollTo({top:t.getBoundingClientRect().top+scrollY-150,behavior:"smooth"});
   }));
   const spy=()=>{
-    const cats=$$(".cat"); if(!cats.length) return;
+    const cats=$$(".cat[id]"); if(!cats.length) return;
     let cur=cats[0];cats.forEach(c=>{if(c.getBoundingClientRect().top<220)cur=c});
+    if(!btns.some(b=>b.dataset.target===cur.id)) cur={id:btns[0].dataset.target};
     btns.forEach(b=>b.classList.toggle("on",b.dataset.target===cur.id));
     const on=$("button.on",tabs); if(on){positionPill(); const l=on.offsetLeft-tabs.clientWidth/2+on.offsetWidth/2; tabs.scrollTo({left:l,behavior:"smooth"})}
   };
