@@ -3,27 +3,5 @@
   "buildCommand": "",
   "installCommand": "",
   "outputDirectory": ".",
-  "trailingSlash": true,
-  "redirects": [
-    {
-      "source": "/lachontale%C3%B1a",
-      "destination": "/lachontalena/",
-      "permanent": false
-    },
-    {
-      "source": "/lachontale%C3%B1a/:path*",
-      "destination": "/lachontalena/:path*",
-      "permanent": false
-    },
-    {
-      "source": "/lachontaleña",
-      "destination": "/lachontalena/",
-      "permanent": false
-    },
-    {
-      "source": "/lachontaleña/:path*",
-      "destination": "/lachontalena/:path*",
-      "permanent": false
-    }
-  ]
+  "trailingSlash": true
 }
