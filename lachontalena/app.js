@@ -227,12 +227,6 @@ if(matchMedia("(hover:hover)").matches){
     c.addEventListener("mousemove",e=>{const r=c.getBoundingClientRect(),x=(e.clientX-r.left)/r.width-.5,y=(e.clientY-r.top)/r.height-.5;c.style.transform=`perspective(900px) rotateY(${x*10}deg) rotateX(${-y*10}deg) translateY(-6px)`});
     c.addEventListener("mouseleave",()=>{c.style.transform=""});
   });
-  /* custom cursor */
-  const cur=document.createElement("div");cur.className="cursor";document.body.appendChild(cur);
-  let cx=0,cy=0,tx=0,ty=0;
-  addEventListener("mousemove",e=>{tx=e.clientX;ty=e.clientY});
-  (function loop(){cx+=(tx-cx)*.2;cy+=(ty-cy)*.2;cur.style.left=cx+"px";cur.style.top=cy+"px";requestAnimationFrame(loop)})();
-  document.addEventListener("mouseover",e=>{cur.classList.toggle("big",!!e.target.closest("a,button,[data-tilt],.chip"))});
   /* hero plate follows mouse a little */
   const hp=$(".hero-plate .plate-art");
   if(hp) addEventListener("mousemove",e=>{const x=(e.clientX/innerWidth-.5)*18,y=(e.clientY/innerHeight-.5)*18;hp.parentElement.style.transform=`translate(${x}px,${y}px)`});
