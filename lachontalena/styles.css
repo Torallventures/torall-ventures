@@ -1092,3 +1092,18 @@ body.searching .tabs{opacity:.35;pointer-events:none}
 .sa-chg{font-weight:700;text-decoration:underline;text-underline-offset:3px;padding:.45rem .4rem}
 .sa-x{width:30px;height:30px;border-radius:50%;font-size:.8rem;opacity:.6}
 .store-ask .sa-q b{display:inline;font-family:inherit;font-size:inherit}
+
+/* =================== v11: real hero video =================== */
+body.video-on .hero{min-height:100svh}
+.hero-video{transform:scale(1.04);transition:opacity 1.2s ease,transform 10s ease-out;background:#2A1A12 center/cover no-repeat}
+body.video-on .hero-video{opacity:1;transform:scale(1)}
+body.video-on .hero-shade{background:linear-gradient(90deg,rgba(32,20,13,.86) 0%,rgba(32,20,13,.55) 48%,rgba(32,20,13,.15) 100%),linear-gradient(0deg,rgba(32,20,13,.7),transparent 35%)}
+body.video-on .hero-plate .badge{left:auto;right:4%;top:2%}
+body.video-on .hero-plate .t1{top:auto;bottom:6%;right:2%}
+body.video-on .hero .hills .layer:not(:last-child){opacity:0}
+@media (max-width:960px){
+  body.video-on .hero{padding-bottom:6rem;display:flex;align-items:flex-end}
+  body.video-on .hero-shade{background:linear-gradient(0deg,rgba(32,20,13,.92) 0%,rgba(32,20,13,.6) 55%,rgba(32,20,13,.25) 100%)}
+  body.video-on .hero-plate{display:none}
+}
+@media (max-width:960px){body.video-on .scroll-cue{display:none}}

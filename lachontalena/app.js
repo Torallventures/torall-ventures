@@ -305,9 +305,16 @@ if(slides.length){
   setInterval(()=>{ if(document.body.classList.contains("video-on")) return; slides[si].classList.remove("on"); decks.forEach(d=>d[si]&&d[si].classList.remove("on")); si=(si+1)%slides.length; slides[si].classList.add("on"); decks.forEach(d=>d[si]&&d[si].classList.add("on")); },5500);
 }
 if(hv){
+  const mob=matchMedia("(max-width:760px)").matches;
+  const reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+  hv.poster=mob?hv.dataset.posterM:hv.dataset.posterD;
   const on=()=>{document.body.classList.add("has-video","video-on")};
-  if(hv.readyState>=2) on(); else hv.addEventListener("loadeddata",on,{once:true});
-  const src=$("source",hv); src&&src.addEventListener("error",()=>hv.remove());
+  hv.addEventListener("loadeddata",on,{once:true});
+  hv.addEventListener("error",()=>hv.remove(),{once:true});
+  if(reduce){ hv.removeAttribute("autoplay"); hv.style.backgroundImage=`url(${hv.poster})`; on(); }
+  else { hv.src=mob?hv.dataset.srcM:hv.dataset.srcD; hv.load(); const p=hv.play(); p&&p.catch(()=>{}); }
+  // pause when hero scrolled away (saves battery), resume when back
+  if("IntersectionObserver" in window){ new IntersectionObserver(es=>es.forEach(e=>{ if(reduce) return; e.isIntersecting?hv.play().catch(()=>{}):hv.pause(); }),{threshold:.05}).observe(hv); }
 }
 const fl=$(".floaters");
 if(fl){
