@@ -221,64 +221,77 @@ function club(){return ls.get("lc-club",null)}
 function canRedeem(){const c=club();return c&&c.stamps>=D.CLUB.goal}
 function tipAmt(s){if(ck.tip==="custom"){const v=parseFloat(String(ck.tipCustom).replace(/[^0-9.]/g,""));return isFinite(v)?Math.min(v,999):0}return s*ck.tip}
 function totals(){const s=subtotal(),disc=(ck.redeem&&canRedeem())?Math.min(D.CLUB.reward,s):0,base=s-disc,tax=base*D.TAX,tip=tipAmt(s);return {s,disc,tax,tip,t:base+tax+tip}}
-function stepHead(){
-  const names=[T("Hora","Time"),T("Tus datos","Details"),T("Pago","Payment")];
-  return `<div class="steps">${names.map((n,i)=>`<div class="st ${ck.step>i+1?"done":""} ${ck.step===i+1?"on":""}"><i>${ck.step>i+1?"✓":i+1}</i><span>${n}</span></div>`).join("")}</div>`;
-}
-function renderCo(){
-  const s=ck.step; let body="";
-  if(s===1){
-    const ok=asapOK();
-    const st=store();
-    body=`<div class="co-store"><span class="pin">📍</span><div><small>${T("Recoger en","Pickup at")}</small><b>${esc(storeLabel(st))}</b><span>${esc(st.addr)}, ${esc(st.cityLine)}</span></div><button class="lk" data-store-open>${T("Cambiar","Change")}</button></div>
-    <h3>${T("¿Cuándo lo quieres?","When do you want it?")}</h3>
-    <div class="modes">
-      <button class="mode ${ck.mode==="asap"?"on":""} ${ok?"":"off"}" data-m="asap" ${ok?"":"disabled"}><b>${T("Lo antes posible","ASAP")}</b><span>${ok?T("Listo en ~20–25 min","Ready in ~20–25 min"):(cartDays().length<7?T("Tu pedido tiene platos de fin de semana","Your order has weekend-only dishes"):T("Cerrado ahora","Closed right now"))}</span></button>
-      <button class="mode ${ck.mode==="later"?"on":""}" data-m="later"><b>${T("Programar","Schedule")}</b><span>${T("Elige día y hora","Pick a day & time")}</span></button>
-    </div>
-    ${ck.mode==="later"?`<div class="days">${[0,1,2,3,4,5,6].map(o=>`<button class="day ${ck.day===o?"on":""}" data-d="${o}" ${dayAllowed(o)?"":"disabled"}>${dayName(o)}</button>`).join("")}</div>
-      <div class="slots">${slots(ck.day).map(m=>`<button class="slot ${ck.min===m?"on":""}" data-s="${m}">${tfmt(m)}</button>`).join("")||`<p class="muted">${T("No quedan horarios hoy.","No times left today.")}</p>`}</div>`:""}`;
-  }
-  if(s===2){
-    body=`<h3>${T("¿A nombre de quién?","Who's picking up?")}</h3>
-    <div class="fields">
-      <label class="fl"><span>${T("Nombre","Name")} *</span><input name="name" autocomplete="name" value="${esc(ck.name)}"></label>
-      <label class="fl"><span>${T("Teléfono","Phone")} *</span><input name="phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="(305) 555-0123" value="${esc(ck.phone)}"></label>
-      <label class="fl full"><span>Email (${T("opcional","optional")})</span><input name="email" type="email" autocomplete="email" value="${esc(ck.email)}"></label>
-      <label class="cbx full"><input type="checkbox" name="sms" ${ck.sms?"checked":""}><span>${T("Avísame por texto cuando mi pedido esté listo","Text me when my order is ready")}</span></label>
-      ${club()?`<div class="club-mini full">👑 ${T("Club del Rey","Club del Rey")}: <b>${club().stamps}/${D.CLUB.goal}</b> ${T("coronas — este pedido suma 1","crowns — this order adds 1")}</div>`:`<label class="cbx full club-join"><input type="checkbox" name="join" ${ck.join?"checked":""}><span>👑 <b>${T("Únete al Club del Rey","Join Club del Rey")}</b> — ${T(`gana una corona por pedido; a las ${D.CLUB.goal}, $${D.CLUB.reward} de descuento.`,`earn a crown per order; at ${D.CLUB.goal}, get $${D.CLUB.reward} off.`)}</span></label>`}
-    </div><p class="err" hidden></p>`;
-  }
-  if(s===3){
-    const t=totals();
-    body=`<h3>${T("Pago","Payment")}</h3>
-    <p class="secure">🔒 ${T("Pago seguro en línea — tu pedido entra a la cocina ya pagado.","Secure online payment — your order goes to the kitchen already paid.")}</p>
-    <div class="pays three">
-      <button class="pay ${ck.pay==="card"?"on":""}" data-p="card"><b>💳 ${T("Tarjeta","Card")}</b><span>Visa · Mastercard · Amex</span></button>
-      <button class="pay ${ck.pay==="apple"?"on":""}" data-p="apple"><b> Apple Pay</b><span>${T("En iPhone","On iPhone")}</span></button>
-      <button class="pay ${ck.pay==="google"?"on":""}" data-p="google"><b>G Pay</b><span>${T("En Android","On Android")}</span></button>
-    </div>
-    <div class="demo-note">${T("En el sitio real, aquí se abre el pago seguro (Square, Stripe o Toast). En este demo no se cobra nada.","On the live site this opens secure checkout (Square, Stripe or Toast). Nothing is charged in this demo.")}</div>
-    ${canRedeem()?`<label class="cbx redeem"><input type="checkbox" data-redeem ${ck.redeem?"checked":""}><span>👑 ${T(`¡Tienes ${D.CLUB.goal} coronas! Usa tus $${D.CLUB.reward} de descuento`,`You have ${D.CLUB.goal} crowns! Use your $${D.CLUB.reward} off`)}</span></label>`:""}
-    <h4 class="sub">${T("¿Propina para el equipo?","Tip the team?")}</h4>
-    <div class="tips">${[0,0.10,0.15,0.20].map(p=>`<button class="tip ${ck.tip===p?"on":""}" data-t="${p}">${p?Math.round(p*100)+"%":T("Ahora no","Not now")}<small>${p?money(subtotal()*p):""}</small></button>`).join("")}<button class="tip ${ck.tip==="custom"?"on":""}" data-t="custom">${T("Otro","Custom")}<small>$</small></button></div>
-    ${ck.tip==="custom"?`<label class="tip-custom"><span>$</span><input type="text" inputmode="decimal" data-tipc placeholder="0.00" value="${esc(ck.tipCustom)}" aria-label="${T("Propina personalizada","Custom tip")}"></label>`:""}
-    <div class="sum">
+function timeLabel(){return ck.mode==="asap"?T("Lo antes posible · ~20–25 min","ASAP · ~20–25 min"):(ck.min!=null?slotLabel(ck.day,ck.min):T("Elige una hora","Pick a time"))}
+function coSum(){const t=totals();return `
       <div class="row"><span>Subtotal</span><span>${money(t.s)}</span></div>
       ${t.disc?`<div class="row club-row"><span>👑 ${T("Recompensa del Club","Club reward")}</span><span>−${money(t.disc)}</span></div>`:""}
       <div class="row"><span>${T("Impuesto (7%)","Tax (7%)")}</span><span>${money(t.tax)}</span></div>
-      <div class="row" data-k="tip"><span>${T("Propina","Tip")}</span><span>${money(t.tip)}</span></div>
-      <div class="row big"><span>Total</span><b>${money(t.t)}</b></div>
+      <div class="row"><span>${T("Propina","Tip")}</span><span>${money(t.tip)}</span></div>
+      <div class="row big"><span>Total</span><b>${money(t.t)}</b></div>`}
+function refreshTotals(){const sm=$(".sum",cos);if(sm)sm.innerHTML=coSum();const t=totals();$$(".pay-total",cos).forEach(e=>e.textContent=money(t.t))}
+function renderCo(){
+  if(ck.step===4){renderDone();return}
+  const keep=cos.scrollTop, ok=asapOK(), st=store(), u=user(), t=totals();
+  const editInfo=ck.editInfo||!u||!ck.name||ck.phone.replace(/\D/g,"").length<10;
+  cos.innerHTML=`<button class="cz-x" aria-label="${T("Cerrar","Close")}">✕</button>
+  <div class="co-body one">
+    <h3 class="co-title">${T("Finalizar pedido","Checkout")}</h3>
+    <p class="co-items">${count()} ${count()===1?T("artículo","item"):T("artículos","items")} · ${money(t.s)}</p>
+
+    <div class="express">
+      <button class="xpay apple" data-xpay="apple" aria-label="Apple Pay"><svg viewBox="0 0 24 24" width="18"><path fill="currentColor" d="M16.4 12.6c0-2.4 2-3.6 2.1-3.7-1.2-1.7-3-1.9-3.6-2-1.5-.2-3 .9-3.8.9s-2-.9-3.3-.9c-1.7 0-3.3 1-4.2 2.5-1.8 3.1-.5 7.7 1.3 10.2.9 1.2 1.9 2.6 3.2 2.6 1.3-.1 1.8-.8 3.3-.8s2 .8 3.3.8c1.4 0 2.3-1.3 3.1-2.5 1-1.4 1.4-2.8 1.4-2.9 0 0-2.8-1-2.8-4.2zM14 5.3c.7-.8 1.2-2 1-3.1-1 0-2.2.7-2.9 1.5-.6.7-1.2 1.9-1 3 1.1.1 2.2-.6 2.9-1.4z"/></svg> Pay</button>
+      <button class="xpay google" data-xpay="google" aria-label="Google Pay"><b>G</b> Pay</button>
     </div>
-    <p class="legal-line">${T("Al hacer tu pedido aceptas los","By placing your order you agree to the")} <a href="terminos/" target="_blank">${T("Términos","Terms")}</a> ${T("y la","and")} <a href="privacidad/" target="_blank">${T("Política de privacidad","Privacy Policy")}</a>.</p>
-    <div class="recap"><b>📍</b> ${esc(storeLabel(store()))} · <b>${T("Recoger","Pickup")}:</b> ${ck.mode==="asap"?T("Lo antes posible (~20–25 min)","ASAP (~20–25 min)"):slotLabel(ck.day,ck.min)} · <b>${esc(ck.name)}</b></div>`;
-  }
-  if(s===4){
-    const o=ck.order;
-    cos.innerHTML=`<div class="done">
+    <div class="or"><span>${T("o completa abajo","or fill in below")}</span></div>
+
+    <section class="co-sec" id="sec-store">
+      <div class="sec-h"><span class="sn">1</span><h4>${T("Recoger en","Pickup at")}</h4></div>
+      <div class="co-store"><span class="pin">📍</span><div><b>${esc(storeLabel(st))}</b><span>${esc(st.addr)}, ${esc(st.cityLine)}</span></div><button class="lk" data-store-open>${T("Cambiar","Change")}</button></div>
+    </section>
+
+    <section class="co-sec" id="sec-time">
+      <div class="sec-h"><span class="sn">2</span><h4>${T("¿Cuándo?","When?")}</h4></div>
+      <div class="modes">
+        <button class="mode ${ck.mode==="asap"?"on":""} ${ok?"":"off"}" data-m="asap" ${ok?"":"disabled"} aria-pressed="${ck.mode==="asap"}"><b>${T("Lo antes posible","ASAP")}</b><span>${ok?T("Listo en ~20–25 min","Ready in ~20–25 min"):(cartDays().length<7?T("Tu pedido tiene platos de días específicos","Your order has day-specific dishes"):T("Cerrado ahora","Closed right now"))}</span></button>
+        <button class="mode ${ck.mode==="later"?"on":""}" data-m="later" aria-pressed="${ck.mode==="later"}"><b>${T("Programar","Schedule")}</b><span>${T("Elige día y hora","Pick a day & time")}</span></button>
+      </div>
+      ${ck.mode==="later"?`<div class="days">${[0,1,2,3,4,5,6].map(o=>`<button class="day ${ck.day===o?"on":""}" data-d="${o}" ${dayAllowed(o)?"":"disabled"}>${dayName(o)}</button>`).join("")}</div>
+        <div class="slots">${slots(ck.day).map(m=>`<button class="slot ${ck.min===m?"on":""}" data-s="${m}">${tfmt(m)}</button>`).join("")||`<p class="muted">${T("No quedan horarios este día.","No times left this day.")}</p>`}</div>`:""}
+      <p class="err" data-err="time" hidden></p>
+    </section>
+
+    <section class="co-sec" id="sec-info">
+      <div class="sec-h"><span class="sn">3</span><h4>${T("Tus datos","Your details")}</h4></div>
+      ${editInfo?`<div class="fields">
+        <label class="fl"><span>${T("Nombre","Name")} *</span><input name="name" autocomplete="name" value="${esc(ck.name)}"></label>
+        <label class="fl"><span>${T("Teléfono","Phone")} *</span><input name="phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="(305) 555-0123" value="${esc(ck.phone)}"></label>
+      </div>`:`<div class="me-row"><span class="avatar sm">${esc((ck.name.trim()[0]||"?").toUpperCase())}</span><div><b>${esc(ck.name)}</b><small>${esc(ck.phone)}</small></div><button class="lk" data-edit-info>${T("Editar","Edit")}</button></div>`}
+      <label class="cbx"><input type="checkbox" name="sms" ${ck.sms?"checked":""}><span>${T("Avísame por texto cuando esté listo","Text me when it's ready")}</span></label>
+      ${club()?`<div class="club-mini">👑 Club del Rey: <b>${club().stamps}/${D.CLUB.goal}</b> ${T("coronas — este pedido suma 1","crowns — this order adds 1")}</div>`:`<label class="cbx club-join"><input type="checkbox" name="join" ${ck.join?"checked":""}><span>👑 <b>${T("Únete al Club del Rey","Join Club del Rey")}</b> — ${T(`1 corona por pedido; a las ${D.CLUB.goal}, $${D.CLUB.reward} de descuento.`,`1 crown per order; at ${D.CLUB.goal}, $${D.CLUB.reward} off.`)}</span></label>`}
+      ${canRedeem()?`<label class="cbx redeem"><input type="checkbox" data-redeem ${ck.redeem?"checked":""}><span>👑 ${T(`¡Tienes ${D.CLUB.goal} coronas! Usa tus $${D.CLUB.reward} de descuento`,`You have ${D.CLUB.goal} crowns! Use your $${D.CLUB.reward} off`)}</span></label>`:""}
+      <p class="err" data-err="info" hidden></p>
+    </section>
+
+    <section class="co-sec" id="sec-pay">
+      <div class="sec-h"><span class="sn">4</span><h4>${T("Propina y pago","Tip & payment")}</h4></div>
+      <div class="tips">${[0,0.10,0.15,0.20].map(p=>`<button class="tip ${ck.tip===p?"on":""}" data-t="${p}">${p?Math.round(p*100)+"%":T("Ahora no","Not now")}<small>${p?money(subtotal()*p):""}</small></button>`).join("")}<button class="tip ${ck.tip==="custom"?"on":""}" data-t="custom">${T("Otro","Custom")}<small>$</small></button></div>
+      ${ck.tip==="custom"?`<label class="tip-custom"><span>$</span><input type="text" inputmode="decimal" data-tipc placeholder="0.00" value="${esc(ck.tipCustom)}" aria-label="${T("Propina personalizada","Custom tip")}"></label>`:""}
+      <div class="card-box"><span>💳</span><div><b>${T("Tarjeta de crédito o débito","Credit or debit card")}</b><small>${T("Se abre el pago seguro al confirmar","Secure payment opens when you confirm")}</small></div><span class="brands">VISA · MC · AMEX</span></div>
+      <div class="sum">${coSum()}</div>
+      <p class="secure">🔒 ${T("Pago seguro — tu pedido entra a la cocina ya pagado.","Secure payment — your order goes to the kitchen already paid.")}</p>
+      <p class="legal-line">${T("Al hacer tu pedido aceptas los","By placing your order you agree to the")} <a href="terminos/" target="_blank">${T("Términos","Terms")}</a> ${T("y la","and")} <a href="privacidad/" target="_blank">${T("Política de privacidad","Privacy Policy")}</a>. ${T("Demo: no se cobra nada.","Demo: nothing is charged.")}</p>
+    </section>
+  </div>
+  <div class="co-foot one"><div class="cf-when"><small>${T("Recoger","Pickup")}</small><b>${esc(timeLabel())}</b></div><button class="btn solid next place">${T("Hacer pedido","Place order")} · <span class="pay-total">${money(t.t)}</span></button></div>`;
+  cos.scrollTop=keep;
+  const dOn=$(".day.on",cos); if(dOn){const r=dOn.parentElement; r.scrollLeft=dOn.offsetLeft-r.clientWidth/2+dOn.offsetWidth/2;}
+}
+function renderDone(){
+  const o=ck.order;
+  cos.innerHTML=`<div class="done">
       <svg class="chk" viewBox="0 0 80 80"><circle cx="40" cy="40" r="36"/><path d="M24 41l11 11 22-24"/></svg>
       <h3>${T("¡Pedido confirmado!","Order confirmed!")}</h3>
-      <p class="ono">${T("Pedido","Order")} <b>#${o.no}</b></p>
+      <p class="ono">${T("Pedido","Order")} <b>#${o.no}</b>${o.pay&&o.pay!=="card"?` · ${o.pay==="apple"?"Apple Pay":"Google Pay"}`:""}</p>
       <div class="when"><small>${T("Listo para recoger","Ready for pickup")}</small><b>${o.when}</b></div>
       <ul class="olist">${o.lines.map(l=>`<li><span>${l.qty}× ${esc(l.name)}</span><span>${money(l.price)}</span></li>`).join("")}<li class="tt"><span>Total</span><b>${money(o.total)}</b></li></ul>
       ${o.club!=null?`<div class="club-done"><span>👑 +1 ${T("corona","crown")}</span><div class="crowns sm">${crownsHTML(o.club)}</div><small>${o.club>=D.CLUB.goal?T("¡Tu próximo pedido tiene descuento!","Your next order has a discount!"):T(`Llevas ${o.club} de ${D.CLUB.goal}`,`${o.club} of ${D.CLUB.goal}`)}</small></div>`:""}
@@ -288,49 +301,50 @@ function renderCo(){
       <p class="sig">👑 ${T("Gracias por tu pedido — El Rey Fritanguero","Thanks for your order — El Rey Fritanguero")} 🇳🇮</p>
       <p class="demo-note">${T("Demo: este pedido no se envió al restaurante.","Demo: this order was not sent to the restaurant.")}</p>
     </div>`;
-    $(".close-done",cos).addEventListener("click",closeCheckout);
-    return;
-  }
-  const nextLbl=s===3?`${T("Hacer pedido","Place order")} · ${money(totals().t)}`:T("Continuar","Continue");
-  cos.innerHTML=`<button class="cz-x" aria-label="Cerrar">✕</button>${stepHead()}<div class="co-body">${body}</div>
-    <div class="co-foot">${s>1?`<button class="btn back">← ${T("Atrás","Back")}</button>`:"<span></span>"}<button class="btn solid next">${nextLbl}</button></div>`;
-  const dOn=$(".day.on",cos); if(dOn){const r=dOn.parentElement; r.scrollLeft=dOn.offsetLeft-r.clientWidth/2+dOn.offsetWidth/2;}
+  $(".close-done",cos).addEventListener("click",closeCheckout);
+  cos.scrollTop=0;
+}
+function syncInfo(){const f=n=>$(`[name=${n}]`,cos);if(f("name"))ck.name=f("name").value.trim();if(f("phone"))ck.phone=f("phone").value.trim();if(f("sms"))ck.sms=f("sms").checked;if(f("join"))ck.join=f("join").checked}
+function flagErr(key,msg,focusSel){const e=$(`[data-err="${key}"]`,cos);if(e){e.hidden=false;e.textContent=msg;const sec=e.closest(".co-sec");sec.classList.remove("shake");void sec.offsetWidth;sec.classList.add("shake","bad");sec.scrollIntoView({behavior:"smooth",block:"center"})}const f=focusSel&&$(focusSel,cos);if(f)setTimeout(()=>f.focus(),350)}
+function placeOrder(pay){
+  syncInfo(); $$(".err",cos).forEach(e=>e.hidden=true); $$(".co-sec.bad",cos).forEach(e=>e.classList.remove("bad"));
+  if(ck.mode==="later"&&ck.min==null){flagErr("time",T("Elige una hora para recoger.","Pick a pickup time."));return}
+  if(!ck.name){if(!$("[name=name]",cos)){ck.editInfo=true;renderCo()}flagErr("info",T("Escribe tu nombre.","Please enter your name."),"[name=name]");return}
+  if(ck.phone.replace(/\D/g,"").length<10){if(!$("[name=phone]",cos)){ck.editInfo=true;renderCo()}flagErr("info",T("Escribe un teléfono válido de 10 dígitos.","Please enter a valid 10-digit phone."),"[name=phone]");return}
+  ls.set("lc-pickup",{mode:ck.mode,day:ck.day,min:ck.min}); ls.set("lc-info",{name:ck.name,phone:ck.phone});
+  const btn=$(".place",cos); if(btn){btn.classList.add("loading");btn.disabled=true}
+  setTimeout(()=>{
+    const t=totals(), st0=store();
+    ck.order={pay,store:st0.id,storeName:storeLabel(st0),storeAddr:st0.addr+", "+st0.cityLine,maps:mapsUrl(st0),no:"LC-"+Math.floor(1000+Math.random()*9000),when:ck.mode==="asap"?T("En ~20–25 minutos","In ~20–25 minutes"):slotLabel(ck.day,ck.min),
+      lines:cart.map(l=>({qty:l.qty,name:N(ITEM(l.id)),price:linePrice(l)})),total:t.t,sms:ck.sms};
+    let c=club();
+    if(c||ck.join){ c=c||{name:ck.name,phone:ck.phone,stamps:0,sms:false}; if(t.disc) c.stamps-=D.CLUB.goal; c.stamps+=1; ls.set("lc-club",c); ck.order.club=c.stamps; }
+    const hist=orders(); hist.unshift({no:ck.order.no,store:st0.id,date:Date.now(),total:t.t,lines:cart.map(l=>({id:l.id,qty:l.qty,sel:l.sel,note:l.note}))}); ls.set("lc-orders",hist.slice(0,10));
+    const u0=user(); if(u0) ls.set("lc-known-"+u0.phone.replace(/\D/g,""),u0);
+    ck.order.guest=!u0;
+    ls.set("lc-last-order",ck.order); cart=[]; save(); renderClub(); renderReorder();
+    ck.step=4; renderCo();
+  },pay==="card"?700:1100);
 }
 cos.addEventListener("click",e=>{
   if(!ck) return;
   if(e.target.closest(".cz-x")){closeCheckout();return}
-  const m=e.target.closest("[data-m]");if(m&&!m.disabled){ck.mode=m.dataset.m;if(ck.mode==="later"&&!dayAllowed(ck.day))ck.day=firstDay();renderCo();return}
-  const d=e.target.closest("[data-d]");if(d){ck.day=+d.dataset.d;ck.min=null;renderCo();return}
-  const sl=e.target.closest("[data-s]");if(sl){ck.min=+sl.dataset.s;$$(".slot",cos).forEach(b=>b.classList.toggle("on",b===sl));return}
-  const p=e.target.closest("[data-p]");if(p){ck.pay=p.dataset.p;renderCo();return}
-  const t=e.target.closest("[data-t]");if(t){ck.tip=t.dataset.t==="custom"?"custom":+t.dataset.t;renderCo();if(ck.tip==="custom"){const i=$("[data-tipc]",cos);i&&i.focus()}return}
-  const rd=e.target.closest("[data-redeem]");if(rd){ck.redeem=rd.checked;renderCo();return}
-  if(e.target.closest(".back")){ck.step--;renderCo();return}
-  if(e.target.closest(".next")){
-    if(ck.step===1){ if(ck.mode==="later"&&ck.min==null){const s=$(".slots",cos);s&&s.classList.remove("shake");void (s&&s.offsetWidth);s&&s.classList.add("shake");return} ls.set("lc-pickup",{mode:ck.mode,day:ck.day,min:ck.min}); }
-    if(ck.step===2){
-      const f=n=>$(`[name=${n}]`,cos);ck.name=f("name").value.trim();ck.phone=f("phone").value.trim();ck.email=f("email").value.trim();ck.sms=f("sms").checked;ck.join=f("join")?f("join").checked:false;
-      const err=$(".err",cos);
-      if(!ck.name){err.hidden=false;err.textContent=T("Escribe tu nombre.","Please enter your name.");f("name").focus();return}
-      if(ck.phone.replace(/\D/g,"").length<10){err.hidden=false;err.textContent=T("Escribe un teléfono válido de 10 dígitos.","Please enter a valid 10-digit phone.");f("phone").focus();return}
-      ls.set("lc-info",{name:ck.name,phone:ck.phone,email:ck.email});
-    }
-    if(ck.step===3){
-      const t=totals();
-      const st0=store();
-      ck.order={store:st0.id,storeName:storeLabel(st0),storeAddr:st0.addr+", "+st0.cityLine,maps:mapsUrl(st0),no:"LC-"+Math.floor(1000+Math.random()*9000),when:ck.mode==="asap"?T("En ~20–25 minutos","In ~20–25 minutes"):slotLabel(ck.day,ck.min),
-        lines:cart.map(l=>({qty:l.qty,name:N(ITEM(l.id)),price:linePrice(l)})),total:t.t,sms:ck.sms};
-      let c=club();
-      if(c||ck.join){ c=c||{name:ck.name,phone:ck.phone,stamps:0,sms:false}; if(t.disc) c.stamps-=D.CLUB.goal; c.stamps+=1; ls.set("lc-club",c); ck.order.club=c.stamps; }
-      const hist=orders(); hist.unshift({no:ck.order.no,store:st0.id,date:Date.now(),total:t.t,lines:cart.map(l=>({id:l.id,qty:l.qty,sel:l.sel,note:l.note}))}); ls.set("lc-orders",hist.slice(0,10));
-      const u0=user(); if(u0) ls.set("lc-known-"+u0.phone.replace(/\D/g,""),u0);
-      ck.order.guest=!u0;
-      ls.set("lc-last-order",ck.order); cart=[]; save(); renderClub(); renderReorder();
-    }
-    ck.step++; renderCo(); cos.scrollTop=0;
-  }
+  if(ck.step===4) return;
+  const m=e.target.closest("[data-m]");if(m&&!m.disabled){syncInfo();ck.mode=m.dataset.m;if(ck.mode==="later"&&!dayAllowed(ck.day))ck.day=firstDay();renderCo();return}
+  const d=e.target.closest("[data-d]");if(d){syncInfo();ck.day=+d.dataset.d;ck.min=null;renderCo();return}
+  const sl=e.target.closest("[data-s]");if(sl){ck.min=+sl.dataset.s;$$(".slot",cos).forEach(b=>b.classList.toggle("on",b===sl));const w=$(".cf-when b",cos);if(w)w.textContent=timeLabel();const er=$('[data-err="time"]',cos);if(er)er.hidden=true;$("#sec-time",cos).classList.remove("bad");return}
+  const t=e.target.closest("[data-t]");if(t){syncInfo();ck.tip=t.dataset.t==="custom"?"custom":+t.dataset.t;renderCo();if(ck.tip==="custom"){const i=$("[data-tipc]",cos);i&&i.focus()}return}
+  const rd=e.target.closest("[data-redeem]");if(rd){syncInfo();ck.redeem=rd.checked;renderCo();return}
+  if(e.target.closest("[data-edit-info]")){ck.editInfo=true;renderCo();const n=$("[name=name]",cos);n&&n.focus();return}
+  const x=e.target.closest("[data-xpay]");if(x){placeOrder(x.dataset.xpay);return}
+  if(e.target.closest(".place")){placeOrder("card");return}
 });
-cos.addEventListener("input",e=>{ if(e.target.matches("[data-tipc]")){ let v=e.target.value.replace(/[^0-9.]/g,"").replace(/(\..*)\./g,"$1"); const pt=v.split("."); if(pt[1]&&pt[1].length>2)v=pt[0]+"."+pt[1].slice(0,2); e.target.value=v; ck.tipCustom=v; const t=totals(); const rows=$$(".sum .row span:last-child, .sum .row b",cos); const tipRow=[...$$(".sum .row",cos)].find(r=>r.dataset.k==="tip"); if(tipRow) tipRow.lastElementChild.textContent=money(t.tip); const tot=$(".sum .row.big b",cos); if(tot) tot.textContent=money(t.t); const nx=$(".co .next",cos); if(nx) nx.textContent=`${T("Hacer pedido","Place order")} · ${money(t.t)}`; return; } if(e.target.name==="phone"){ let v=e.target.value.replace(/\D/g,"").slice(0,10); if(v.length>6)v=`(${v.slice(0,3)}) ${v.slice(3,6)}-${v.slice(6)}`;else if(v.length>3)v=`(${v.slice(0,3)}) ${v.slice(3)}`; e.target.value=v; }});
+cos.addEventListener("input",e=>{
+  if(e.target.matches("[data-tipc]")){ let v=e.target.value.replace(/[^0-9.]/g,"").replace(/(\..*)\./g,"$1"); const pt=v.split("."); if(pt[1]&&pt[1].length>2)v=pt[0]+"."+pt[1].slice(0,2); e.target.value=v; ck.tipCustom=v; refreshTotals(); return; }
+  if(e.target.name==="phone"){ let v=e.target.value.replace(/\D/g,"").slice(0,10); if(v.length>6)v=`(${v.slice(0,3)}) ${v.slice(3,6)}-${v.slice(6)}`;else if(v.length>3)v=`(${v.slice(0,3)}) ${v.slice(3)}`; e.target.value=v; }
+  syncInfo();
+});
+cos.addEventListener("change",e=>{if(e.target.type==="checkbox"&&!e.target.matches("[data-redeem]"))syncInfo()});
 
 /* ---------------- Club del Rey ---------------- */
 const CROWN='<svg viewBox="0 0 24 24"><path d="M3 8l4.5 4L12 5l4.5 7L21 8l-2 11H5z"/></svg>';
@@ -516,7 +530,7 @@ function renderSp(){
 function setOrigin(o,msg){spState.origin=o;spState.msg=msg||"";ls.set("lc-origin",o);renderSp();}
 function storeChanged(silent){
   renderDrawer(); renderOrderStrip(); if(window.LC_updateOpen) window.LC_updateOpen();
-  if(co.classList.contains("open")&&ck&&ck.step<4){ if(ck.mode==="later"&&!dayAllowed(ck.day)) ck.day=firstDay(); ck.min=null; if(ck.mode==="asap"&&!asapOK()) ck.mode="later"; renderCo(); }
+  if(co.classList.contains("open")&&ck&&ck.step<4){ syncInfo(); if(ck.mode==="later"&&!dayAllowed(ck.day)) ck.day=firstDay(); ck.min=null; if(ck.mode==="asap"&&!asapOK()) ck.mode="later"; renderCo(); }
   if(!silent) showToast(T("Recoger en ","Pickup at ")+storeLabel(store())+" ✓");
 }
 sps.addEventListener("click",e=>{
@@ -547,7 +561,7 @@ function renderOrderStrip(){
   $$("[data-store-list]").forEach(renderStoreList);
   const ask=$("[data-store-ask]");
   if(ask){ if(ls.get("lc-store-chosen",false)){ask.hidden=true;ask.innerHTML="";} else { const st=store(); ask.hidden=false;
-    ask.innerHTML=`<span class="sa-ico">📍</span><div><b>${T("¿Recoges en ","Picking up at ")}${esc(storeLabel(st))}?</b><small>${esc(st.addr)}, ${esc(st.cityLine)}</small></div><div class="sa-btns"><button class="btn solid sm" data-ask-yes>${T("Sí","Yes")}</button><button class="btn sm" data-store-open>${T("Cambiar tienda","Change store")}</button></div>`; } }
+    ask.innerHTML=`<span class="sa-ico">📍</span><span class="sa-q">${T("¿Recoges en ","Pickup at ")}<b>${esc(st.city)}</b>?</span><button class="sa-yes" data-ask-yes>${T("Sí","Yes")}</button><button class="sa-chg" data-store-open>${T("Cambiar","Change")}</button><button class="sa-x" data-ask-yes aria-label="${T("Cerrar","Close")}">✕</button>`; } }
 }
 document.addEventListener("click",e=>{if(e.target.closest("[data-ask-yes]")){ls.set("lc-store-chosen",true);renderOrderStrip();showToast(T("¡Listo! Recoger en ","Done! Pickup at ")+storeLabel(store()))}});
 function renderStoreList(root){
@@ -561,6 +575,97 @@ function renderStoreList(root){
 }
 document.addEventListener("click",e=>{const b=e.target.closest("[data-order-store]");if(b){ls.set("lc-store",b.dataset.orderStore);ls.set("lc-store-chosen",true);location.href=document.baseURI.replace(/[^/]*$/,"")+"ordenar/"}});
 
+/* ---------------- Smart search (typo tolerant) ---------------- */
+const norm=t=>String(t||"").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"").replace(/[^a-z0-9 ]+/g," ").replace(/\s+/g," ").trim();
+const STOP=new Set(["de","con","la","el","los","las","y","en","a","al","the","with","and","of","para","to","un","una"]);
+const SYN={beef:["res"],steak:["res","asado"],carne:["res","asado"],meat:["res","cerdo","pollo"],pork:["cerdo"],puerco:["cerdo"],chancho:["cerdo"],chicken:["pollo"],gallina:["pollo"],grill:["asado"],grilled:["asado"],
+  soda:["gaseosa","coca","rojita","kola"],pop:["gaseosa"],gaseosa:["coca","rojita","kola","milca"],coke:["coca"],cola:["coca","kola"],water:["agua"],drink:["bebida","refresco","natural"],drinks:["bebida","refresco"],bebida:["natural","gaseosa"],refresco:["natural","chicha","cacao"],fresco:["natural","chicha","cacao","jamaica"],juice:["natural","refresco"],jugo:["natural"],
+  chocolate:["cacao"],cocoa:["cacao"],hibiscus:["jamaica"],tamarind:["tamarindo"],corn:["chicha","tortilla","nacatamal"],maiz:["chicha","tortilla","nacatamal"],
+  plantain:["tajadas","maduro","maduras","verdes"],platano:["tajadas","maduro","maduras"],banana:["maduro","maduras"],chips:["tajadas","verdes"],cheese:["queso","quesillo"],rice:["gallo","pinto","arroz"],beans:["gallo","pinto","frijoles"],frijol:["gallo","pinto"],
+  soup:["sopa"],caldo:["sopa"],tamal:["nacatamal"],tamale:["nacatamal"],taco:["tacos"],enchilada:["enchiladas"],tortilla:["tortillas"],salad:["ensalada"],sunday:["vaho","domingos"],domingo:["vaho"],extra:["extras"],side:["extras"],sides:["extras"]};
+function lev(a,b){ // optimal string alignment distance (handles swapped letters)
+  const m=a.length,n=b.length; if(Math.abs(m-n)>2) return 9;
+  const d=[];for(let i=0;i<=m;i++){d[i]=[i];}for(let j=0;j<=n;j++)d[0][j]=j;
+  for(let i=1;i<=m;i++)for(let j=1;j<=n;j++){const c=a[i-1]===b[j-1]?0:1;d[i][j]=Math.min(d[i-1][j]+1,d[i][j-1]+1,d[i-1][j-1]+c);if(i>1&&j>1&&a[i-1]===b[j-2]&&a[i-2]===b[j-1])d[i][j]=Math.min(d[i][j],d[i-2][j-2]+1)}
+  return d[m][n];
+}
+let IDX=null;
+function buildIdx(){
+  IDX=D.ITEMS.map(it=>{const cat=D.CATS.find(c=>c.id===it.cat)||{};
+    const f=(txt,w)=>norm(txt).split(" ").filter(x=>x&&!STOP.has(x)).map(x=>({w:x,wt:w}));
+    return {it,words:[...f(it.es+" "+it.en,3),...f((cat.es||"")+" "+(cat.en||""),1.5),...f(it.des+" "+it.den,1)]};});
+}
+const stem=x=>x.length>3?x.replace(/(es|s)$/,"").replace(/[oa]$/,""):x;
+function matchTok(q,words,noFuzzy){
+  let best=0,fix=null,fuzzy=false;
+  const allowed=q.length<=3?0:q.length<=6?1:2;
+  for(const {w,wt} of words){
+    let sc=0,isF=false;
+    if(w===q) sc=3;
+    else if(w.startsWith(q)&&q.length>=2) sc=2.4;
+    else if(q.length>=4&&stem(q)===stem(w)){sc=2.8;isF=q.length===w.length}
+    else if(q.length>=4&&w.includes(q)) sc=1.8;
+    else if(allowed&&!noFuzzy){
+      const dl=Math.min(lev(q,w),q.length<w.length?lev(q,w.slice(0,q.length)):9);
+      if(dl<=allowed){sc=1.6-0.35*dl;isF=true}
+    }
+    sc*=wt/3+.67;
+    if(sc>best){best=sc;fix=w;fuzzy=isF}
+  }
+  return {best,fix,fuzzy};
+}
+function search(qraw){
+  if(!IDX) buildIdx();
+  const toks=norm(qraw).split(" ").filter(x=>x&&!STOP.has(x));
+  if(!toks.length) return {res:[],toks};
+  const res=[];const fixes={};
+  // if a word matches something for real, ignore typo-guesses for that word
+  const exact={};for(const q of toks){exact[q]=IDX.some(row=>[q,...(SYN[q]||[])].some(a=>{const r=matchTok(a,row.words,true);return r.best>0}))}
+  for(const row of IDX){
+    let total=0,ok=true;const rf={};
+    for(const q of toks){
+      const alts=[q,...(SYN[q]||[])];
+      let best={best:0};
+      for(const a of alts){const r=matchTok(a,row.words,exact[q]);if(a!==q){r.best*=.9;r.fuzzy=false}if(r.best>best.best)best=r}
+      if(!best.best){ok=false;break}
+      total+=best.best; if(best.fuzzy) rf[q]=best.fix;
+    }
+    if(ok) res.push({it:row.it,score:total+(row.it.tag?.15:0),rf});
+  }
+  res.sort((a,b)=>b.score-a.score);
+  if(res[0]){ Object.assign(fixes,res[0].rf); const cut=res[0].score*.65; for(let i=res.length-1;i>0;i--) if(res[i].score<cut) res.splice(i,1); }
+  const corrected=toks.map(t=>fixes[t]||t).join(" ");
+  return {res:res.map(r=>r.it),toks,didYouMean:Object.keys(fixes).length&&corrected!==toks.join(" ")?corrected:null};
+}
+let sq="";
+const SUGG=["asado","tacos","cacao","nacatamal","quesillo","chicha"];
+function searchBox(){return `<div class="msearch" role="search">
+  <svg viewBox="0 0 24 24" width="18" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+  <input type="search" data-msearch value="${esc(sq)}" placeholder="${T("Busca: asado, cacao, tacos…","Search: asado, cacao, tacos…")}" aria-label="${T("Buscar en el menú","Search the menu")}" autocomplete="off" enterkeyhint="search">
+  <button class="ms-x" data-msclear aria-label="${T("Borrar búsqueda","Clear search")}" ${sq?"":"hidden"}>✕</button></div>`}
+function resultsHTML(kind){
+  const r=search(sq), list=r.res;
+  const head=`<div class="sr-head reveal in"><h2>${list.length?`${list.length} ${list.length===1?T("resultado","result"):T("resultados","results")}`:T("Sin resultados","No results")} <span>${T("para","for")} “${esc(sq)}”</span></h2>
+    ${r.didYouMean&&list.length?`<p class="dym">${T("Mostrando resultados para","Showing results for")} <b>${esc(r.didYouMean)}</b></p>`:""}</div>`;
+  if(!list.length) return head+`<div class="sr-empty"><div class="eart">${art("cajita")}</div><p>${T("No encontramos ese plato. Prueba con:","We couldn't find that. Try:")}</p><div class="sr-sugg">${SUGG.map(x=>`<button class="chip" data-sq="${x}">${x}</button>`).join("")}</div></div>`;
+  if(kind==="order") return head+`<div class="ogrid">${list.map(cardHTML).join("")}</div>`;
+  return head+`<div class="items">${list.map(it=>{const a=avail(it);return `<div class="item reveal in ${a.ok?"":"unavail"}"><h3>${esc(N(it))}</h3><span class="p">${money(it.price)}</span><p>${esc(L()==="en"?it.den:it.des)}</p>${a.ok?`<button class="add-mini" data-add="${it.id}">+ ${T("Agregar","Add")}</button>`:""}</div>`}).join("")}</div>`;
+}
+let sqT=null;
+function setQuery(v,immediate){
+  sq=v; clearTimeout(sqT);
+  const run=()=>{renderOrderPage();renderMenuPage();$$("[data-msclear]").forEach(b=>b.hidden=!sq);$$("[data-msearch]").forEach(i=>{if(i.value!==sq)i.value=sq});document.body.classList.toggle("searching",!!sq);if(window.LC_observe)window.LC_observe();if(window.LC_refreshTabs)window.LC_refreshTabs();const m=$("#orderRoot")||$("#menuRoot");if(sq&&m){const top=m.getBoundingClientRect().top;if(top>innerHeight*.6||top<0)scrollTo({top:scrollY+top-170,behavior:"smooth"})}};
+  immediate?run():(sqT=setTimeout(run,140));
+}
+function mountSearch(){$$("[data-search-slot]").forEach(slot=>{slot.innerHTML=searchBox()})}
+document.addEventListener("input",e=>{if(e.target.matches("[data-msearch]"))setQuery(e.target.value)});
+document.addEventListener("keydown",e=>{if(e.target.matches&&e.target.matches("[data-msearch]")){if(e.key==="Escape"){setQuery("",true);e.target.blur()}if(e.key==="Enter"){e.target.blur();const r=$(".sr-head");r&&r.scrollIntoView({behavior:"smooth",block:"start"})}}});
+document.addEventListener("click",e=>{
+  if(e.target.closest("[data-msclear]")){setQuery("",true);const i=$("[data-msearch]");i&&i.focus();return}
+  const c=e.target.closest("[data-sq]");if(c){setQuery(c.dataset.sq,true)}
+});
+document.addEventListener("click",e=>{const b=e.target.closest(".tabs button");if(b&&sq)setQuery("",true)},true);
+
 /* ---------------- Page renderers ---------------- */
 function cardHTML(it){
   const a=avail(it);
@@ -571,12 +676,14 @@ function cardHTML(it){
 }
 function renderOrderPage(){
   const root=$("#orderRoot"); if(!root) return;
+  if(sq){root.innerHTML=resultsHTML("order");return}
   const pop=D.ITEMS.filter(i=>i.tag&&i.tag.es==="Más pedido");
   root.innerHTML=(pop.length?`<div class="cat popular"><div class="cat-head reveal"><h2>🔥 ${T("Los más pedidos","Most ordered")}</h2></div><div class="ogrid">${pop.map(cardHTML).join("")}</div></div>`:"")+D.CATS.map(c=>`<div class="cat" id="o-${c.id}"><div class="cat-head reveal"><div class="ico">${art(c.art)}</div><h2>${esc(N(c))}</h2><span class="note">${esc(N(c.note))}</span></div>
     <div class="ogrid">${D.ITEMS.filter(i=>i.cat===c.id).map(cardHTML).join("")}</div></div>`).join("");
 }
 function renderMenuPage(){
   const root=$("#menuRoot"); if(!root) return;
+  if(sq){root.innerHTML=resultsHTML("menu");return}
   root.innerHTML=D.CATS.map(c=>{
     const items=D.ITEMS.filter(i=>i.cat===c.id);
     const feat=items.filter(i=>i.img), rest=items.filter(i=>!i.img);
@@ -591,9 +698,9 @@ document.addEventListener("click",e=>{
 });
 document.addEventListener("keydown",e=>{if(e.key==="Enter"&&e.target.classList&&e.target.classList.contains("ocard"))openCz(e.target.dataset.id,$(".add",e.target))});
 
-function renderAll(){renderOrderStrip();renderOrderPage();renderMenuPage();renderClub();renderReorder();renderAcctBtn();renderFab();renderDrawer();if(acc.classList.contains("open"))renderAcct();
+function renderAll(){mountSearch();renderOrderStrip();renderOrderPage();renderMenuPage();renderClub();renderReorder();renderAcctBtn();renderFab();renderDrawer();if(acc.classList.contains("open"))renderAcct();
   if(window.LC_observe) window.LC_observe(); if(window.LC_refreshTabs) window.LC_refreshTabs();}
 renderAll();
-document.addEventListener("lc:lang",()=>{renderAll();if(sp.classList.contains("open"))renderSp(); if(cz.classList.contains("open"))renderCz(); if(co.classList.contains("open")&&ck&&ck.step<4)renderCo();});
+document.addEventListener("lc:lang",()=>{renderAll();if(sp.classList.contains("open"))renderSp(); if(cz.classList.contains("open"))renderCz(); if(co.classList.contains("open")&&ck&&ck.step<4){syncInfo();renderCo();}});
 window.LC_openCart=openDrawer;
 })();

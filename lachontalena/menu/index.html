@@ -29,6 +29,7 @@
 <link rel="stylesheet" href="styles.css">
 </head>
 <body class="is-loading" data-page="menu">
+<a class="skip" href="#main" data-en="Skip to content">Saltar al contenido</a>
 
 <div class="curtain" aria-hidden="true">
   <div class="panel top"></div><div class="panel bot"></div>
@@ -52,13 +53,13 @@
       <button class="acct-btn" data-acct aria-label="Cuenta"></button>
       <div class="lang" role="group" aria-label="Idioma"><button data-l="es" class="on">ES</button><button data-l="en">EN</button></div>
       <a class="btn solid call" href="ordenar/"><span data-en="Order online">Ordenar en línea</span> <span class="arr">→</span></a>
-      <button class="burger" aria-label="Menú"><span class="b-lines"><i></i><i></i><i></i></span><span class="b-txt" data-en="Menu">Menú</span></button>
+      <button class="burger" aria-label="Menú" aria-expanded="false" aria-controls="mobileMenu"><span class="b-lines"><i></i><i></i><i></i></span><span class="b-txt" data-en="Menu">Menú</span></button>
     </div>
   </div>
 </header>
 
 <div class="mm-layers" aria-hidden="true"><i></i><i></i><i></i></div>
-<div class="mobile-menu">
+<div class="mobile-menu" id="mobileMenu">
   <a class="big" href="./"><span data-en="Home">Inicio</span></a>
   <a class="big" href="menu/"><span data-en="Menu">Menú</span></a>
   <a class="big" href="nosotros/"><span data-en="Our story">Nosotros</span></a>
@@ -72,7 +73,7 @@
   </div>
 </div>
 
-<main>
+<main id="main" tabindex="-1">
 <section class="page-hero">
   <div class="deco photo-deco" data-speed="0.12"><img src="media/menu/asado-res.jpg" alt=""></div>
   <div class="wrap">
@@ -83,14 +84,14 @@
 </section>
 
 <div class="menu-tabs">
-  <div class="wrap tabs">
+  <div class="wrap mt-wrap"><div data-search-slot></div><div class="tabs">
     <button data-target="asados" class="on" data-en="Heavy Dishes">Platos Fuertes</button>
     <button data-target="antojitos" data-en="Nica Cravings">Antojitos</button>
     <button data-target="domingos" data-en="Sundays &amp; Soup">Domingos y Sopa</button>
     <button data-target="naturales" data-en="Natural Drinks">Bebidas Naturales</button>
     <button data-target="sodas" data-en="Sodas">Gaseosas</button>
     <button data-target="extras">Extras</button>
-  </div>
+  </div></div>
 </div>
 
 <section class="menu-list">

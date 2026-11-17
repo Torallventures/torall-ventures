@@ -41,6 +41,7 @@
 <link rel="stylesheet" href="styles.css">
 </head>
 <body class="is-loading" data-page="home">
+<a class="skip" href="#main" data-en="Skip to content">Saltar al contenido</a>
 
 <div class="curtain" aria-hidden="true">
   <div class="panel top"></div><div class="panel bot"></div>
@@ -64,13 +65,13 @@
       <button class="acct-btn" data-acct aria-label="Cuenta"></button>
       <div class="lang" role="group" aria-label="Idioma"><button data-l="es" class="on">ES</button><button data-l="en">EN</button></div>
       <a class="btn solid call" href="ordenar/"><span data-en="Order online">Ordenar en línea</span> <span class="arr">→</span></a>
-      <button class="burger" aria-label="Menú"><span class="b-lines"><i></i><i></i><i></i></span><span class="b-txt" data-en="Menu">Menú</span></button>
+      <button class="burger" aria-label="Menú" aria-expanded="false" aria-controls="mobileMenu"><span class="b-lines"><i></i><i></i><i></i></span><span class="b-txt" data-en="Menu">Menú</span></button>
     </div>
   </div>
 </header>
 
 <div class="mm-layers" aria-hidden="true"><i></i><i></i><i></i></div>
-<div class="mobile-menu">
+<div class="mobile-menu" id="mobileMenu">
   <a class="big" href="./"><span data-en="Home">Inicio</span></a>
   <a class="big" href="menu/"><span data-en="Menu">Menú</span></a>
   <a class="big" href="nosotros/"><span data-en="Our story">Nosotros</span></a>
@@ -84,7 +85,7 @@
   </div>
 </div>
 
-<main>
+<main id="main" tabindex="-1">
 <section class="hero">
   <div class="hero-slides" aria-hidden="true">
     <div class="slide" style="background-image:url(media/hero-1-full.jpg)"></div>
@@ -144,26 +145,6 @@
   <span>Carne asada</span><span>Gallo pinto</span><span>Queso frito</span><span>Tajadas</span><span>Nacatamal</span><span>Tortillas a mano</span><span>Sopa de costilla</span><span>Cacao</span><span>Pío quinto</span>
 </div></div>
 
-<section class="intro">
-  <div class="wrap intro-grid">
-    <div class="frame-wrap reveal">
-      <div class="frame mask-img photo"><img src="media/el-rey.jpg" alt="El Rey Fritanguero frente al mural nicaragüense"><span class="frame-cap">👑 El Rey Fritanguero 🇳🇮</span></div>
-      <div class="stamp" data-badge="SABOR DE CHONTALES • HECHO CON AMOR • " data-fill="#B4472B"></div>
-    </div>
-    <div>
-      <span class="eyebrow reveal" data-en="Our house is your house">Nuestra casa es tu casa</span>
-      <h2 class="split" style="margin:1.2rem 0 1.5rem" data-en="A hacienda <em>from Chontales</em> in the heart of Hialeah">Una hacienda <em>chontaleña</em> en el corazón de Hialeah</h2>
-      <p class="lead reveal d1" data-en="James and Tamara Reyes brought the flavors of Chontales — Nicaragua's cattle country — to Hialeah. Country-style, family-run, and made with ingredients brought straight from Nicaragua.">James y Tamara Reyes trajeron el sabor de Chontales — la tierra ganadera de Nicaragua — a Hialeah. Estilo campestre, negocio familiar, y con ingredientes traídos directo de Nicaragua.</p>
-      <div class="stats reveal d2">
-        <div class="stat"><b data-count="95" data-suffix="%">0%</b><small data-en="ingredients from Nicaragua">ingredientes de Nicaragua</small></div>
-        <div class="stat"><b data-count="4.6">0</b><small data-en="stars on Google">estrellas en Google</small></div>
-        <div class="stat"><b data-count="7">0</b><small data-en="days a week">días a la semana</small></div>
-      </div>
-      <a class="btn reveal d3" style="margin-top:2.4rem" href="nosotros/"><span data-en="Our story">Nuestra historia</span> <span class="arr">→</span></a>
-    </div>
-  </div>
-</section>
-
 <section class="dishes">
   <div class="wrap">
     <div class="dishes-head">
@@ -199,33 +180,6 @@
   </div>
 </section>
 
-<section class="experience">
-  <div class="wrap">
-    <span class="eyebrow reveal" data-en="Your way">A tu manera</span>
-    <h2 class="split" style="margin-top:1rem;max-width:16ch" data-en="To go, or <em>stay a while.</em>">Para llevar, o <em>quédate un rato.</em></h2>
-    <div class="exp-grid">
-      <div class="exp a reveal" data-tilt>
-        <div class="ico" data-art="cajita"></div>
-        <div>
-          <h3 data-en="Fritanga cajita">La cajita fritanguera</h3>
-          <p data-en="The classic. Your favorite fritanga packed in a cajita to take home, to work or to the park.">La de siempre. Tu fritanga favorita en su cajita para llevar a la casa, al trabajo o al parque.</p>
-        </div>
-      </div>
-      <div class="exp b reveal d1" data-tilt>
-        <div class="ico" data-art="hat"></div>
-        <div>
-          <h3 data-en="Sit-down at the hacienda">Mesa en la hacienda</h3>
-          <p data-en="A clean, spacious, country-style dining room with friendly service. Bring the whole family.">Un comedor limpio, amplio y campestre, con servicio amable. Trae a toda la familia.</p>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<div class="marquee terra rev"><div class="track">
-  <span data-en="Nica breakfast all day">Desayuno nica todo el día</span><span data-en="Handmade tortillas">Tortillas hechas a mano</span><span data-en="Catering &amp; events">Catering y eventos</span><span data-en="Family platters">Platones familiares</span>
-</div></div>
-
 <section class="order-promo">
   <div class="wrap op-grid">
     <div class="op-img reveal"><img src="media/menu/asado-cerdo.jpg" alt="Asado de cerdo"><span class="op-badge" data-badge="ORDENA EN LÍNEA • RECOGE CALIENTITO • " data-fill="#B4472B"></span></div>
@@ -242,6 +196,30 @@
     </div>
   </div>
 </section>
+
+<section class="intro">
+  <div class="wrap intro-grid">
+    <div class="frame-wrap reveal">
+      <div class="frame mask-img photo"><img src="media/el-rey.jpg" alt="El Rey Fritanguero frente al mural nicaragüense"><span class="frame-cap">👑 El Rey Fritanguero 🇳🇮</span></div>
+      <div class="stamp" data-badge="SABOR DE CHONTALES • HECHO CON AMOR • " data-fill="#B4472B"></div>
+    </div>
+    <div>
+      <span class="eyebrow reveal" data-en="Our house is your house">Nuestra casa es tu casa</span>
+      <h2 class="split" style="margin:1.2rem 0 1.5rem" data-en="A hacienda <em>from Chontales</em> in the heart of Hialeah">Una hacienda <em>chontaleña</em> en el corazón de Hialeah</h2>
+      <p class="lead reveal d1" data-en="James and Tamara Reyes brought the flavors of Chontales — Nicaragua's cattle country — to Hialeah. Country-style, family-run, and made with ingredients brought straight from Nicaragua.">James y Tamara Reyes trajeron el sabor de Chontales — la tierra ganadera de Nicaragua — a Hialeah. Estilo campestre, negocio familiar, y con ingredientes traídos directo de Nicaragua.</p>
+      <div class="stats reveal d2">
+        <div class="stat"><b data-count="95" data-suffix="%">0%</b><small data-en="ingredients from Nicaragua">ingredientes de Nicaragua</small></div>
+        <div class="stat"><b data-count="4.6">0</b><small data-en="stars on Google">estrellas en Google</small></div>
+        <div class="stat"><b data-count="7">0</b><small data-en="days a week">días a la semana</small></div>
+      </div>
+      <a class="btn reveal d3" style="margin-top:2.4rem" href="nosotros/"><span data-en="Our story">Nuestra historia</span> <span class="arr">→</span></a>
+    </div>
+  </div>
+</section>
+
+
+
+
 
 <section class="reviews">
   <div class="wrap">

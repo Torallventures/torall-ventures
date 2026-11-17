@@ -153,7 +153,8 @@ function splitAll(force){
 /* ---------------- Page load / transitions ---------------- */
 const first=!sess.get("lc-seen"); sess.set("lc-seen","1");
 function ready(){document.body.classList.remove("is-loading");document.body.classList.add("is-ready")}
-setTimeout(ready, first?1300:420);
+document.body.classList.toggle("first",first);
+setTimeout(ready, first?900:120);
 window.addEventListener("pageshow",e=>{if(e.persisted){document.body.classList.remove("is-leaving","menu-open");ready()}});
 document.addEventListener("click",e=>{
   const a=e.target.closest("a[href]"); if(!a) return;
@@ -165,7 +166,7 @@ document.addEventListener("click",e=>{
   e.preventDefault();
   document.body.classList.remove("menu-open");
   document.body.classList.add("is-leaving");
-  setTimeout(()=>{location.href=u.href},720);
+  setTimeout(()=>{location.href=u.href},340);
 });
 
 /* ---------------- Nav ---------------- */
@@ -183,7 +184,7 @@ const onScroll=()=>{
   else if(navAcc<-10) document.body.classList.remove("nav-up");
 };
 addEventListener("scroll",onScroll,{passive:true});onScroll();
-const burger=$(".burger"); burger&&burger.addEventListener("click",()=>document.body.classList.toggle("menu-open"));
+const burger=$(".burger"); burger&&burger.addEventListener("click",()=>{const o=document.body.classList.toggle("menu-open");burger.setAttribute("aria-expanded",o)});
 const page=document.body.dataset.page;
 $$(".nav ul a").forEach(a=>{if(a.dataset.page===page)a.classList.add("active")});
 

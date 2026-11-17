@@ -29,6 +29,7 @@
 <link rel="stylesheet" href="styles.css">
 </head>
 <body class="is-loading" data-page="legal">
+<a class="skip" href="#main" data-en="Skip to content">Saltar al contenido</a>
 
 <div class="curtain" aria-hidden="true">
   <div class="panel top"></div><div class="panel bot"></div>
@@ -52,13 +53,13 @@
       <button class="acct-btn" data-acct aria-label="Cuenta"></button>
       <div class="lang" role="group" aria-label="Idioma"><button data-l="es" class="on">ES</button><button data-l="en">EN</button></div>
       <a class="btn solid call" href="ordenar/"><span data-en="Order online">Ordenar en línea</span> <span class="arr">→</span></a>
-      <button class="burger" aria-label="Menú"><span class="b-lines"><i></i><i></i><i></i></span><span class="b-txt" data-en="Menu">Menú</span></button>
+      <button class="burger" aria-label="Menú" aria-expanded="false" aria-controls="mobileMenu"><span class="b-lines"><i></i><i></i><i></i></span><span class="b-txt" data-en="Menu">Menú</span></button>
     </div>
   </div>
 </header>
 
 <div class="mm-layers" aria-hidden="true"><i></i><i></i><i></i></div>
-<div class="mobile-menu">
+<div class="mobile-menu" id="mobileMenu">
   <a class="big" href="./"><span data-en="Home">Inicio</span></a>
   <a class="big" href="menu/"><span data-en="Menu">Menú</span></a>
   <a class="big" href="nosotros/"><span data-en="Our story">Nosotros</span></a>
@@ -72,7 +73,7 @@
   </div>
 </div>
 
-<main>
+<main id="main" tabindex="-1">
 <section class="legal"><div class="wrap legal-grid">
 <nav class="legal-toc" aria-label="Contenido"><b data-en="Contents">Contenido</b><a href="#pedidos" data-en="Orders">Pedidos</a><a href="#precios" data-en="Prices & payment">Precios y pagos</a><a href="#recogida" data-en="Pickup">Recogida</a><a href="#cancelaciones" data-en="Cancellations & refunds">Cancelaciones y reembolsos</a><a href="#alergias" data-en="Allergies">Alergias</a><a href="#cuentas" data-en="Accounts">Cuentas</a><a href="#club" data-en="Club del Rey">Club del Rey</a><a href="#sms" data-en="SMS terms">Términos de SMS</a><a href="#opiniones" data-en="Feedback">Opiniones</a><a href="#responsabilidad" data-en="Liability">Responsabilidad</a><a href="#ley" data-en="Governing law">Ley aplicable</a><a href="#contacto" data-en="Contact">Contacto</a></nav>
 <article>

@@ -29,6 +29,7 @@
 <link rel="stylesheet" href="styles.css">
 </head>
 <body class="is-loading" data-page="legal">
+<a class="skip" href="#main" data-en="Skip to content">Saltar al contenido</a>
 
 <div class="curtain" aria-hidden="true">
   <div class="panel top"></div><div class="panel bot"></div>
@@ -52,13 +53,13 @@
       <button class="acct-btn" data-acct aria-label="Cuenta"></button>
       <div class="lang" role="group" aria-label="Idioma"><button data-l="es" class="on">ES</button><button data-l="en">EN</button></div>
       <a class="btn solid call" href="ordenar/"><span data-en="Order online">Ordenar en línea</span> <span class="arr">→</span></a>
-      <button class="burger" aria-label="Menú"><span class="b-lines"><i></i><i></i><i></i></span><span class="b-txt" data-en="Menu">Menú</span></button>
+      <button class="burger" aria-label="Menú" aria-expanded="false" aria-controls="mobileMenu"><span class="b-lines"><i></i><i></i><i></i></span><span class="b-txt" data-en="Menu">Menú</span></button>
     </div>
   </div>
 </header>
 
 <div class="mm-layers" aria-hidden="true"><i></i><i></i><i></i></div>
-<div class="mobile-menu">
+<div class="mobile-menu" id="mobileMenu">
   <a class="big" href="./"><span data-en="Home">Inicio</span></a>
   <a class="big" href="menu/"><span data-en="Menu">Menú</span></a>
   <a class="big" href="nosotros/"><span data-en="Our story">Nosotros</span></a>
@@ -72,7 +73,7 @@
   </div>
 </div>
 
-<main>
+<main id="main" tabindex="-1">
 <section class="legal"><div class="wrap legal-grid">
 <nav class="legal-toc" aria-label="Contenido"><b data-en="Contents">Contenido</b><a href="#recopilamos" data-en="What we collect">Qué recopilamos</a><a href="#uso" data-en="How we use it">Cómo la usamos</a><a href="#sms-priv" data-en="Text messages">Mensajes de texto</a><a href="#compartimos" data-en="Who we share it with">Con quién la compartimos</a><a href="#pagos" data-en="Payments">Pagos</a><a href="#cookies" data-en="Cookies & storage">Cookies y almacenamiento</a><a href="#derechos" data-en="Your choices">Tus opciones</a><a href="#ninos" data-en="Children">Menores</a><a href="#seguridad" data-en="Security">Seguridad</a><a href="#cambios" data-en="Changes">Cambios</a><a href="#contacto" data-en="Contact">Contacto</a></nav>
 <article>
