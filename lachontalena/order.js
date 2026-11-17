@@ -87,7 +87,7 @@ function renderDrawer(){
   $(".drawer .pick").innerHTML=`<svg viewBox="0 0 24 24" width="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s-7-6.2-7-11a7 7 0 0114 0c0 4.8-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg><span>${T("Para recoger en","Pickup at")} <b>1366 E 4th Ave, Hialeah</b></span>`;
   const box=$(".drawer .lines"),ft=$(".drawer footer");
   if(!cart.length){
-    box.innerHTML=`<div class="empty"><div class="eart">${art("cajita")}</div><h4>${T("Tu cajita está vacía","Your cajita is empty")}</h4><p>${T("Agrega tus favoritos del menú.","Add your favorites from the menu.")}</p><a class="btn solid" href="ordenar.html">${T("Ver el menú","Browse the menu")} <span class="arr">→</span></a></div>`;
+    box.innerHTML=`<div class="empty"><div class="eart">${art("cajita")}</div><h4>${T("Tu cajita está vacía","Your cajita is empty")}</h4><p>${T("Agrega tus favoritos del menú.","Add your favorites from the menu.")}</p><a class="btn solid" href="ordenar/">${T("Ver el menú","Browse the menu")} <span class="arr">→</span></a></div>`;
     ft.innerHTML="";return;
   }
   box.innerHTML=cart.map((l,i)=>{const it=ITEM(l.id);return `<div class="line" data-i="${i}">
@@ -98,7 +98,7 @@ function renderDrawer(){
       <button class="lk" data-a="edit">${T("Editar","Edit")}</button><button class="lk" data-a="rm">${T("Quitar","Remove")}</button></div></div></div>`}).join("");
   ft.innerHTML=`<div class="row"><span>Subtotal</span><b>${money(subtotal())}</b></div>
     <button class="btn solid wide go">${T("Continuar al pago","Continue to checkout")} <span class="arr">→</span></button>
-    <a class="more" href="ordenar.html">+ ${T("Agregar más","Add more items")}</a>`;
+    <a class="more" href="ordenar/">+ ${T("Agregar más","Add more items")}</a>`;
   $(".go",ft).addEventListener("click",()=>{closeDrawer();openCheckout()});
 }
 $(".drawer .lines").addEventListener("click",e=>{
@@ -206,7 +206,7 @@ let ck=null;
 function openCheckout(){
   if(!cart.length) return;
   const prev=ls.get("lc-pickup",null),info=ls.get("lc-info",{});
-  ck={redeem:true,join:true,step:1,mode:asapOK()?(prev&&prev.mode)||"asap":"later",day:prev&&prev.day||0,min:prev&&prev.min||null,name:info.name||"",phone:info.phone||"",email:info.email||"",sms:true,pay:"store",tip:0.15};
+  ck={redeem:true,join:true,tipCustom:"",step:1,mode:asapOK()?(prev&&prev.mode)||"asap":"later",day:prev&&prev.day||0,min:prev&&prev.min||null,name:info.name||"",phone:info.phone||"",email:info.email||"",sms:true,pay:"card",tip:0.15};
   if(ck.mode==="later"&&!dayAllowed(ck.day)) ck.day=firstDay();
   renderCo(); co.classList.add("open"); co.setAttribute("aria-hidden","false"); lock(true);
 }
@@ -214,7 +214,8 @@ function closeCheckout(){co.classList.remove("open");co.setAttribute("aria-hidde
 $(".co .cz-back").addEventListener("click",()=>{if(!ck||ck.step<4)closeCheckout()});
 function club(){return ls.get("lc-club",null)}
 function canRedeem(){const c=club();return c&&c.stamps>=D.CLUB.goal}
-function totals(){const s=subtotal(),disc=(ck.redeem&&canRedeem())?Math.min(D.CLUB.reward,s):0,base=s-disc,tax=base*D.TAX,tip=s*ck.tip;return {s,disc,tax,tip,t:base+tax+tip}}
+function tipAmt(s){if(ck.tip==="custom"){const v=parseFloat(String(ck.tipCustom).replace(/[^0-9.]/g,""));return isFinite(v)?Math.min(v,999):0}return s*ck.tip}
+function totals(){const s=subtotal(),disc=(ck.redeem&&canRedeem())?Math.min(D.CLUB.reward,s):0,base=s-disc,tax=base*D.TAX,tip=tipAmt(s);return {s,disc,tax,tip,t:base+tax+tip}}
 function stepHead(){
   const names=[T("Hora","Time"),T("Tus datos","Details"),T("Pago","Payment")];
   return `<div class="steps">${names.map((n,i)=>`<div class="st ${ck.step>i+1?"done":""} ${ck.step===i+1?"on":""}"><i>${ck.step>i+1?"✓":i+1}</i><span>${n}</span></div>`).join("")}</div>`;
@@ -244,19 +245,22 @@ function renderCo(){
   if(s===3){
     const t=totals();
     body=`<h3>${T("Pago","Payment")}</h3>
-    <div class="pays">
-      <button class="pay ${ck.pay==="store"?"on":""}" data-p="store"><b>${T("Pagar al recoger","Pay at pickup")}</b><span>${T("Efectivo o tarjeta en el restaurante","Cash or card at the restaurant")}</span></button>
-      <button class="pay ${ck.pay==="online"?"on":""}" data-p="online"><b>${T("Pagar en línea","Pay online")}</b><span>${T("Tarjeta, Apple Pay, Google Pay","Card, Apple Pay, Google Pay")}</span></button>
+    <p class="secure">🔒 ${T("Pago seguro en línea — tu pedido entra a la cocina ya pagado.","Secure online payment — your order goes to the kitchen already paid.")}</p>
+    <div class="pays three">
+      <button class="pay ${ck.pay==="card"?"on":""}" data-p="card"><b>💳 ${T("Tarjeta","Card")}</b><span>Visa · Mastercard · Amex</span></button>
+      <button class="pay ${ck.pay==="apple"?"on":""}" data-p="apple"><b> Apple Pay</b><span>${T("En iPhone","On iPhone")}</span></button>
+      <button class="pay ${ck.pay==="google"?"on":""}" data-p="google"><b>G Pay</b><span>${T("En Android","On Android")}</span></button>
     </div>
-    ${ck.pay==="online"?`<div class="demo-note">${T("En el sitio real, aquí se abre el pago seguro (Square, Stripe o Toast). En este demo no se cobra nada.","On the live site this opens secure checkout (Square, Stripe or Toast). Nothing is charged in this demo.")}</div>`:""}
+    <div class="demo-note">${T("En el sitio real, aquí se abre el pago seguro (Square, Stripe o Toast). En este demo no se cobra nada.","On the live site this opens secure checkout (Square, Stripe or Toast). Nothing is charged in this demo.")}</div>
     ${canRedeem()?`<label class="cbx redeem"><input type="checkbox" data-redeem ${ck.redeem?"checked":""}><span>👑 ${T(`¡Tienes ${D.CLUB.goal} coronas! Usa tus $${D.CLUB.reward} de descuento`,`You have ${D.CLUB.goal} crowns! Use your $${D.CLUB.reward} off`)}</span></label>`:""}
     <h4 class="sub">${T("¿Propina para el equipo?","Tip the team?")}</h4>
-    <div class="tips">${[0,0.10,0.15,0.20].map(p=>`<button class="tip ${ck.tip===p?"on":""}" data-t="${p}">${p?Math.round(p*100)+"%":T("Ahora no","Not now")}<small>${p?money(subtotal()*p):""}</small></button>`).join("")}</div>
+    <div class="tips">${[0,0.10,0.15,0.20].map(p=>`<button class="tip ${ck.tip===p?"on":""}" data-t="${p}">${p?Math.round(p*100)+"%":T("Ahora no","Not now")}<small>${p?money(subtotal()*p):""}</small></button>`).join("")}<button class="tip ${ck.tip==="custom"?"on":""}" data-t="custom">${T("Otro","Custom")}<small>$</small></button></div>
+    ${ck.tip==="custom"?`<label class="tip-custom"><span>$</span><input type="text" inputmode="decimal" data-tipc placeholder="0.00" value="${esc(ck.tipCustom)}" aria-label="${T("Propina personalizada","Custom tip")}"></label>`:""}
     <div class="sum">
       <div class="row"><span>Subtotal</span><span>${money(t.s)}</span></div>
       ${t.disc?`<div class="row club-row"><span>👑 ${T("Recompensa del Club","Club reward")}</span><span>−${money(t.disc)}</span></div>`:""}
       <div class="row"><span>${T("Impuesto (7%)","Tax (7%)")}</span><span>${money(t.tax)}</span></div>
-      <div class="row"><span>${T("Propina","Tip")}</span><span>${money(t.tip)}</span></div>
+      <div class="row" data-k="tip"><span>${T("Propina","Tip")}</span><span>${money(t.tip)}</span></div>
       <div class="row big"><span>Total</span><b>${money(t.t)}</b></div>
     </div>
     <div class="recap"><b>${T("Recoger","Pickup")}:</b> ${ck.mode==="asap"?T("Lo antes posible (~20–25 min)","ASAP (~20–25 min)"):slotLabel(ck.day,ck.min)} · <b>${esc(ck.name)}</b></div>`;
@@ -290,7 +294,7 @@ cos.addEventListener("click",e=>{
   const d=e.target.closest("[data-d]");if(d){ck.day=+d.dataset.d;ck.min=null;renderCo();return}
   const sl=e.target.closest("[data-s]");if(sl){ck.min=+sl.dataset.s;$$(".slot",cos).forEach(b=>b.classList.toggle("on",b===sl));return}
   const p=e.target.closest("[data-p]");if(p){ck.pay=p.dataset.p;renderCo();return}
-  const t=e.target.closest("[data-t]");if(t){ck.tip=+t.dataset.t;renderCo();return}
+  const t=e.target.closest("[data-t]");if(t){ck.tip=t.dataset.t==="custom"?"custom":+t.dataset.t;renderCo();if(ck.tip==="custom"){const i=$("[data-tipc]",cos);i&&i.focus()}return}
   const rd=e.target.closest("[data-redeem]");if(rd){ck.redeem=rd.checked;renderCo();return}
   if(e.target.closest(".back")){ck.step--;renderCo();return}
   if(e.target.closest(".next")){
@@ -313,7 +317,7 @@ cos.addEventListener("click",e=>{
     ck.step++; renderCo(); cos.scrollTop=0;
   }
 });
-cos.addEventListener("input",e=>{ if(e.target.name==="phone"){ let v=e.target.value.replace(/\D/g,"").slice(0,10); if(v.length>6)v=`(${v.slice(0,3)}) ${v.slice(3,6)}-${v.slice(6)}`;else if(v.length>3)v=`(${v.slice(0,3)}) ${v.slice(3)}`; e.target.value=v; }});
+cos.addEventListener("input",e=>{ if(e.target.matches("[data-tipc]")){ let v=e.target.value.replace(/[^0-9.]/g,"").replace(/(\..*)\./g,"$1"); const pt=v.split("."); if(pt[1]&&pt[1].length>2)v=pt[0]+"."+pt[1].slice(0,2); e.target.value=v; ck.tipCustom=v; const t=totals(); const rows=$$(".sum .row span:last-child, .sum .row b",cos); const tipRow=[...$$(".sum .row",cos)].find(r=>r.dataset.k==="tip"); if(tipRow) tipRow.lastElementChild.textContent=money(t.tip); const tot=$(".sum .row.big b",cos); if(tot) tot.textContent=money(t.t); const nx=$(".co .next",cos); if(nx) nx.textContent=`${T("Hacer pedido","Place order")} · ${money(t.t)}`; return; } if(e.target.name==="phone"){ let v=e.target.value.replace(/\D/g,"").slice(0,10); if(v.length>6)v=`(${v.slice(0,3)}) ${v.slice(3,6)}-${v.slice(6)}`;else if(v.length>3)v=`(${v.slice(0,3)}) ${v.slice(3)}`; e.target.value=v; }});
 
 /* ---------------- Club del Rey ---------------- */
 const CROWN='<svg viewBox="0 0 24 24"><path d="M3 8l4.5 4L12 5l4.5 7L21 8l-2 11H5z"/></svg>';
@@ -326,7 +330,7 @@ function renderClub(){
     <div class="crowns">${crownsHTML(c?c.stamps:3)}</div>
     <div class="cc-bot">${c?`<b>${c.stamps}/${D.CLUB.goal}</b> ${T("coronas","crowns")}${c.stamps>=D.CLUB.goal?" · "+T("¡recompensa lista!","reward ready!"):""}`:T(`Cada pedido = 1 corona · ${D.CLUB.goal} = $${D.CLUB.reward} de descuento`,`Every order = 1 crown · ${D.CLUB.goal} = $${D.CLUB.reward} off`)}</div>
   </div>
-  ${c?`<div class="club-member"><h3>${T("¡Ya eres del Club, ","You're in the Club, ")}${esc(c.name.split(" ")[0])}! 👑</h3><p>${T("Cada pedido en línea suma una corona automáticamente con tu teléfono.","Every online order adds a crown automatically with your phone number.")}</p><a class="btn solid" href="ordenar.html">${T("Ordenar y ganar","Order & earn")} <span class="arr">→</span></a></div>`:
+  ${c?`<div class="club-member"><h3>${T("¡Ya eres del Club, ","You're in the Club, ")}${esc(c.name.split(" ")[0])}! 👑</h3><p>${T("Cada pedido en línea suma una corona automáticamente con tu teléfono.","Every online order adds a crown automatically with your phone number.")}</p><a class="btn solid" href="ordenar/">${T("Ordenar y ganar","Order & earn")} <span class="arr">→</span></a></div>`:
   `<form class="club-form" novalidate>
     <label class="fl"><span>${T("Nombre","Name")}</span><input name="cname" autocomplete="name"></label>
     <label class="fl"><span>${T("Teléfono","Phone")}</span><input name="cphone" type="tel" inputmode="tel" placeholder="(305) 555-0123"></label>
@@ -350,10 +354,9 @@ const mbar=document.createElement("div");mbar.className="mbar";document.body.app
 function renderMbar(){
   const n=count();
   mbar.innerHTML=n?`<button class="mb-main" data-open-cart><span class="mb-c">${n}</span><span>${T("Ver pedido","View order")}</span><b>${money(subtotal())}</b></button><a class="mb-call" href="tel:+13056039352" aria-label="${T("Llamar","Call")}">📞</a>`
-    :`<a class="mb-main" href="ordenar.html"><span>${T("Ordenar en línea","Order online")}</span><span class="arr">→</span></a><a class="mb-call" href="tel:+13056039352" aria-label="${T("Llamar","Call")}">📞</a>`;
+    :`<a class="mb-main" href="ordenar/"><span>${T("Ordenar en línea","Order online")}</span><span class="arr">→</span></a><a class="mb-call" href="tel:+13056039352" aria-label="${T("Llamar","Call")}">📞</a>`;
 }
-let lastY=scrollY;
-addEventListener("scroll",()=>{const y=scrollY;mbar.classList.toggle("hide",y>lastY+4&&y>200);if(y<lastY-4)mbar.classList.remove("hide");lastY=y},{passive:true});
+
 
 /* ---------------- Page renderers ---------------- */
 function cardHTML(it){
