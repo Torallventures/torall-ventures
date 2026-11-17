@@ -3,5 +3,17 @@
   "buildCommand": "",
   "installCommand": "",
   "outputDirectory": ".",
-  "trailingSlash": true
+  "trailingSlash": true,
+  "redirects": [
+    {
+      "source": "/:slug(lachontale[^n/]+a)",
+      "destination": "/lachontalena/",
+      "permanent": false
+    },
+    {
+      "source": "/:slug(lachontale[^n/]+a)/:rest*",
+      "destination": "/lachontalena/:rest*",
+      "permanent": false
+    }
+  ]
 }
