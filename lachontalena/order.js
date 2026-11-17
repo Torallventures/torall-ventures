@@ -10,6 +10,13 @@ const N=o=>o?(L()==="en"?o.en:o.es):"";
 const money=n=>"$"+n.toFixed(2);
 const esc=s=>String(s).replace(/[&<>"]/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[m]));
 const ITEM=id=>D.ITEMS.find(i=>i.id===id);
+const DOW_ES=["dom","lun","mar","mié","jue","vie","sáb"],DOW_EN=["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+function todayDow(){return ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"].indexOf(new Intl.DateTimeFormat("en-US",{timeZone:"America/New_York",weekday:"short"}).format(new Date()))}
+function avail(it){
+  if(it.soldOut) return {ok:false,label:T("Agotado hoy","Sold out today")};
+  if(it.days){const lbl=T("Solo ","Only ")+it.days.map(d=>L()==="en"?DOW_EN[d]:DOW_ES[d]).join(T(" y "," & "));return {ok:true,limited:true,today:it.days.includes(todayDow()),label:lbl}}
+  return {ok:true};
+}
 const art=k=>(window.LC_ART&&window.LC_ART[k])||"";
 const media=(it,cls="")=>it.img?`<img class="${cls}" src="${it.img}" alt="${esc(N(it))}" loading="lazy">`:`<div class="${cls} art-bg">${art(it.art)}</div>`;
 
@@ -54,7 +61,7 @@ function showToast(msg){toast.textContent=msg;toast.classList.add("show");clearT
 document.addEventListener("keydown",e=>{if(e.key==="Escape"){if(co.classList.contains("open"))closeCheckout();else if(cz.classList.contains("open"))closeCz();else closeDrawer()}});
 
 function renderFab(){
-  const n=count();
+  const n=count(); if(typeof renderMbar==="function"&&mbar) renderMbar();
   fab.classList.toggle("show",n>0||document.body.dataset.page==="order");
   $(".cnt",fab).textContent=n;
   $(".lbl",fab).textContent=n?T("Tu pedido","Your order"):T("Pedido vacío","Empty order");
@@ -107,6 +114,7 @@ $(".drawer .lines").addEventListener("click",e=>{
 let cs=null; // {id, sel, qty, note, editIndex}
 function openCz(id,srcEl,editIndex){
   const it=ITEM(id); if(!it) return;
+  if(!avail(it).ok){showToast(T("Ese plato está agotado hoy 😔","That dish is sold out today 😔"));return}
   const base=editIndex!=null?cart[editIndex]:null;
   cs={id,qty:base?base.qty:1,note:base?base.note:"",edit:editIndex,src:srcEl,sel:{}};
   it.opts.forEach(g=>{cs.sel[g]=base&&base.sel[g]?[...base.sel[g]]:[...(D.G[g].def||[])]});
@@ -125,6 +133,7 @@ function renderCz(){
     ${it.tag?`<span class="cz-tag">${esc(N(it.tag))}</span>`:""}
     <h3>${esc(N(it))}</h3><div class="cz-price">${money(it.price)}</div>
     <p class="cz-desc">${esc(L()==="en"?it.den:it.des)}</p>
+    ${(()=>{const a=avail(it);return a.limited?`<div class="cz-limit">🗓 ${esc(a.label)}${a.today?"":T(" — prográmalo para recoger el fin de semana al pagar."," — schedule a weekend pickup at checkout.")}</div>`:""})()}
     ${it.opts.map(g=>{const {G,n}=groupState(g);const req=G.min>0;
       return `<section class="grp" data-g="${g}"><div class="gh"><h4>${esc(N(G))}</h4><span class="badge ${req?"req":""}">${req?(G.min===G.max?T(`Requerido · elige ${G.min}`,`Required · pick ${G.min}`):T("Requerido","Required")):(G.hint?N(G.hint):T("Opcional","Optional"))}</span></div>
       ${G.max>1&&G.min===G.max?`<div class="gprog"><i style="width:${n/G.max*100}%"></i></div>`:""}
@@ -187,20 +196,25 @@ function slots(off){
   for(let m=o*60+15;m<=c*60-15;m+=15){ if(off===0&&m<now.min+30) continue; out.push(m) }
   return out;
 }
-function asapOK(){const n=miami(),[o,c]=HOURS[n.dow];return n.min>=o*60&&n.min<c*60-20}
+function cartDays(){let d=[0,1,2,3,4,5,6];cart.forEach(l=>{const it=ITEM(l.id);if(it&&it.days)d=d.filter(x=>it.days.includes(x))});return d}
+function dayAllowed(off){return cartDays().includes((miami().dow+off)%7)&&slots(off).length>0}
+function asapOK(){const n=miami(),[o,c]=HOURS[n.dow];return n.min>=o*60&&n.min<c*60-20&&cartDays().includes(n.dow)}
+function firstDay(){for(let o=0;o<7;o++)if(dayAllowed(o))return o;return 0}
 
 /* ---------------- Checkout ---------------- */
 let ck=null;
 function openCheckout(){
   if(!cart.length) return;
   const prev=ls.get("lc-pickup",null),info=ls.get("lc-info",{});
-  ck={step:1,mode:asapOK()?(prev&&prev.mode)||"asap":"later",day:prev&&prev.day||0,min:prev&&prev.min||null,name:info.name||"",phone:info.phone||"",email:info.email||"",sms:true,pay:"store",tip:0.15};
-  if(ck.mode==="later"&&!slots(ck.day).length) ck.day=1;
+  ck={redeem:true,join:true,step:1,mode:asapOK()?(prev&&prev.mode)||"asap":"later",day:prev&&prev.day||0,min:prev&&prev.min||null,name:info.name||"",phone:info.phone||"",email:info.email||"",sms:true,pay:"store",tip:0.15};
+  if(ck.mode==="later"&&!dayAllowed(ck.day)) ck.day=firstDay();
   renderCo(); co.classList.add("open"); co.setAttribute("aria-hidden","false"); lock(true);
 }
 function closeCheckout(){co.classList.remove("open");co.setAttribute("aria-hidden","true");lock(false)}
 $(".co .cz-back").addEventListener("click",()=>{if(!ck||ck.step<4)closeCheckout()});
-function totals(){const s=subtotal(),tax=s*D.TAX,tip=s*ck.tip;return {s,tax,tip,t:s+tax+tip}}
+function club(){return ls.get("lc-club",null)}
+function canRedeem(){const c=club();return c&&c.stamps>=D.CLUB.goal}
+function totals(){const s=subtotal(),disc=(ck.redeem&&canRedeem())?Math.min(D.CLUB.reward,s):0,base=s-disc,tax=base*D.TAX,tip=s*ck.tip;return {s,disc,tax,tip,t:base+tax+tip}}
 function stepHead(){
   const names=[T("Hora","Time"),T("Tus datos","Details"),T("Pago","Payment")];
   return `<div class="steps">${names.map((n,i)=>`<div class="st ${ck.step>i+1?"done":""} ${ck.step===i+1?"on":""}"><i>${ck.step>i+1?"✓":i+1}</i><span>${n}</span></div>`).join("")}</div>`;
@@ -211,10 +225,10 @@ function renderCo(){
     const ok=asapOK();
     body=`<h3>${T("¿Cuándo lo quieres?","When do you want it?")}</h3>
     <div class="modes">
-      <button class="mode ${ck.mode==="asap"?"on":""} ${ok?"":"off"}" data-m="asap" ${ok?"":"disabled"}><b>${T("Lo antes posible","ASAP")}</b><span>${ok?T("Listo en ~20–25 min","Ready in ~20–25 min"):T("Cerrado ahora","Closed right now")}</span></button>
+      <button class="mode ${ck.mode==="asap"?"on":""} ${ok?"":"off"}" data-m="asap" ${ok?"":"disabled"}><b>${T("Lo antes posible","ASAP")}</b><span>${ok?T("Listo en ~20–25 min","Ready in ~20–25 min"):(cartDays().length<7?T("Tu pedido tiene platos de fin de semana","Your order has weekend-only dishes"):T("Cerrado ahora","Closed right now"))}</span></button>
       <button class="mode ${ck.mode==="later"?"on":""}" data-m="later"><b>${T("Programar","Schedule")}</b><span>${T("Elige día y hora","Pick a day & time")}</span></button>
     </div>
-    ${ck.mode==="later"?`<div class="days">${[0,1,2,3].map(o=>`<button class="day ${ck.day===o?"on":""}" data-d="${o}" ${slots(o).length?"":"disabled"}>${dayName(o)}</button>`).join("")}</div>
+    ${ck.mode==="later"?`<div class="days">${[0,1,2,3,4,5,6].map(o=>`<button class="day ${ck.day===o?"on":""}" data-d="${o}" ${dayAllowed(o)?"":"disabled"}>${dayName(o)}</button>`).join("")}</div>
       <div class="slots">${slots(ck.day).map(m=>`<button class="slot ${ck.min===m?"on":""}" data-s="${m}">${tfmt(m)}</button>`).join("")||`<p class="muted">${T("No quedan horarios hoy.","No times left today.")}</p>`}</div>`:""}`;
   }
   if(s===2){
@@ -224,6 +238,7 @@ function renderCo(){
       <label class="fl"><span>${T("Teléfono","Phone")} *</span><input name="phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="(305) 555-0123" value="${esc(ck.phone)}"></label>
       <label class="fl full"><span>Email (${T("opcional","optional")})</span><input name="email" type="email" autocomplete="email" value="${esc(ck.email)}"></label>
       <label class="cbx full"><input type="checkbox" name="sms" ${ck.sms?"checked":""}><span>${T("Avísame por texto cuando mi pedido esté listo","Text me when my order is ready")}</span></label>
+      ${club()?`<div class="club-mini full">👑 ${T("Club del Rey","Club del Rey")}: <b>${club().stamps}/${D.CLUB.goal}</b> ${T("coronas — este pedido suma 1","crowns — this order adds 1")}</div>`:`<label class="cbx full club-join"><input type="checkbox" name="join" ${ck.join?"checked":""}><span>👑 <b>${T("Únete al Club del Rey","Join Club del Rey")}</b> — ${T(`gana una corona por pedido; a las ${D.CLUB.goal}, $${D.CLUB.reward} de descuento.`,`earn a crown per order; at ${D.CLUB.goal}, get $${D.CLUB.reward} off.`)}</span></label>`}
     </div><p class="err" hidden></p>`;
   }
   if(s===3){
@@ -234,10 +249,12 @@ function renderCo(){
       <button class="pay ${ck.pay==="online"?"on":""}" data-p="online"><b>${T("Pagar en línea","Pay online")}</b><span>${T("Tarjeta, Apple Pay, Google Pay","Card, Apple Pay, Google Pay")}</span></button>
     </div>
     ${ck.pay==="online"?`<div class="demo-note">${T("En el sitio real, aquí se abre el pago seguro (Square, Stripe o Toast). En este demo no se cobra nada.","On the live site this opens secure checkout (Square, Stripe or Toast). Nothing is charged in this demo.")}</div>`:""}
+    ${canRedeem()?`<label class="cbx redeem"><input type="checkbox" data-redeem ${ck.redeem?"checked":""}><span>👑 ${T(`¡Tienes ${D.CLUB.goal} coronas! Usa tus $${D.CLUB.reward} de descuento`,`You have ${D.CLUB.goal} crowns! Use your $${D.CLUB.reward} off`)}</span></label>`:""}
     <h4 class="sub">${T("¿Propina para el equipo?","Tip the team?")}</h4>
     <div class="tips">${[0,0.10,0.15,0.20].map(p=>`<button class="tip ${ck.tip===p?"on":""}" data-t="${p}">${p?Math.round(p*100)+"%":T("Ahora no","Not now")}<small>${p?money(subtotal()*p):""}</small></button>`).join("")}</div>
     <div class="sum">
       <div class="row"><span>Subtotal</span><span>${money(t.s)}</span></div>
+      ${t.disc?`<div class="row club-row"><span>👑 ${T("Recompensa del Club","Club reward")}</span><span>−${money(t.disc)}</span></div>`:""}
       <div class="row"><span>${T("Impuesto (7%)","Tax (7%)")}</span><span>${money(t.tax)}</span></div>
       <div class="row"><span>${T("Propina","Tip")}</span><span>${money(t.tip)}</span></div>
       <div class="row big"><span>Total</span><b>${money(t.t)}</b></div>
@@ -252,6 +269,7 @@ function renderCo(){
       <p class="ono">${T("Pedido","Order")} <b>#${o.no}</b></p>
       <div class="when"><small>${T("Listo para recoger","Ready for pickup")}</small><b>${o.when}</b></div>
       <ul class="olist">${o.lines.map(l=>`<li><span>${l.qty}× ${esc(l.name)}</span><span>${money(l.price)}</span></li>`).join("")}<li class="tt"><span>Total</span><b>${money(o.total)}</b></li></ul>
+      ${o.club!=null?`<div class="club-done"><span>👑 +1 ${T("corona","crown")}</span><div class="crowns sm">${crownsHTML(o.club)}</div><small>${o.club>=D.CLUB.goal?T("¡Tu próximo pedido tiene descuento!","Your next order has a discount!"):T(`Llevas ${o.club} de ${D.CLUB.goal}`,`${o.club} of ${D.CLUB.goal}`)}</small></div>`:""}
       <p class="muted">${o.sms?T("Te mandamos un texto cuando esté listo.","We'll text you when it's ready."):""} ${T("Recoge en","Pick up at")} 1366 E 4th Ave, Hialeah.</p>
       <div class="dbtns"><a class="btn solid" href="https://www.google.com/maps/dir/?api=1&destination=Fritanga+La+Chontale%C3%B1a+1366+E+4th+Ave+Hialeah+FL" target="_blank" rel="noopener">${T("Cómo llegar","Directions")} <span class="arr">↗</span></a><button class="btn close-done">${T("Listo","Done")}</button></div>
       <p class="sig">👑 ${T("Gracias por tu pedido — El Rey Fritanguero","Thanks for your order — El Rey Fritanguero")} 🇳🇮</p>
@@ -263,20 +281,22 @@ function renderCo(){
   const nextLbl=s===3?`${T("Hacer pedido","Place order")} · ${money(totals().t)}`:T("Continuar","Continue");
   cos.innerHTML=`<button class="cz-x" aria-label="Cerrar">✕</button>${stepHead()}<div class="co-body">${body}</div>
     <div class="co-foot">${s>1?`<button class="btn back">← ${T("Atrás","Back")}</button>`:"<span></span>"}<button class="btn solid next">${nextLbl}</button></div>`;
+  const dOn=$(".day.on",cos); if(dOn){const r=dOn.parentElement; r.scrollLeft=dOn.offsetLeft-r.clientWidth/2+dOn.offsetWidth/2;}
 }
 cos.addEventListener("click",e=>{
   if(!ck) return;
   if(e.target.closest(".cz-x")){closeCheckout();return}
-  const m=e.target.closest("[data-m]");if(m&&!m.disabled){ck.mode=m.dataset.m;if(ck.mode==="later"&&!slots(ck.day).length)ck.day=1;renderCo();return}
+  const m=e.target.closest("[data-m]");if(m&&!m.disabled){ck.mode=m.dataset.m;if(ck.mode==="later"&&!dayAllowed(ck.day))ck.day=firstDay();renderCo();return}
   const d=e.target.closest("[data-d]");if(d){ck.day=+d.dataset.d;ck.min=null;renderCo();return}
   const sl=e.target.closest("[data-s]");if(sl){ck.min=+sl.dataset.s;$$(".slot",cos).forEach(b=>b.classList.toggle("on",b===sl));return}
   const p=e.target.closest("[data-p]");if(p){ck.pay=p.dataset.p;renderCo();return}
   const t=e.target.closest("[data-t]");if(t){ck.tip=+t.dataset.t;renderCo();return}
+  const rd=e.target.closest("[data-redeem]");if(rd){ck.redeem=rd.checked;renderCo();return}
   if(e.target.closest(".back")){ck.step--;renderCo();return}
   if(e.target.closest(".next")){
     if(ck.step===1){ if(ck.mode==="later"&&ck.min==null){const s=$(".slots",cos);s&&s.classList.remove("shake");void (s&&s.offsetWidth);s&&s.classList.add("shake");return} ls.set("lc-pickup",{mode:ck.mode,day:ck.day,min:ck.min}); }
     if(ck.step===2){
-      const f=n=>$(`[name=${n}]`,cos);ck.name=f("name").value.trim();ck.phone=f("phone").value.trim();ck.email=f("email").value.trim();ck.sms=f("sms").checked;
+      const f=n=>$(`[name=${n}]`,cos);ck.name=f("name").value.trim();ck.phone=f("phone").value.trim();ck.email=f("email").value.trim();ck.sms=f("sms").checked;ck.join=f("join")?f("join").checked:false;
       const err=$(".err",cos);
       if(!ck.name){err.hidden=false;err.textContent=T("Escribe tu nombre.","Please enter your name.");f("name").focus();return}
       if(ck.phone.replace(/\D/g,"").length<10){err.hidden=false;err.textContent=T("Escribe un teléfono válido de 10 dígitos.","Please enter a valid 10-digit phone.");f("phone").focus();return}
@@ -286,19 +306,62 @@ cos.addEventListener("click",e=>{
       const t=totals();
       ck.order={no:"LC-"+Math.floor(1000+Math.random()*9000),when:ck.mode==="asap"?T("En ~20–25 minutos","In ~20–25 minutes"):slotLabel(ck.day,ck.min),
         lines:cart.map(l=>({qty:l.qty,name:N(ITEM(l.id)),price:linePrice(l)})),total:t.t,sms:ck.sms};
-      ls.set("lc-last-order",ck.order); cart=[]; save();
+      let c=club();
+      if(c||ck.join){ c=c||{name:ck.name,phone:ck.phone,stamps:0,sms:false}; if(t.disc) c.stamps-=D.CLUB.goal; c.stamps+=1; ls.set("lc-club",c); ck.order.club=c.stamps; }
+      ls.set("lc-last-order",ck.order); cart=[]; save(); renderClub();
     }
     ck.step++; renderCo(); cos.scrollTop=0;
   }
 });
 cos.addEventListener("input",e=>{ if(e.target.name==="phone"){ let v=e.target.value.replace(/\D/g,"").slice(0,10); if(v.length>6)v=`(${v.slice(0,3)}) ${v.slice(3,6)}-${v.slice(6)}`;else if(v.length>3)v=`(${v.slice(0,3)}) ${v.slice(3)}`; e.target.value=v; }});
 
+/* ---------------- Club del Rey ---------------- */
+const CROWN='<svg viewBox="0 0 24 24"><path d="M3 8l4.5 4L12 5l4.5 7L21 8l-2 11H5z"/></svg>';
+function crownsHTML(n){let h="";for(let i=0;i<D.CLUB.goal;i++)h+=`<i class="${i<Math.min(n,D.CLUB.goal)?"on":""}" style="--i:${i}">${i===D.CLUB.goal-1?"🎁":CROWN}</i>`;return h}
+function renderClub(){
+  const root=$("#clubRoot"); if(!root) return;
+  const c=club();
+  root.innerHTML=`<div class="club-card reveal in">
+    <div class="cc-top"><span>👑 Club del Rey</span><small>${c?esc(c.name):T("Tarjeta de lealtad","Loyalty card")}</small></div>
+    <div class="crowns">${crownsHTML(c?c.stamps:3)}</div>
+    <div class="cc-bot">${c?`<b>${c.stamps}/${D.CLUB.goal}</b> ${T("coronas","crowns")}${c.stamps>=D.CLUB.goal?" · "+T("¡recompensa lista!","reward ready!"):""}`:T(`Cada pedido = 1 corona · ${D.CLUB.goal} = $${D.CLUB.reward} de descuento`,`Every order = 1 crown · ${D.CLUB.goal} = $${D.CLUB.reward} off`)}</div>
+  </div>
+  ${c?`<div class="club-member"><h3>${T("¡Ya eres del Club, ","You're in the Club, ")}${esc(c.name.split(" ")[0])}! 👑</h3><p>${T("Cada pedido en línea suma una corona automáticamente con tu teléfono.","Every online order adds a crown automatically with your phone number.")}</p><a class="btn solid" href="ordenar.html">${T("Ordenar y ganar","Order & earn")} <span class="arr">→</span></a></div>`:
+  `<form class="club-form" novalidate>
+    <label class="fl"><span>${T("Nombre","Name")}</span><input name="cname" autocomplete="name"></label>
+    <label class="fl"><span>${T("Teléfono","Phone")}</span><input name="cphone" type="tel" inputmode="tel" placeholder="(305) 555-0123"></label>
+    <label class="cbx consent"><input type="checkbox" name="csms"><span>${T("Sí, quiero recibir textos con especiales y recompensas de Fritanga La Chontaleña (hasta 4 al mes). Pueden aplicar tarifas de mensajes y datos. Responde STOP para cancelar o HELP para ayuda. No es requisito para unirte.","Yes, text me specials and rewards from Fritanga La Chontaleña (up to 4/month). Msg & data rates may apply. Reply STOP to cancel, HELP for help. Not required to join.")}</span></label>
+    <button class="btn solid" type="submit">${T("Unirme gratis","Join free")} <span class="arr">→</span></button>
+    <p class="err" hidden></p>
+  </form>`}`;
+  const f=$(".club-form",root);
+  if(f){
+    f.addEventListener("input",e=>{if(e.target.name==="cphone"){let v=e.target.value.replace(/\D/g,"").slice(0,10);if(v.length>6)v=`(${v.slice(0,3)}) ${v.slice(3,6)}-${v.slice(6)}`;else if(v.length>3)v=`(${v.slice(0,3)}) ${v.slice(3)}`;e.target.value=v}});
+    f.addEventListener("submit",e=>{e.preventDefault();const n=f.cname.value.trim(),ph=f.cphone.value,err=$(".err",f);
+      if(!n){err.hidden=false;err.textContent=T("Escribe tu nombre.","Enter your name.");return}
+      if(ph.replace(/\D/g,"").length<10){err.hidden=false;err.textContent=T("Escribe un teléfono de 10 dígitos.","Enter a 10-digit phone.");return}
+      ls.set("lc-club",{name:n,phone:ph,stamps:1,sms:f.csms.checked});renderClub();
+      showToast(T("¡Bienvenido al Club del Rey! Te regalamos tu primera corona 👑","Welcome to Club del Rey! Your first crown is on us 👑"));});
+  }
+}
+
+/* ---------------- Mobile order bar ---------------- */
+const mbar=document.createElement("div");mbar.className="mbar";document.body.appendChild(mbar);
+function renderMbar(){
+  const n=count();
+  mbar.innerHTML=n?`<button class="mb-main" data-open-cart><span class="mb-c">${n}</span><span>${T("Ver pedido","View order")}</span><b>${money(subtotal())}</b></button><a class="mb-call" href="tel:+13056039352" aria-label="${T("Llamar","Call")}">📞</a>`
+    :`<a class="mb-main" href="ordenar.html"><span>${T("Ordenar en línea","Order online")}</span><span class="arr">→</span></a><a class="mb-call" href="tel:+13056039352" aria-label="${T("Llamar","Call")}">📞</a>`;
+}
+let lastY=scrollY;
+addEventListener("scroll",()=>{const y=scrollY;mbar.classList.toggle("hide",y>lastY+4&&y>200);if(y<lastY-4)mbar.classList.remove("hide");lastY=y},{passive:true});
+
 /* ---------------- Page renderers ---------------- */
 function cardHTML(it){
-  return `<article class="ocard reveal" data-id="${it.id}" tabindex="0">
-    <div class="om">${media(it)}${it.tag?`<span class="otag">${esc(N(it.tag))}</span>`:""}</div>
+  const a=avail(it);
+  return `<article class="ocard reveal ${a.ok?"":"unavail"}" data-id="${it.id}" tabindex="0">
+    <div class="om">${media(it)}${it.tag?`<span class="otag">${esc(N(it.tag))}</span>`:""}${a.label?`<span class="avail ${a.ok?"":"out"}">${esc(a.label)}</span>`:""}</div>
     <div class="ob"><h3>${esc(N(it))}</h3><p>${esc(L()==="en"?it.den:it.des)}</p>
-    <div class="of"><b>${money(it.price)}</b><button class="add" data-add="${it.id}" aria-label="${T("Agregar","Add")} ${esc(N(it))}">+</button></div></div></article>`;
+    <div class="of"><b>${money(it.price)}</b><button class="add" data-add="${it.id}" aria-label="${T("Agregar","Add")} ${esc(N(it))}" ${a.ok?"":"disabled"}>+</button></div></div></article>`;
 }
 function renderOrderPage(){
   const root=$("#orderRoot"); if(!root) return;
@@ -312,7 +375,7 @@ function renderMenuPage(){
     const feat=items.filter(i=>i.img), rest=items.filter(i=>!i.img);
     return `<div class="cat" id="${c.id}"><div class="cat-head reveal"><div class="ico">${art(c.art)}</div><h2>${esc(N(c))}</h2><span class="note">${esc(N(c.note))}</span></div>
     ${feat.length?`<div class="specials" style="margin-bottom:1.5rem">${feat.map((it,k)=>`<div class="special photo reveal ${k?"d1":""}" data-id="${it.id}"><img src="${it.img}" alt="${esc(N(it))}" loading="lazy"><div class="sp-in">${it.tag?`<span class="otag">${esc(N(it.tag))}</span>`:""}<h3>${esc(N(it))}</h3><p>${esc(L()==="en"?it.den:it.des)}</p><div class="sp-f"><span class="p">${money(it.price)}</span><button class="btn light sm" data-add="${it.id}">${T("Ordenar","Order")} <span class="arr">→</span></button></div></div></div>`).join("")}</div>`:""}
-    <div class="items">${rest.map((it,k)=>`<div class="item reveal ${k%2?"d1":""}" data-id="${it.id}"><h3>${esc(N(it))}${it.tag?` <span class="tag">${esc(N(it.tag))}</span>`:""}</h3><span class="p">${money(it.price)}</span><p>${esc(L()==="en"?it.den:it.des)}</p><button class="add-mini" data-add="${it.id}">+ ${T("Agregar","Add")}</button></div>`).join("")}</div></div>`}).join("");
+    <div class="items">${rest.map((it,k)=>{const a=avail(it);return `<div class="item reveal ${k%2?"d1":""} ${a.ok?"":"unavail"}" data-id="${it.id}"><h3>${esc(N(it))}${it.tag?` <span class="tag">${esc(N(it.tag))}</span>`:""}${a.label?` <span class="tag ${a.ok?"lim":"out"}">${esc(a.label)}</span>`:""}</h3><span class="p">${money(it.price)}</span><p>${esc(L()==="en"?it.den:it.des)}</p>${a.ok?`<button class="add-mini" data-add="${it.id}">+ ${T("Agregar","Add")}</button>`:""}</div>`}).join("")}</div></div>`}).join("");
 }
 document.addEventListener("click",e=>{
   const a=e.target.closest("[data-add]"); if(a){e.preventDefault();openCz(a.dataset.add,a);return}
@@ -321,7 +384,7 @@ document.addEventListener("click",e=>{
 });
 document.addEventListener("keydown",e=>{if(e.key==="Enter"&&e.target.classList&&e.target.classList.contains("ocard"))openCz(e.target.dataset.id,$(".add",e.target))});
 
-function renderAll(){renderOrderPage();renderMenuPage();renderFab();renderDrawer();
+function renderAll(){renderOrderPage();renderMenuPage();renderClub();renderFab();renderDrawer();
   if(window.LC_observe) window.LC_observe(); if(window.LC_refreshTabs) window.LC_refreshTabs();}
 renderAll();
 document.addEventListener("lc:lang",()=>{renderAll(); if(cz.classList.contains("open"))renderCz(); if(co.classList.contains("open")&&ck&&ck.step<4)renderCo();});

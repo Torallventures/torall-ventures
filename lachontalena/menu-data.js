@@ -59,10 +59,10 @@ const ITEMS=[
   I("tomahawk","compartir","Tomahawk Nica","Nica Tomahawk","Tomahawk gigante de res nicaragüense con 3 acompañantes.","A giant tomahawk of Nicaraguan beef with 3 sides.",70,["cook","sides3","salsas"],{art:"steak"}),
   I("desayuno-nica","desayunos","Desayuno Nica","Nica Breakfast","Gallo pinto, huevos, queso frito, maduro, crema y tortillas hechas a mano.","Gallo pinto, eggs, fried cheese, sweet plantain, cream and handmade tortillas.",14,["eggs","rice","coffee","extras"],{art:"tortilla"}),
   I("desayuno-ranchero","desayunos","Desayuno Ranchero","Ranch Breakfast","Todo lo del desayuno nica, más tu carne favorita.","Everything in the Nica breakfast plus your favorite meat.",17,["bmeat","eggs","rice","coffee","extras"],{art:"plate"}),
-  I("nacatamal","desayunos","Nacatamal","Nacatamal","Masa de maíz con cerdo, arroz y papa, envuelto en hoja de chagüite.","Corn masa with pork, rice and potato, wrapped in banana leaf.",10,["coffee"],{tag:{es:"Fin de semana",en:"Weekends"},art:"nacatamal"}),
+  I("nacatamal","desayunos","Nacatamal","Nacatamal","Masa de maíz con cerdo, arroz y papa, envuelto en hoja de chagüite.","Corn masa with pork, rice and potato, wrapped in banana leaf.",10,["coffee"],{days:[6,0],art:"nacatamal"}),
   I("tortillas","desayunos","Tortillas a Mano","Handmade Tortillas","Recién salidas del comal. Orden de tres.","Fresh off the comal. Order of three.",3,[],{art:"tortilla"}),
   I("sopa-costilla","sopas","Sopa de Costilla","Beef Rib Soup","Costilla de res, yuca, plátano, elote y verduras.","Beef rib, yuca, plantain, corn and vegetables.",16,["soupside"],{art:"soup"}),
-  I("sopa-mondongo","sopas","Sopa de Mondongo","Tripe Soup","La sopa tradicional, cocida por horas.","The traditional soup, slow-cooked for hours.",16,["soupside"],{art:"soup"}),
+  I("sopa-mondongo","sopas","Sopa de Mondongo","Tripe Soup","La sopa tradicional, cocida por horas.","The traditional soup, slow-cooked for hours.",16,["soupside"],{art:"soup",soldOut:true}),
   I("cacao","bebidas","Cacao","Cacao","Cacao frío con leche y canela.","Cold cacao with milk and cinnamon.",5,["size","sweet"],{art:"drink"}),
   I("chicha","bebidas","Chicha","Chicha","Refresco de maíz, la rosadita de siempre.","Sweet corn drink, the classic pink one.",5,["size","sweet"],{art:"drink"}),
   I("arroz-pina","bebidas","Arroz con Piña","Rice & Pineapple","Cremoso, dulce y refrescante.","Creamy, sweet and refreshing.",5,["size","sweet"],{art:"drink"}),
@@ -73,5 +73,7 @@ const ITEMS=[
   I("arroz-leche","postres","Arroz con Leche","Rice Pudding","Cremosito, con canela y pasas.","Creamy, with cinnamon and raisins.",6,[],{art:"bunuelo"}),
   I("bunuelos","postres","Buñuelos","Buñuelos","Buñuelos de yuca bañados en miel caliente.","Yuca fritters bathed in warm honey syrup.",7,[],{art:"bunuelo"})
 ];
-return {G,CATS,ITEMS,TAX:0.07};
+const SOCIAL={tiktok:"https://www.tiktok.com/@el_rey_fritanguero_nica",instagram:"https://www.instagram.com/fritangas_managuitas_usa",facebook:"https://www.facebook.com/share/1F8cXYR9hw/"};
+const CLUB={goal:10,reward:15};
+return {G,CATS,ITEMS,TAX:0.07,SOCIAL,CLUB};
 })();
