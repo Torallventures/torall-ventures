@@ -238,11 +238,7 @@ function renderCo(){
     <h3 class="co-title">${T("Finalizar pedido","Checkout")}</h3>
     <p class="co-items">${count()} ${count()===1?T("artículo","item"):T("artículos","items")} · ${money(t.s)}</p>
 
-    <div class="express">
-      <button class="xpay apple" data-xpay="apple" aria-label="Apple Pay"><svg viewBox="0 0 24 24" width="18"><path fill="currentColor" d="M16.4 12.6c0-2.4 2-3.6 2.1-3.7-1.2-1.7-3-1.9-3.6-2-1.5-.2-3 .9-3.8.9s-2-.9-3.3-.9c-1.7 0-3.3 1-4.2 2.5-1.8 3.1-.5 7.7 1.3 10.2.9 1.2 1.9 2.6 3.2 2.6 1.3-.1 1.8-.8 3.3-.8s2 .8 3.3.8c1.4 0 2.3-1.3 3.1-2.5 1-1.4 1.4-2.8 1.4-2.9 0 0-2.8-1-2.8-4.2zM14 5.3c.7-.8 1.2-2 1-3.1-1 0-2.2.7-2.9 1.5-.6.7-1.2 1.9-1 3 1.1.1 2.2-.6 2.9-1.4z"/></svg> Pay</button>
-      <button class="xpay google" data-xpay="google" aria-label="Google Pay"><b>G</b> Pay</button>
-    </div>
-    <div class="or"><span>${T("o completa abajo","or fill in below")}</span></div>
+
 
     <section class="co-sec" id="sec-store">
       <div class="sec-h"><span class="sn">1</span><h4>${T("Recoger en","Pickup at")}</h4></div>
@@ -276,8 +272,14 @@ function renderCo(){
       <div class="sec-h"><span class="sn">4</span><h4>${T("Propina y pago","Tip & payment")}</h4></div>
       <div class="tips">${[0,0.10,0.15,0.20].map(p=>`<button class="tip ${ck.tip===p?"on":""}" data-t="${p}">${p?Math.round(p*100)+"%":T("Ahora no","Not now")}<small>${p?money(subtotal()*p):""}</small></button>`).join("")}<button class="tip ${ck.tip==="custom"?"on":""}" data-t="custom">${T("Otro","Custom")}<small>$</small></button></div>
       ${ck.tip==="custom"?`<label class="tip-custom"><span>$</span><input type="text" inputmode="decimal" data-tipc placeholder="0.00" value="${esc(ck.tipCustom)}" aria-label="${T("Propina personalizada","Custom tip")}"></label>`:""}
-      <div class="card-box"><span>💳</span><div><b>${T("Tarjeta de crédito o débito","Credit or debit card")}</b><small>${T("Se abre el pago seguro al confirmar","Secure payment opens when you confirm")}</small></div><span class="brands">VISA · MC · AMEX</span></div>
       <div class="sum">${coSum()}</div>
+      <h5 class="pay-h">${T("Pagar","Pay")}</h5>
+    <div class="express">
+      <button class="xpay apple" data-xpay="apple" aria-label="Apple Pay"><svg viewBox="0 0 24 24" width="18"><path fill="currentColor" d="M16.4 12.6c0-2.4 2-3.6 2.1-3.7-1.2-1.7-3-1.9-3.6-2-1.5-.2-3 .9-3.8.9s-2-.9-3.3-.9c-1.7 0-3.3 1-4.2 2.5-1.8 3.1-.5 7.7 1.3 10.2.9 1.2 1.9 2.6 3.2 2.6 1.3-.1 1.8-.8 3.3-.8s2 .8 3.3.8c1.4 0 2.3-1.3 3.1-2.5 1-1.4 1.4-2.8 1.4-2.9 0 0-2.8-1-2.8-4.2zM14 5.3c.7-.8 1.2-2 1-3.1-1 0-2.2.7-2.9 1.5-.6.7-1.2 1.9-1 3 1.1.1 2.2-.6 2.9-1.4z"/></svg> Pay</button>
+      <button class="xpay google" data-xpay="google" aria-label="Google Pay"><b>G</b> Pay</button>
+    </div>
+    <div class="or"><span>${T("o paga con tarjeta","or pay by card")}</span></div>
+      <div class="card-box"><span>💳</span><div><b>${T("Tarjeta de crédito o débito","Credit or debit card")}</b><small>${T("Se abre el pago seguro al confirmar","Secure payment opens when you confirm")}</small></div><span class="brands">VISA · MC · AMEX</span></div>
       <p class="secure">🔒 ${T("Pago seguro — tu pedido entra a la cocina ya pagado.","Secure payment — your order goes to the kitchen already paid.")}</p>
       <p class="legal-line">${T("Al hacer tu pedido aceptas los","By placing your order you agree to the")} <a href="terminos/" target="_blank">${T("Términos","Terms")}</a> ${T("y la","and")} <a href="privacidad/" target="_blank">${T("Política de privacidad","Privacy Policy")}</a>. ${T("Demo: no se cobra nada.","Demo: nothing is charged.")}</p>
     </section>

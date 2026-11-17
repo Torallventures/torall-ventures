@@ -1113,3 +1113,7 @@ body.video-on .hero .hills .layer:not(:last-child){opacity:0}
 body.video-on .hero-plate{display:none}
 body.video-on .hero-grid{grid-template-columns:1fr}
 body.video-on .hero-grid>div:first-child{max-width:820px}
+.pay-h{font-family:var(--f-display);font-size:1.05rem;font-weight:600;margin:1.2rem 0 .6rem}
+.co-sec .express{margin-top:0}
+.co-sec .or{margin:1rem 0 .4rem}
+.co-sec .card-box{margin-top:.4rem}
