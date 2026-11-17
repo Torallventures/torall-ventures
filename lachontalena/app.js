@@ -190,7 +190,7 @@ $$(".nav ul a").forEach(a=>{if(a.dataset.page===page)a.classList.add("active")})
 
 /* ---------------- Reveal on scroll ---------------- */
 const io=new IntersectionObserver(es=>es.forEach(en=>{if(en.isIntersecting){en.target.classList.add("in");io.unobserve(en.target)}}),{threshold:.15,rootMargin:"0px 0px -6% 0px"});
-function observe(){ $$(".reveal:not(.in),.split:not(.in),.mask-img:not(.in),.reviews:not(.in)").forEach(el=>io.observe(el)) }
+function observe(){ $$(".reveal:not(.in),.split:not(.in),.reviews:not(.in)").forEach(el=>io.observe(el)) }
 window.LC_observe=observe;
 
 /* ---------------- Counters ---------------- */

@@ -1107,3 +1107,9 @@ body.video-on .hero .hills .layer:not(:last-child){opacity:0}
   body.video-on .hero-plate{display:none}
 }
 @media (max-width:960px){body.video-on .scroll-cue{display:none}}
+/* photo reveal is driven by its wrapper (an observer can't see a fully clipped element) */
+.reveal.in .mask-img{clip-path:inset(0 0 0 0)}
+/* hero: no floating badge / review card over the video */
+body.video-on .hero-plate{display:none}
+body.video-on .hero-grid{grid-template-columns:1fr}
+body.video-on .hero-grid>div:first-child{max-width:820px}
