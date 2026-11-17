@@ -87,7 +87,8 @@ function renderDrawer(){
   $(".drawer .pick").innerHTML=`<svg viewBox="0 0 24 24" width="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s-7-6.2-7-11a7 7 0 0114 0c0 4.8-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg><span>${T("Para recoger en","Pickup at")} <b>1366 E 4th Ave, Hialeah</b></span>`;
   const box=$(".drawer .lines"),ft=$(".drawer footer");
   if(!cart.length){
-    box.innerHTML=`<div class="empty"><div class="eart">${art("cajita")}</div><h4>${T("Tu cajita está vacía","Your cajita is empty")}</h4><p>${T("Agrega tus favoritos del menú.","Add your favorites from the menu.")}</p><a class="btn solid" href="ordenar/">${T("Ver el menú","Browse the menu")} <span class="arr">→</span></a></div>`;
+    const lastO=orders()[0];
+    box.innerHTML=`<div class="empty"><div class="eart">${art("cajita")}</div><h4>${T("Tu cajita está vacía","Your cajita is empty")}</h4><p>${T("Agrega tus favoritos del menú.","Add your favorites from the menu.")}</p><a class="btn solid" href="ordenar/">${T("Ver el menú","Browse the menu")} <span class="arr">→</span></a></div>${lastO?`<div class="dz-re"><small>${T("Pide de nuevo","Order again")}</small>${orderCard(lastO)}</div>`:""}`;
     ft.innerHTML="";return;
   }
   box.innerHTML=cart.map((l,i)=>{const it=ITEM(l.id);return `<div class="line" data-i="${i}">
@@ -205,7 +206,7 @@ function firstDay(){for(let o=0;o<7;o++)if(dayAllowed(o))return o;return 0}
 let ck=null;
 function openCheckout(){
   if(!cart.length) return;
-  const prev=ls.get("lc-pickup",null),info=ls.get("lc-info",{});
+  const prev=ls.get("lc-pickup",null),u=user(),info=u?{name:u.name,phone:u.phone}:ls.get("lc-info",{});
   ck={redeem:true,join:true,tipCustom:"",step:1,mode:asapOK()?(prev&&prev.mode)||"asap":"later",day:prev&&prev.day||0,min:prev&&prev.min||null,name:info.name||"",phone:info.phone||"",email:info.email||"",sms:true,pay:"card",tip:0.15};
   if(ck.mode==="later"&&!dayAllowed(ck.day)) ck.day=firstDay();
   renderCo(); co.classList.add("open"); co.setAttribute("aria-hidden","false"); lock(true);
@@ -276,6 +277,7 @@ function renderCo(){
       ${o.club!=null?`<div class="club-done"><span>👑 +1 ${T("corona","crown")}</span><div class="crowns sm">${crownsHTML(o.club)}</div><small>${o.club>=D.CLUB.goal?T("¡Tu próximo pedido tiene descuento!","Your next order has a discount!"):T(`Llevas ${o.club} de ${D.CLUB.goal}`,`${o.club} of ${D.CLUB.goal}`)}</small></div>`:""}
       <p class="muted">${o.sms?T("Te mandamos un texto cuando esté listo.","We'll text you when it's ready."):""} ${T("Recoge en","Pick up at")} 1366 E 4th Ave, Hialeah.</p>
       <div class="dbtns"><a class="btn solid" href="https://www.google.com/maps/dir/?api=1&destination=Fritanga+La+Chontale%C3%B1a+1366+E+4th+Ave+Hialeah+FL" target="_blank" rel="noopener">${T("Cómo llegar","Directions")} <span class="arr">↗</span></a><button class="btn close-done">${T("Listo","Done")}</button></div>
+      ${o.guest?`<div class="save-acct"><b>${T("¿La próxima vez en un toque?","Next time in one tap?")}</b><span>${T("Crea tu cuenta con tu teléfono y guarda este pedido.","Create an account with your phone and save this order.")}</span><button class="btn sm" data-acct>${T("Crear cuenta","Create account")}</button></div>`:""}
       <p class="sig">👑 ${T("Gracias por tu pedido — El Rey Fritanguero","Thanks for your order — El Rey Fritanguero")} 🇳🇮</p>
       <p class="demo-note">${T("Demo: este pedido no se envió al restaurante.","Demo: this order was not sent to the restaurant.")}</p>
     </div>`;
@@ -312,7 +314,10 @@ cos.addEventListener("click",e=>{
         lines:cart.map(l=>({qty:l.qty,name:N(ITEM(l.id)),price:linePrice(l)})),total:t.t,sms:ck.sms};
       let c=club();
       if(c||ck.join){ c=c||{name:ck.name,phone:ck.phone,stamps:0,sms:false}; if(t.disc) c.stamps-=D.CLUB.goal; c.stamps+=1; ls.set("lc-club",c); ck.order.club=c.stamps; }
-      ls.set("lc-last-order",ck.order); cart=[]; save(); renderClub();
+      const hist=orders(); hist.unshift({no:ck.order.no,date:Date.now(),total:t.t,lines:cart.map(l=>({id:l.id,qty:l.qty,sel:l.sel,note:l.note}))}); ls.set("lc-orders",hist.slice(0,10));
+      const u0=user(); if(u0) ls.set("lc-known-"+u0.phone.replace(/\D/g,""),u0);
+      ck.order.guest=!u0;
+      ls.set("lc-last-order",ck.order); cart=[]; save(); renderClub(); renderReorder();
     }
     ck.step++; renderCo(); cos.scrollTop=0;
   }
@@ -358,6 +363,107 @@ function renderMbar(){
 }
 
 
+/* ---------------- Account: sign in + order history ---------------- */
+const user=()=>ls.get("lc-user",null);
+const orders=()=>ls.get("lc-orders",[]);
+const acc=document.createElement("div");acc.className="co acct";acc.setAttribute("aria-hidden","true");
+acc.innerHTML='<div class="cz-back"></div><div class="co-sheet acct-sheet" role="dialog" aria-modal="true"></div>';
+document.body.appendChild(acc);
+const as=$(".acct-sheet",acc);
+let av={view:"start"};
+function openAcct(view){av={view:view||(user()?"home":"start")};renderAcct();acc.classList.add("open");acc.setAttribute("aria-hidden","false");lock(true)}
+function closeAcct(){acc.classList.remove("open");acc.setAttribute("aria-hidden","true");lock(false)}
+$(".cz-back",acc).addEventListener("click",closeAcct);
+const fmtPhone=v=>{v=v.replace(/\D/g,"").slice(0,10);if(v.length>6)return `(${v.slice(0,3)}) ${v.slice(3,6)}-${v.slice(6)}`;if(v.length>3)return `(${v.slice(0,3)}) ${v.slice(3)}`;return v};
+const dateFmt=t=>new Intl.DateTimeFormat(L()==="en"?"en-US":"es-US",{month:"short",day:"numeric"}).format(new Date(t));
+function orderCard(o){
+  const names=o.lines.map(l=>{const it=ITEM(l.id);return it?`${l.qty}× ${N(it)}`:""}).filter(Boolean);
+  const pics=o.lines.slice(0,3).map(l=>{const it=ITEM(l.id);return it?`<span class="op">${media(it)}</span>`:""}).join("");
+  return `<div class="ocard-mini"><div class="opics">${pics}</div><div class="oinfo"><b>${esc(names.join(", "))}</b><small>${dateFmt(o.date)} · ${money(o.total)}</small></div><button class="btn solid sm" data-reorder="${o.no}">${T("Pedir de nuevo","Order again")}</button></div>`;
+}
+function renderAcct(){
+  const u=user(); let h="";
+  if(av.view==="start") h=`<h3>${T("Entra o crea tu cuenta","Sign in or create an account")}</h3>
+    <p class="muted" style="margin:-.6rem 0 1.2rem">${T("Guarda tus pedidos, pide de nuevo en un toque y junta coronas del Club del Rey.","Save your orders, reorder in one tap and collect Club del Rey crowns.")}</p>
+    <label class="fl"><span>${T("Tu teléfono","Your phone")}</span><input name="aphone" type="tel" inputmode="tel" autocomplete="tel" placeholder="(305) 555-0123" value="${esc(av.phone||"")}"></label>
+    <button class="btn solid wide" data-a="send" style="margin-top:1rem">${T("Enviarme un código por texto","Text me a code")} <span class="arr">→</span></button>
+    <div class="or"><span>${T("o","or")}</span></div>
+    <button class="sso apple" data-a="sso" data-p="apple"><svg viewBox="0 0 24 24" width="18"><path fill="currentColor" d="M16.4 12.6c0-2.4 2-3.6 2.1-3.7-1.2-1.7-3-1.9-3.6-2-1.5-.2-3 .9-3.8.9s-2-.9-3.3-.9c-1.7 0-3.3 1-4.2 2.5-1.8 3.1-.5 7.7 1.3 10.2.9 1.2 1.9 2.6 3.2 2.6 1.3-.1 1.8-.8 3.3-.8s2 .8 3.3.8c1.4 0 2.3-1.3 3.1-2.5 1-1.4 1.4-2.8 1.4-2.9 0 0-2.8-1-2.8-4.2zM14 5.3c.7-.8 1.2-2 1-3.1-1 0-2.2.7-2.9 1.5-.6.7-1.2 1.9-1 3 1.1.1 2.2-.6 2.9-1.4z"/></svg>${T("Continuar con Apple","Continue with Apple")}</button>
+    <button class="sso google" data-a="sso" data-p="google"><svg viewBox="0 0 24 24" width="18"><path fill="#4285F4" d="M22 12.2c0-.7-.1-1.4-.2-2H12v3.8h5.6a4.8 4.8 0 01-2.1 3.1v2.6h3.4c2-1.8 3.1-4.5 3.1-7.5z"/><path fill="#34A853" d="M12 22c2.8 0 5.2-.9 6.9-2.5l-3.4-2.6c-.9.6-2.1 1-3.5 1-2.7 0-5-1.8-5.8-4.3H2.7v2.7A10 10 0 0012 22z"/><path fill="#FBBC05" d="M6.2 13.6a6 6 0 010-3.8V7.1H2.7a10 10 0 000 9.2z"/><path fill="#EA4335" d="M12 5.9c1.5 0 2.9.5 4 1.6l3-3A10 10 0 0012 2 10 10 0 002.7 7.1l3.5 2.7C7 7.6 9.3 5.9 12 5.9z"/></svg>${T("Continuar con Google","Continue with Google")}</button>
+    <p class="err" hidden></p>`;
+  if(av.view==="code") h=`<button class="lk back-lk" data-a="back">← ${T("Cambiar número","Change number")}</button>
+    <h3>${T("Escribe el código","Enter the code")}</h3>
+    <p class="muted" style="margin:-.6rem 0 1.2rem">${T("Te lo mandamos por texto al","We texted it to")} <b>${esc(av.phone)}</b></p>
+    <div class="otp">${[0,1,2,3,4,5].map(i=>`<input inputmode="numeric" maxlength="1" data-otp="${i}" aria-label="${i+1}">`).join("")}</div>
+    <p class="demo-note">${T("Demo: escribe cualquier código de 6 dígitos.","Demo: type any 6-digit code.")}</p><p class="err" hidden></p>`;
+  if(av.view==="name") h=`<h3>${av.sso?T("¡Conectado! ✓","Connected! ✓"):T("¡Bienvenido! 👑","Welcome! 👑")}</h3>
+    <p class="muted" style="margin:-.6rem 0 1.2rem">${T("Solo falta tu nombre"+(av.sso?" y teléfono para avisarte cuando esté listo tu pedido.":"."),"Just your name"+(av.sso?" and phone so we can text you when your order is ready.":"."))}</p>
+    <div class="fields"><label class="fl full"><span>${T("Nombre","Name")}</span><input name="aname" autocomplete="name"></label>
+    ${av.sso?`<label class="fl full"><span>${T("Teléfono","Phone")}</span><input name="aphone2" type="tel" inputmode="tel" placeholder="(305) 555-0123"></label>`:""}</div>
+    <button class="btn solid wide" data-a="finish" style="margin-top:1.2rem">${T("Crear mi cuenta","Create my account")} <span class="arr">→</span></button><p class="err" hidden></p>`;
+  if(av.view==="home"&&u){ const c=club(),os=orders();
+    h=`<div class="prof"><span class="avatar">${esc(u.name.trim()[0]||"?").toUpperCase()}</span><div><h3>${T("Hola, ","Hi, ")}${esc(u.name.split(" ")[0])} 👋</h3><small>${esc(u.phone)}${u.method!=="phone"?` · ${u.method==="apple"?"Apple":"Google"}`:""}</small></div></div>
+    <div class="club-strip">👑 Club del Rey <b>${c?c.stamps:0}/${D.CLUB.goal}</b><div class="crowns sm">${crownsHTML(c?c.stamps:0)}</div></div>
+    <h4 class="sub">${T("Tus pedidos","Your orders")}</h4>
+    ${os.length?`<div class="olist2">${os.map(orderCard).join("")}</div>`:`<p class="muted">${T("Todavía no tienes pedidos. ¡El primero suma una corona!","No orders yet. Your first one earns a crown!")}</p><a class="btn solid sm" href="ordenar/" style="margin-top:.8rem">${T("Ordenar ahora","Order now")} <span class="arr">→</span></a>`}
+    <button class="lk signout" data-a="out">${T("Cerrar sesión","Sign out")}</button>`;}
+  as.innerHTML=`<button class="cz-x" aria-label="Cerrar">✕</button><div class="acct-body">${h}</div>`;
+  const first=$("input",as); if(first&&av.view!=="home") setTimeout(()=>first.focus(),350);
+}
+function finishLogin(u){
+  ls.set("lc-user",u);
+  let c=club(); if(!c){c={name:u.name,phone:u.phone,stamps:0,sms:false};ls.set("lc-club",c)}
+  // attach orders placed as guest
+  av={view:"home"}; renderAcct(); renderAcctBtn(); renderClub(); renderReorder();
+  showToast(T(`¡Listo, ${u.name.split(" ")[0]}! Sesión iniciada 👑`,`You're in, ${u.name.split(" ")[0]}! 👑`));
+}
+as.addEventListener("click",e=>{
+  if(e.target.closest(".cz-x")){closeAcct();return}
+  const b=e.target.closest("[data-a]"); const ro=e.target.closest("[data-reorder]");
+  if(ro){reorder(ro.dataset.reorder);closeAcct();return}
+  if(!b) return; const err=$(".err",as);
+  const a=b.dataset.a;
+  if(a==="send"){const ph=$("[name=aphone]",as).value;if(ph.replace(/\D/g,"").length<10){err.hidden=false;err.textContent=T("Escribe un teléfono de 10 dígitos.","Enter a 10-digit phone.");return}av={view:"code",phone:ph};renderAcct();return}
+  if(a==="back"){av={view:"start",phone:av.phone};renderAcct();return}
+  if(a==="sso"){av={view:"name",sso:b.dataset.p};renderAcct();return}
+  if(a==="finish"){const n=$("[name=aname]",as).value.trim();const ph=av.sso?$("[name=aphone2]",as).value:av.phone;
+    if(!n){err.hidden=false;err.textContent=T("Escribe tu nombre.","Enter your name.");return}
+    if(ph.replace(/\D/g,"").length<10){err.hidden=false;err.textContent=T("Escribe un teléfono de 10 dígitos.","Enter a 10-digit phone.");return}
+    finishLogin({name:n,phone:fmtPhone(ph),method:av.sso||"phone"});return}
+  if(a==="out"){try{localStorage.removeItem("lc-user")}catch(_){}closeAcct();renderAcctBtn();showToast(T("Sesión cerrada","Signed out"));return}
+});
+as.addEventListener("input",e=>{
+  const t=e.target;
+  if(t.name==="aphone"||t.name==="aphone2"){t.value=fmtPhone(t.value);return}
+  if(t.dataset.otp!=null){t.value=t.value.replace(/\D/g,"").slice(-1);const all=$$("[data-otp]",as);
+    if(t.value&&+t.dataset.otp<5)all[+t.dataset.otp+1].focus();
+    const code=all.map(i=>i.value).join("");
+    if(code.length===6){ $(".otp",as).classList.add("ok"); setTimeout(()=>{ const known=user(); const prev=ls.get("lc-known-"+av.phone.replace(/\D/g,""),null);
+      if(prev) finishLogin(prev); else {av={view:"name",phone:av.phone};renderAcct();} },450); }}
+});
+as.addEventListener("keydown",e=>{const t=e.target;if(t.dataset&&t.dataset.otp!=null&&e.key==="Backspace"&&!t.value&&+t.dataset.otp>0){$$("[data-otp]",as)[+t.dataset.otp-1].focus()}});
+as.addEventListener("paste",e=>{const t=e.target;if(t.dataset&&t.dataset.otp!=null){const v=(e.clipboardData.getData("text")||"").replace(/\D/g,"").slice(0,6);if(v.length){e.preventDefault();$$("[data-otp]",as).forEach((i,k)=>i.value=v[k]||"");$$("[data-otp]",as)[Math.min(5,v.length-1)].dispatchEvent(new Event("input",{bubbles:true}))}}});
+
+function reorder(no){
+  const o=orders().find(x=>x.no===no); if(!o) return;
+  let added=0,skipped=0;
+  o.lines.forEach(l=>{const it=ITEM(l.id); if(it&&avail(it).ok){cart.push({uid:Date.now().toString(36)+Math.random().toString(36).slice(2,5),id:l.id,qty:l.qty,sel:JSON.parse(JSON.stringify(l.sel||{})),note:l.note||""});added++} else skipped++;});
+  save(); bump();
+  showToast(skipped?T(`Agregamos ${added}. ${skipped} no está disponible hoy.`,`Added ${added}. ${skipped} not available today.`):T("¡Tu pedido de siempre está en la cajita! 👑","Your usual is in the cajita! 👑"));
+  setTimeout(openDrawer,500);
+}
+function renderAcctBtn(){
+  const u=user();
+  $$("[data-acct]").forEach(b=>{b.innerHTML=u?`<span class="avatar sm">${esc(u.name.trim()[0]||"?").toUpperCase()}</span><span class="acct-lbl">${esc(u.name.split(" ")[0])}</span>`:`<svg viewBox="0 0 24 24" width="18" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"/></svg><span class="acct-lbl">${T("Entrar","Sign in")}</span>`;});
+}
+function renderReorder(){
+  const root=$("#reorderRoot"); if(!root) return;
+  const os=orders().slice(0,3);
+  if(!os.length){root.innerHTML="";return}
+  root.innerHTML=`<div class="reorder reveal in"><div class="ro-head"><h3>${T("Pide de nuevo","Order again")} ⚡</h3><small>${T("Tus últimos pedidos, en un toque","Your recent orders, in one tap")}</small></div><div class="olist2">${os.map(orderCard).join("")}</div></div>`;
+}
+document.addEventListener("click",e=>{const b=e.target.closest("[data-acct]");if(b){e.preventDefault();openAcct()}const r=e.target.closest("#reorderRoot [data-reorder], .drawer [data-reorder]");if(r){reorder(r.dataset.reorder)}});
+
 /* ---------------- Page renderers ---------------- */
 function cardHTML(it){
   const a=avail(it);
@@ -387,7 +493,7 @@ document.addEventListener("click",e=>{
 });
 document.addEventListener("keydown",e=>{if(e.key==="Enter"&&e.target.classList&&e.target.classList.contains("ocard"))openCz(e.target.dataset.id,$(".add",e.target))});
 
-function renderAll(){renderOrderPage();renderMenuPage();renderClub();renderFab();renderDrawer();
+function renderAll(){renderOrderPage();renderMenuPage();renderClub();renderReorder();renderAcctBtn();renderFab();renderDrawer();if(acc.classList.contains("open"))renderAcct();
   if(window.LC_observe) window.LC_observe(); if(window.LC_refreshTabs) window.LC_refreshTabs();}
 renderAll();
 document.addEventListener("lc:lang",()=>{renderAll(); if(cz.classList.contains("open"))renderCz(); if(co.classList.contains("open")&&ck&&ck.step<4)renderCo();});

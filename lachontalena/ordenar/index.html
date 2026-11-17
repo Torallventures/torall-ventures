@@ -49,6 +49,7 @@
       </ul>
     </nav>
     <div class="nav-right">
+      <button class="acct-btn" data-acct aria-label="Cuenta"></button>
       <div class="lang" role="group" aria-label="Idioma"><button data-l="es" class="on">ES</button><button data-l="en">EN</button></div>
       <a class="btn solid call" href="ordenar/"><span data-en="Order online">Ordenar en línea</span> <span class="arr">→</span></a>
       <button class="burger" aria-label="Menú"><span class="b-lines"><i></i><i></i><i></i></span><span class="b-txt" data-en="Menu">Menú</span></button>
@@ -63,6 +64,7 @@
   <a class="big" href="nosotros/"><span data-en="Our story">Nosotros</span></a>
   <a class="big" href="visitanos/"><span data-en="Visit">Visítanos</span></a>
   <a class="big" href="ordenar/"><span data-en="Order online">Ordenar</span></a>
+  <a class="mm-acct" href="#" data-acct><span data-en="My account / Sign in">Mi cuenta / Entrar</span> →</a>
   <div class="mm-foot">
     <span>1366 E 4th Ave, Hialeah, FL 33010</span>
     <a href="tel:+13056039352">(305) 603-9352</a>
@@ -74,7 +76,7 @@
 <section class="page-hero order-hero">
   <div class="oh-img" data-speed="0.08"><img src="media/hero-2.jpg" alt=""></div>
   <div class="wrap">
-    <span class="eyebrow reveal" data-en="Order online · Pickup">Ordena en línea · Para recoger</span>
+    <span class="eyebrow reveal" data-en="100% authentic Nicaraguan food 🇳🇮">100% auténtica gastronomía nicaragüense 🇳🇮</span>
     <h1 class="split" data-en="Build your <em>cajita.</em>">Arma tu <em>cajita.</em></h1>
     <p class="lead reveal d1" data-en="Customize every plate, add notes for the kitchen, and choose ASAP or a pickup time.">Personaliza cada plato, deja notas para la cocina y elige lo antes posible o una hora para recoger.</p>
     <div class="pickup-strip reveal d2">
@@ -99,6 +101,7 @@
 
 <section class="menu-list order-list">
   <div class="wrap">
+    <div id="reorderRoot"></div>
     <div id="orderRoot"></div>
     <p class="reveal" style="font-size:.85rem;color:var(--brown);text-align:center;margin-top:1rem" data-en="Demo ordering — menu and prices to be confirmed with the restaurant. No payment is taken.">Pedido de demostración — menú y precios por confirmar con el restaurante. No se cobra nada.</p>
   </div>
