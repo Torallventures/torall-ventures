@@ -1138,3 +1138,13 @@ body.is-ready:not(.first) .curtain .mark{opacity:0;transform:translateY(-8px);tr
 .cursor{display:none!important}
 /* v14: no zoom on the hero video (scaling a playing video makes it shimmer) */
 .hero-video,body.has-video .hero-video,body.video-on .hero-video{transform:none!important;transition:opacity 1s ease!important;will-change:auto}
+/* v15: Nosotros header — text higher, stamp straddles the two sections */
+.page-hero.green{overflow:visible;z-index:5;position:relative}
+.page-hero.green .deco{position:absolute;top:auto;right:6%;width:200px;bottom:-100px;opacity:1;z-index:6;filter:drop-shadow(0 10px 18px rgba(0,0,0,.25))}
+.page-hero.green .deco svg{animation:spin 24s linear infinite}
+.page-hero.green+section{position:relative;z-index:1}
+@media (max-width:960px){
+  .page-hero{padding:7.5rem 0 3.5rem}
+  .page-hero.green{padding-bottom:4.5rem}
+  .page-hero.green .deco{width:128px;bottom:-64px;right:5%;opacity:1}
+}
