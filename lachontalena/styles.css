@@ -875,3 +875,35 @@ body.menu-open .mm-acct{opacity:1}
 .nf h2{margin-bottom:1.2rem}
 .oinfo b{white-space:normal;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
 @media (max-width:560px){.ocard-mini{grid-template-columns:auto 1fr}.ocard-mini .btn{grid-column:1/-1;justify-content:center}}
+
+/* =================== v6: hero less zoom =================== */
+.hero-slides .slide{transform:scale(1.04);transition:opacity 1.6s ease,transform 9s linear}
+.hero-slides .slide.on{transform:scale(1)}
+.hero-photo{display:none}
+.lk-dd{display:inline-flex;align-items:center;gap:.35rem;font-weight:700;border:1.5px solid var(--ink);border-radius:99px;padding:.35rem .8rem;font-size:.85rem}
+.lk-dd:hover{background:var(--ink);color:var(--cream)}
+@media (max-width:960px){
+  /* phones: photo behind is soft ambience; the full photo shows crisp in a card */
+  .hero{min-height:auto;padding-bottom:7rem}
+  .hero-slides .slide{filter:blur(10px) brightness(.85);transform:scale(1.15)}
+  .hero-slides .slide.on{transform:scale(1.1)}
+  .hero-photo{display:block;position:relative;margin-top:2rem;aspect-ratio:4/3;border-radius:24px;overflow:hidden;box-shadow:0 24px 50px -20px rgba(0,0,0,.6);border:2px solid rgba(245,235,218,.25)}
+  .hero-photo img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity 1.4s ease}
+  .hero-photo img.on{opacity:1}
+  body.has-video .hero-plate{display:none}
+  body.video-on .hero-photo{display:none}
+  body.video-on .hero-slides{display:none}
+}
+/* desktop: blurred ambience + full photo in a framed card */
+.hero-slides .slide{filter:blur(14px) brightness(.8)}
+.hero-slides .slide,.hero-slides .slide.on{transform:scale(1.12)}
+.hero-photo img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity 1.4s ease}
+.hero-photo img.on{opacity:1}
+@media (min-width:961px){
+  body.has-video .hero-photo.hp-desk{display:block;position:absolute;left:-6%;right:-14%;top:12%;aspect-ratio:4/3;border-radius:28px;overflow:hidden;transform:rotate(2deg);box-shadow:0 40px 80px -30px rgba(0,0,0,.7);border:3px solid rgba(245,235,218,.9);animation:floaty 8s ease-in-out infinite}
+  body.has-video .hero-plate .badge{z-index:3;left:-12%;top:2%;right:auto}
+  body.has-video .hero-plate .t1{z-index:3;top:auto;bottom:4%;right:-10%}
+  body.has-video .hero-plate{max-width:520px}
+}
+@media (max-width:960px){.hero-photo.hp-desk{display:none!important}}
+body.video-on .hero-photo{display:none!important}

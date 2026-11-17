@@ -285,7 +285,8 @@ const hv=$(".hero-video"), slides=$$(".hero-slides .slide");
 if(slides.length){
   document.body.classList.add("has-video");
   let si=0; slides[0].classList.add("on");
-  setInterval(()=>{ if(document.body.classList.contains("video-on")) return; slides[si].classList.remove("on"); si=(si+1)%slides.length; slides[si].classList.add("on"); },5500);
+  const decks=$$(".hero-photo").map(c=>$$("img",c));
+  setInterval(()=>{ if(document.body.classList.contains("video-on")) return; slides[si].classList.remove("on"); decks.forEach(d=>d[si]&&d[si].classList.remove("on")); si=(si+1)%slides.length; slides[si].classList.add("on"); decks.forEach(d=>d[si]&&d[si].classList.add("on")); },5500);
 }
 if(hv){
   const on=()=>{document.body.classList.add("has-video","video-on")};
