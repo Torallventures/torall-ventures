@@ -62,7 +62,7 @@ document.addEventListener("keydown",e=>{if(e.key==="Escape"){if(co.classList.con
 
 function renderFab(){
   const n=count(); if(typeof renderMbar==="function"&&mbar) renderMbar();
-  fab.classList.toggle("show",n>0||document.body.dataset.page==="order");
+  fab.classList.toggle("show",n>0);
   $(".cnt",fab).textContent=n;
   $(".lbl",fab).textContent=n?T("Tu pedido","Your order"):T("Pedido vacío","Empty order");
   $(".tot",fab).textContent=n?money(subtotal()):"";
@@ -264,6 +264,7 @@ function renderCo(){
       <div class="row" data-k="tip"><span>${T("Propina","Tip")}</span><span>${money(t.tip)}</span></div>
       <div class="row big"><span>Total</span><b>${money(t.t)}</b></div>
     </div>
+    <p class="legal-line">${T("Al hacer tu pedido aceptas los","By placing your order you agree to the")} <a href="terminos/" target="_blank">${T("Términos","Terms")}</a> ${T("y la","and")} <a href="privacidad/" target="_blank">${T("Política de privacidad","Privacy Policy")}</a>.</p>
     <div class="recap"><b>${T("Recoger","Pickup")}:</b> ${ck.mode==="asap"?T("Lo antes posible (~20–25 min)","ASAP (~20–25 min)"):slotLabel(ck.day,ck.min)} · <b>${esc(ck.name)}</b></div>`;
   }
   if(s===4){
@@ -339,7 +340,7 @@ function renderClub(){
   `<form class="club-form" novalidate>
     <label class="fl"><span>${T("Nombre","Name")}</span><input name="cname" autocomplete="name"></label>
     <label class="fl"><span>${T("Teléfono","Phone")}</span><input name="cphone" type="tel" inputmode="tel" placeholder="(305) 555-0123"></label>
-    <label class="cbx consent"><input type="checkbox" name="csms"><span>${T("Sí, quiero recibir textos con especiales y recompensas de Fritanga La Chontaleña (hasta 4 al mes). Pueden aplicar tarifas de mensajes y datos. Responde STOP para cancelar o HELP para ayuda. No es requisito para unirte.","Yes, text me specials and rewards from Fritanga La Chontaleña (up to 4/month). Msg & data rates may apply. Reply STOP to cancel, HELP for help. Not required to join.")}</span></label>
+    <label class="cbx consent"><input type="checkbox" name="csms"><span>${T("Sí, quiero recibir textos con especiales y recompensas de Fritanga La Chontaleña (hasta 4 al mes). Pueden aplicar tarifas de mensajes y datos. Responde STOP para cancelar o HELP para ayuda. No es requisito para unirte.","Yes, text me specials and rewards from Fritanga La Chontaleña (up to 4/month). Msg & data rates may apply. Reply STOP to cancel, HELP for help. Not required to join.")} <a href="terminos/#sms">${T("Términos","Terms")}</a> · <a href="privacidad/">${T("Privacidad","Privacy")}</a></span></label>
     <button class="btn solid" type="submit">${T("Unirme gratis","Join free")} <span class="arr">→</span></button>
     <p class="err" hidden></p>
   </form>`}`;
@@ -358,6 +359,9 @@ function renderClub(){
 const mbar=document.createElement("div");mbar.className="mbar";document.body.appendChild(mbar);
 function renderMbar(){
   const n=count();
+  const onOrder=document.body.dataset.page==="order";
+  mbar.classList.toggle("empty-hide",!n&&onOrder);
+  if(!n&&onOrder){mbar.innerHTML="";return}
   mbar.innerHTML=n?`<button class="mb-main" data-open-cart><span class="mb-c">${n}</span><span>${T("Ver pedido","View order")}</span><b>${money(subtotal())}</b></button><a class="mb-call" href="tel:+13056039352" aria-label="${T("Llamar","Call")}">📞</a>`
     :`<a class="mb-main" href="ordenar/"><span>${T("Ordenar en línea","Order online")}</span><span class="arr">→</span></a><a class="mb-call" href="tel:+13056039352" aria-label="${T("Llamar","Call")}">📞</a>`;
 }

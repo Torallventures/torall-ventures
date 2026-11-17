@@ -170,7 +170,18 @@ document.addEventListener("click",e=>{
 
 /* ---------------- Nav ---------------- */
 const nav=$(".nav");
-const onScroll=()=>{nav&&nav.classList.toggle("scrolled",scrollY>40)};
+let navY=scrollY,navAcc=0;
+const onScroll=()=>{
+  if(!nav) return;
+  const y=scrollY; nav.classList.toggle("scrolled",y>40);
+  const d=y-navY; navY=y;
+  if((d>0)!==(navAcc>0)) navAcc=0;
+  navAcc+=d;
+  const lockd=document.body.classList.contains("menu-open")||document.documentElement.classList.contains("lc-lock");
+  if(y<120||lockd){document.body.classList.remove("nav-up");return}
+  if(navAcc>14) document.body.classList.add("nav-up");
+  else if(navAcc<-10) document.body.classList.remove("nav-up");
+};
 addEventListener("scroll",onScroll,{passive:true});onScroll();
 const burger=$(".burger"); burger&&burger.addEventListener("click",()=>document.body.classList.toggle("menu-open"));
 const page=document.body.dataset.page;
