@@ -1148,3 +1148,19 @@ body.is-ready:not(.first) .curtain .mark{opacity:0;transform:translateY(-8px);tr
   .page-hero.green{padding-bottom:4.5rem}
   .page-hero.green .deco{width:128px;bottom:-64px;right:5%;opacity:1}
 }
+
+/* v16: bigger, clearer prices */
+.dish .price{font-family:var(--f-display);font-size:1.5rem;font-weight:700;padding:.45rem 1.05rem;top:1rem;right:1rem;border:2px solid var(--ink);box-shadow:3px 3px 0 var(--ink);letter-spacing:-.01em}
+.dish.photo .price{z-index:3}
+.of b{font-size:1.6rem;font-weight:700}
+.item .p{font-size:1.55rem;font-weight:700}
+.item h3{font-size:1.4rem}
+.special .p,.special.photo .sp-f .p{font-size:2.3rem;font-weight:700}
+.cz-price{font-size:1.8rem;font-weight:700}
+.lt span{font-family:var(--f-display);font-size:1.15rem;color:var(--terra)}
+.ocard-mini .oinfo small{font-size:.85rem}
+@media (max-width:960px){
+  .dish .price{font-size:1.4rem}
+  .of b{font-size:1.35rem}
+  .item .p{font-size:1.4rem}
+}
