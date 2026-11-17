@@ -2,78 +2,64 @@
 window.LC_DATA = (function(){
 const c=(id,es,en,p)=>({id,es,en,p:p||0});
 const G = {
-  sides3:{es:"Elige 3 acompañantes",en:"Pick 3 sides",min:3,max:3,def:["gallo","tajadas","queso"],choices:[
-    c("gallo","Gallo pinto","Gallo pinto"),c("tajadas","Tajadas verdes","Green plantain chips"),c("maduro","Maduro","Sweet plantain"),
-    c("queso","Queso frito","Fried cheese"),c("ensalada","Ensalada de repollo","Cabbage salad"),c("tortilla","Tortilla a mano","Handmade tortilla"),
-    c("crema","Crema","Nica cream"),c("arroz","Arroz blanco","White rice"),c("frijoles","Frijoles molidos","Refried beans")]},
-  rice:{es:"¿Cuánto gallo pinto?",en:"How much gallo pinto?",min:1,max:1,def:["normal"],choices:[
-    c("poco","Poquito","Light"),c("normal","Normal","Regular"),c("extra","Extra","Extra",2)]},
-  salsas:{es:"Salsas y encurtidos",en:"Sauces & pickles",min:0,max:4,def:["chilero"],choices:[
-    c("chilero","Chilero","Chilero (hot pickled onion)"),c("cebolla","Cebolla encurtida","Pickled onion"),c("pico","Pico de gallo","Pico de gallo"),c("cremax","Crema extra","Extra cream",1)]},
-  extras:{es:"¿Algo más?",en:"Add extras",min:0,max:6,def:[],choices:[
-    c("xqueso","Queso frito extra","Extra fried cheese",3),c("xmaduro","Maduro extra","Extra sweet plantain",3),c("xchorizo","Chorizo","Chorizo",5),
-    c("xcarne","Carne asada extra","Extra carne asada",8),c("xpollo","Pollo extra","Extra chicken",6),c("xtortilla","Tortilla extra","Extra tortilla",1),c("xaguacate","Aguacate","Avocado",2)]},
-  proteins2:{es:"Elige 2 carnes",en:"Pick 2 meats",min:2,max:2,def:["carne","pollo"],choices:[
-    c("carne","Carne asada","Carne asada"),c("pollo","Pollo asado","Grilled chicken"),c("cerdo","Cerdo asado","Grilled pork"),c("chorizo","Chorizo","Chorizo"),c("lengua","Lengua","Beef tongue",3)]},
-  eggs:{es:"¿Cómo quieres los huevos?",en:"How do you want your eggs?",min:1,max:1,def:["revueltos"],choices:[
-    c("revueltos","Revueltos","Scrambled"),c("estrellados","Estrellados","Sunny side up"),c("ranchera","Con tomate y cebolla","With tomato & onion")]},
-  bmeat:{es:"Elige tu carne",en:"Choose your meat",min:1,max:1,def:["carne"],choices:[
-    c("carne","Carne asada","Carne asada"),c("pollo","Pollo asado","Grilled chicken"),c("chorizo","Chorizo","Chorizo")]},
-  coffee:{es:"¿Le agregas bebida?",en:"Add a drink?",min:1,max:1,def:["none"],choices:[
-    c("none","Sin bebida","No drink"),c("cafe","Café","Coffee",2),c("cacao","Cacao","Cacao",4),c("pinolillo","Pinolillo","Pinolillo",4)]},
-  cook:{es:"Término",en:"Doneness",min:1,max:1,def:["34"],choices:[
-    c("medio","Término medio","Medium"),c("34","Tres cuartos","Medium well"),c("bien","Bien cocido","Well done")]},
-  soupside:{es:"Acompañante",en:"Side",min:1,max:1,def:["tortilla"],choices:[c("tortilla","Tortilla a mano","Handmade tortilla"),c("arroz","Arroz blanco","White rice")]},
-  size:{es:"Tamaño",en:"Size",min:1,max:1,def:["m"],choices:[c("m","Mediano","Medium"),c("g","Grande","Large",1.5),c("xg","Extra grande","Extra large",3)]},
-  sweet:{es:"Dulce",en:"Sweetness",min:1,max:1,def:["normal"],choices:[c("normal","Normal","Regular"),c("menos","Menos azúcar","Less sugar"),c("sin","Sin azúcar","No sugar")]},
-  soda:{es:"Sabor",en:"Flavor",min:1,max:1,def:["coca"],choices:[c("coca","Coca-Cola","Coca-Cola"),c("rojita","Rojita","Rojita"),c("shaler","Kola Shaler","Kola Shaler"),c("fanta","Fanta Naranja","Orange Fanta")]},
-  soda3:{es:"Refresco de 3 litros",en:"3-liter soda",min:1,max:1,def:["coca"],choices:[c("coca","Coca-Cola","Coca-Cola"),c("fanta","Fanta Naranja","Orange Fanta"),c("sprite","Sprite","Sprite")]},
-  plate:{es:"Acompañantes del platón",en:"Platter sides",min:0,max:9,def:["gallo","tajadas","queso","maduro","enchilada","taco","ensalada"],choices:[
-    c("gallo","Gallo pinto","Gallo pinto"),c("tajadas","Tajadas","Plantain chips"),c("queso","Queso frito","Fried cheese"),c("maduro","Maduro","Sweet plantain"),
-    c("enchilada","Enchilada","Enchilada"),c("taco","Taco nica","Nica taco"),c("ensalada","Ensalada","Salad")],hint:{es:"Quita lo que no quieras",en:"Remove anything you don't want"}}
+  sides:{es:"Acompañantes recomendados",en:"Recommended sides",min:0,max:5,def:[],choices:[
+    c("queso","Queso frito","Fried cheese",4),c("maduro","Tajadas maduras","Ripe plantains",4.5),c("gallo","Gallo pinto","Gallo pinto",5.5),
+    c("tortillas","Tortillas x2","Tortillas x2",4.5),c("verdequeso","Tajadas verdes con queso","Green plantains with cheese",15)]},
+  drinks:{es:"¿Algo de tomar?",en:"Add a drink?",min:0,max:5,def:[],choices:[
+    c("cacao","Cacao","Cocoa",8.5),c("coca","Coca lata","Canned Coke",3),c("chicha","Chicha","Chicha",6.5),c("jicaro","Semilla de jícaro","Jicaro seed",8.5),c("chia","Chía con tamarindo","Tamarind chia",6.5)]},
+  size:{es:"Tamaño",en:"Size",min:1,max:1,def:["m"],choices:[c("m","Mediano","Medium"),c("g","Grande","Large",1.5),c("xg","Extra grande","Extra large",3)]}
 };
 const CATS=[
-  {id:"fritanga",es:"Fritanga",en:"Fritanga",art:"steak",note:{es:"Platos con 3 acompañantes",en:"Plates come with 3 sides"}},
-  {id:"compartir",es:"Para compartir",en:"To share",art:"cajita",note:{es:"Platones para la mesa",en:"Platters for the table"}},
-  {id:"desayunos",es:"Desayunos",en:"Breakfast",art:"tortilla",note:{es:"Servidos todo el día",en:"Served all day"}},
-  {id:"sopas",es:"Sopas",en:"Soups",art:"soup",note:{es:"Caseras, a fuego lento",en:"Homemade, slow-simmered"}},
-  {id:"bebidas",es:"Refrescos",en:"Drinks",art:"drink",note:{es:"Naturales, hechos en casa",en:"Natural, made in house"}},
-  {id:"postres",es:"Postres",en:"Desserts",art:"bunuelo",note:{es:"El toque dulce",en:"Something sweet"}}
+  {id:"asados",es:"Platos Fuertes",en:"Heavy Dishes",art:"steak",note:{es:"Con gallo pinto, tajadas, queso frito y ensalada",en:"With gallo pinto, plantains, fried cheese and salad"}},
+  {id:"antojitos",es:"Antojitos Nicas",en:"Nica Cravings",art:"tortilla",note:{es:"Los clásicos de la fritanga",en:"Fritanga classics"}},
+  {id:"domingos",es:"Domingos y Sopa",en:"Sundays & Soup",art:"soup",note:{es:"Especiales de la casa",en:"House specials"}},
+  {id:"naturales",es:"Bebidas Naturales",en:"Natural Drinks",art:"drink",note:{es:"Mediano, grande o extra grande",en:"Medium, large or extra large"}},
+  {id:"sodas",es:"Gaseosas",en:"Sodas",art:"drink",note:{es:"Bien frías",en:"Ice cold"}},
+  {id:"extras",es:"Extras",en:"Extras",art:"plate",note:{es:"Para completar tu plato",en:"Round out your plate"}}
 ];
-const plate=["sides3","rice","salsas","extras"];
+const plate=["sides","drinks"];
 const I=(id,cat,es,en,des,den,price,opts,o)=>Object.assign({id,cat,es,en,des,den,price,opts:opts||[]},o||{});
+const img=n=>"media/menu/"+n+".jpg";
 const ITEMS=[
-  I("carne-asada","fritanga","Asado de Res","Beef Asado","Carne de res asada a la parrilla, fina y marinada al estilo chontaleño.","Thin-cut grilled beef, marinated the Chontales way.",24.5,plate,{tag:{es:"De la casa",en:"Signature"},art:"plate"}),
-  I("asado-mixto","fritanga","Asado Mixto","Mixed Grill","Elige 2 carnes a la parrilla con tus acompañantes.","Pick 2 grilled meats with your sides.",26,["proteins2","sides3","rice","salsas","extras"],{art:"steak"}),
-  I("pollo-asado","fritanga","Asado de Pollo","Chicken Asado","Pollo adobado a la parrilla, jugoso y ahumado.","Marinated grilled chicken, juicy and smoky.",22,plate,{art:"plate"}),
-  I("cerdo-asado","fritanga","Cerdo Asado","Grilled Pork","Cerdo adobado en naranja agria y achiote.","Pork marinated in sour orange and achiote.",18,plate,{art:"plate"}),
-  I("chorizo","fritanga","Chorizo Asado","Grilled Chorizo","Chorizo a la parrilla, doradito y jugoso.","Grilled chorizo, crispy and juicy.",16,plate,{art:"steak"}),
-  I("lengua","fritanga","Lengua en Salsa","Beef Tongue in Sauce","Lengua tiernita en salsa criolla de la casa.","Tender tongue in our house tomato sauce.",19,plate,{art:"soup"}),
-  I("enchiladas","fritanga","Enchiladas Nicas","Nica Enchiladas","Orden de 2. Tortilla dorada rellena de arroz y carne, con ensalada.","Order of 2. Crispy tortilla stuffed with rice and meat, with salad.",15,["salsas","extras"],{art:"tortilla"}),
-  I("tacos","fritanga","Tacos de Pollo","Chicken Tacos","Tacos nicas de pollo, enrollados y fritos, con repollo, crema y queso.","Rolled, fried Nica chicken tacos with cabbage, cream and cheese.",15,["salsas","extras"],{art:"tortilla"}),
-  I("papas","fritanga","Papas Rellenas","Stuffed Potatoes","Croquetas doradas de papa rellenas de carne sazonada.","Golden potato croquettes filled with seasoned meat.",15,["salsas","extras"],{art:"bunuelo"}),
-  I("tajadas-queso","fritanga","Tajadas con Queso","Plantain Chips & Cheese","Canastita de tajadas verdes con queso frito y repollo.","A basket of green plantain chips with fried cheese and cabbage.",9,["salsas","extras"],{art:"cajita"}),
-  I("maduro-queso","fritanga","Maduro con Queso","Sweet Plantain & Cheese","Maduro y queso frito — sencillo y perfecto.","Sweet plantain and fried cheese — simple and perfect.",9,["extras"],{art:"plate"}),
-  I("chontaleno","compartir","El Chontaleño","El Chontaleño","La bandeja de la casa: pollo, cerdo y res asada, chorizo asado, enchiladas, tacos, tajadas, queso frito, maduro, gallo pinto, ensalada y chilero.","The house platter: grilled chicken, pork and beef, grilled chorizo, enchiladas, tacos, plantain chips, fried cheese, sweet plantain, gallo pinto, salad and chilero.",32,["proteins2","plate","salsas","extras"],{tag:{es:"El más pedido",en:"Most ordered"},img:"media/bowl-sq.jpg"}),
-  I("caballo-bayo","compartir","Caballo Bayo","Caballo Bayo","El platón familiar para 5 en hoja de chagüite: un poquito de todo, con refresco de 3 litros.","The family platter for 5 on banana leaf: a little of everything, with a 3-liter soda.",145,["plate","soda3","salsas","extras"],{tag:{es:"Para 5",en:"Serves 5"},img:"media/leaf-sq.jpg"}),
-  I("tomahawk","compartir","Tomahawk Nica","Nica Tomahawk","Tomahawk gigante de res nicaragüense con 3 acompañantes.","A giant tomahawk of Nicaraguan beef with 3 sides.",70,["cook","sides3","salsas"],{art:"steak"}),
-  I("desayuno-nica","desayunos","Desayuno Nica","Nica Breakfast","Gallo pinto, huevos, queso frito, maduro, crema y tortillas hechas a mano.","Gallo pinto, eggs, fried cheese, sweet plantain, cream and handmade tortillas.",14,["eggs","rice","coffee","extras"],{art:"tortilla"}),
-  I("desayuno-ranchero","desayunos","Desayuno Ranchero","Ranch Breakfast","Todo lo del desayuno nica, más tu carne favorita.","Everything in the Nica breakfast plus your favorite meat.",17,["bmeat","eggs","rice","coffee","extras"],{art:"plate"}),
-  I("nacatamal","desayunos","Nacatamal para Llevar","Nacatamal to Go","Masa de maíz con cerdo, arroz y papa, envuelto en hoja de chagüite.","Corn masa with pork, rice and potato, wrapped in banana leaf.",13,["coffee"],{days:[6,0],art:"nacatamal"}),
-  I("tortillas","desayunos","Tortillas a Mano","Handmade Tortillas","Recién salidas del comal. Orden de tres.","Fresh off the comal. Order of three.",3,[],{art:"tortilla"}),
-  I("sopa-costilla","sopas","Sopa de Costilla","Beef Rib Soup","Costilla de res, yuca, plátano, elote y verduras.","Beef rib, yuca, plantain, corn and vegetables.",16,["soupside"],{art:"soup"}),
-  I("sopa-mondongo","sopas","Sopa de Mondongo","Tripe Soup","La sopa tradicional, cocida por horas.","The traditional soup, slow-cooked for hours.",16,["soupside"],{art:"soup",soldOut:true}),
-  I("cacao","bebidas","Cacao","Cocoa","Cacao frío con leche y canela. Mediano, grande o extra grande.","Cold cocoa drink with milk and cinnamon. Medium, large or extra large.",8.5,["size","sweet"],{art:"drink"}),
-  I("jicaro","bebidas","Semilla de Jícaro","Jicaro Seed","Bebida tradicional de semilla de jícaro con leche.","Traditional drink made from jicaro seeds and milk.",8.5,["size","sweet"],{art:"drink"}),
-  I("chia-tamarindo","bebidas","Chía con Tamarindo","Tamarind Chia","Refresco de tamarindo con semillas de chía.","Tamarind drink with chia seeds.",6.5,["size","sweet"],{art:"drink"}),
-  I("chicha","bebidas","Chicha","Chicha","Refresco de maíz, la rosadita de siempre.","Sweet corn drink, the classic pink one.",6.5,["size","sweet"],{art:"drink"}),
-  I("arroz-pina","bebidas","Arroz con Piña","Rice & Pineapple","Cremoso, dulce y refrescante.","Creamy, sweet and refreshing.",5,["size","sweet"],{art:"drink"}),
-  I("granadilla","bebidas","Granadilla","Granadilla","Refresco natural de granadilla.","Fresh granadilla drink.",5,["size","sweet"],{art:"drink"}),
-  I("pinolillo","bebidas","Pinolillo","Pinolillo","Maíz tostado y cacao — la bebida de los nicas.","Toasted corn and cacao — the drink of the nicas.",5,["size","sweet"],{art:"drink"}),
-  I("gaseosa","bebidas","Gaseosa","Soda","Fría, de lata o botella.","Ice cold, can or bottle.",3,["soda"],{art:"drink"}),
-  I("pio-quinto","postres","Pío Quinto","Pío Quinto","Bizcocho borracho con natilla y canela.","Rum-soaked cake with custard and cinnamon.",7,[],{art:"bunuelo"}),
-  I("arroz-leche","postres","Arroz con Leche","Rice Pudding","Cremosito, con canela y pasas.","Creamy, with cinnamon and raisins.",6,[],{art:"bunuelo"}),
-  I("bunuelos","postres","Buñuelos","Buñuelos","Buñuelos de yuca bañados en miel caliente.","Yuca fritters bathed in warm honey syrup.",7,[],{art:"bunuelo"})
+  I("asado-res","asados","Asado de Res","Beef Asado","Carne asada de res a la parrilla con gallo pinto (arroz y frijoles mixtos), tajadas, queso frito y ensalada.","Grilled beef with gallo pinto, plantain chips, fried cheese and salad.",24,plate,{tag:{es:"Más pedido",en:"Most ordered"},img:img("asado-res")}),
+  I("asado-pollo","asados","Asado de Pollo","Chicken Asado","Pollo asado marinado en cítricos y ajo, con gallo pinto, maduro, queso frito y ensalada.","Grilled chicken marinated in citrus and garlic, with gallo pinto, sweet plantain, fried cheese and salad.",22,plate,{tag:{es:"Más pedido",en:"Most ordered"},img:img("asado-pollo")}),
+  I("asado-cerdo","asados","Asado de Cerdo","Pork Asado","Cerdo asado lentamente, marinado en cítricos y ajo, con gallo pinto, tajadas, queso frito y ensalada.","Slow-roasted pork marinated in citrus and garlic, with gallo pinto, plantain chips, fried cheese and salad.",22,plate,{img:img("asado-cerdo")}),
+  I("asado-mixto","asados","Asado Mixto","Mixed Asado","Res, chuleta de cerdo y pollo a la parrilla, con frijoles, queso, repollo, chimol, encurtido y aguacate.","Grilled beef, pork chop and chicken with beans, cheese, cabbage, chimol, pickles and avocado.",22.5,plate,{art:"steak"}),
+  I("tajadas-res","asados","Tajadas con Res","Plantains with Beef","Tajadas verdes con carne de res, ensalada de repollo y encurtido.","Green plantain chips with beef, cabbage salad and pickled onion.",20,plate,{art:"plate"}),
+  I("tajadas-cerdo","asados","Tajadas con Cerdo","Plantains with Pork","Tajadas con cerdo, ensalada de repollo y encurtido.","Plantain chips with pork, cabbage salad and pickled onion.",19.5,plate,{art:"plate"}),
+  I("tajadas-pollo","asados","Tajadas con Pollo","Plantains with Chicken","Tajadas verdes o maduras, pollo asado, queso frito, ensalada de repollo y encurtido.","Green or ripe plantains, grilled chicken, fried cheese, cabbage salad and pickled onion.",18.5,plate,{art:"plate"}),
+  I("enchiladas","antojitos","Enchiladas de Res","Beef Enchiladas","Tortillas rellenas de carne molida, con ensalada de repollo y chilero.","Tortillas filled with ground beef, topped with cabbage salad and chilero.",16.5,["drinks"],{img:img("enchiladas")}),
+  I("tacos-res","antojitos","Tacos de Res","Beef Tacos","Tacos nicas de res, enrollados y fritos, con repollo, crema y salsa.","Rolled, fried Nica beef tacos with cabbage, cream and sauce.",16.5,["drinks"],{tag:{es:"Más pedido",en:"Most ordered"},img:img("tacos")}),
+  I("tacos-pollo","antojitos","Tacos de Pollo","Chicken Tacos","Tacos nicas de pollo, enrollados y fritos, con repollo, crema y salsa.","Rolled, fried Nica chicken tacos with cabbage, cream and sauce.",15,["drinks"],{img:img("tacos")}),
+  I("quesillo","antojitos","Quesillo","Quesillo","Tortilla suave con quesillo, crema y cebolla encurtida.","Soft corn tortilla with fresh quesillo cheese, cream and pickled onion.",14.5,["drinks"],{img:img("quesillo")}),
+  I("nacatamal","antojitos","Nacatamal para Llevar","Nacatamal to Go","Nacatamal tradicional envuelto en hoja de plátano, para llevar.","Traditional nacatamal wrapped in banana leaf, to go.",13,["drinks"],{img:img("nacatamal")}),
+  I("nacatamal-servido","antojitos","Nacatamal Servido","Served Nacatamal","Masa de maíz con carne y verduras, cocida en hoja de plátano, servido con pan y café.","Corn dough with meat and vegetables steamed in banana leaf, served at the table.",16,["drinks"],{art:"nacatamal"}),
+  I("maduro-queso","antojitos","Tajadas Maduras con Queso","Ripe Plantains with Cheese","Maduro frito con queso.","Fried ripe plantains with cheese.",15,["drinks"],{art:"plate"}),
+  I("verde-queso","antojitos","Tajadas Verdes con Queso","Green Plantains with Cheese","Tajadas verdes fritas con queso.","Fried green plantain chips with cheese.",15,["drinks"],{art:"cajita"}),
+  I("vaho","domingos","Vaho","Steamed Beef Brisket","Carne de pecho de res y verduras, cocinados al vapor en hoja de plátano. Solo los domingos.","Beef brisket and vegetables steamed in banana leaf. Sundays only.",23,["drinks"],{days:[0],art:"nacatamal"}),
+  I("sopa-dia","domingos","Sopa del Día","Soup of the Day","Casi siempre es sopa de costilla de res, pero a veces varía. Llama para saber cuál está hoy.","Usually beef rib soup, but it varies. Call to ask today's soup.",25.3,["drinks"],{art:"soup"}),
+  I("chicha","naturales","Chicha","Chicha","Bebida tradicional de maíz.","Traditional corn drink.",6.5,["size"],{img:img("chicha")}),
+  I("chia-tamarindo","naturales","Chía con Tamarindo","Tamarind Chia","Refresco de tamarindo con semillas de chía.","Tamarind drink with chia seeds.",6.5,["size"],{art:"drink"}),
+  I("jamaica","naturales","Jamaica","Hibiscus","Refresco de flor de jamaica.","Refreshing hibiscus flower drink.",6.5,["size"],{art:"drink"}),
+  I("arroz-pina","naturales","Arroz con Piña","Rice & Pineapple","Refresco de arroz con piña.","Rice and pineapple drink.",6.5,["size"],{art:"drink"}),
+  I("cacao","naturales","Cacao","Cocoa","Cacao cremoso y bien frío.","Rich, cold cocoa drink.",8.5,["size"],{tag:{es:"Más pedido",en:"Most ordered"},img:img("cacao")}),
+  I("jicaro","naturales","Semilla de Jícaro","Jicaro Seed","Bebida tradicional de semilla de jícaro.","Traditional jicaro seed drink.",8.5,["size"],{img:img("jicaro")}),
+  I("coca-lata","sodas","Coca Lata","Canned Coke","Coca-Cola en lata.","Canned Coca-Cola.",3,[],{art:"drink"}),
+  I("milca","sodas","Milca Lata","Canned Milca","La gaseosa nica en lata.","Nicaraguan Milca soda, canned.",4.5,[],{art:"drink"}),
+  I("coca-nica","sodas","Coca Cola Nica 16 oz","Nica Coca-Cola 16 oz","Coca-Cola de Nicaragua.","Coca-Cola from Nicaragua.",6,[],{art:"drink"}),
+  I("kola-champagne","sodas","Kola Champagne","Kola Champagne","Gaseosa sabor champagne.","Cream-soda style kola.",3,[],{art:"drink"}),
+  I("agua","sodas","Agua Botella","Bottled Water","Agua en botella.","Bottled water.",3,[],{art:"drink"}),
+  I("rojita","sodas","Rojita 16 oz","Rojita 16 oz","La gaseosa roja nica.","The classic red Nica soda.",6,[],{art:"drink"}),
+  I("kola-shaler","sodas","Kola Shaler 16 oz","Kola Shaler 16 oz","Gaseosa nicaragüense tradicional.","Traditional Nicaraguan soda.",6,[],{art:"drink"}),
+  I("x-cerdo","extras","Extra Cerdo Asado","Extra Pork Asado","Porción extra de cerdo asado.","Extra portion of roast pork.",8.5,[],{art:"steak"}),
+  I("x-pollo","extras","Extra Pollo Asado","Extra Chicken Asado","Porción extra de pollo asado.","Extra portion of grilled chicken.",8.5,[],{art:"steak"}),
+  I("x-res","extras","Extra Res Asado","Extra Beef Asado","Porción extra de res asada.","Extra portion of grilled beef.",10.5,[],{art:"steak"}),
+  I("x-queso","extras","Queso Frito","Fried Cheese","Queso blanco frito.","Fried white cheese.",4,[],{art:"plate"}),
+  I("x-gallo","extras","Gallo Pinto","Gallo Pinto","Arroz con frijoles.","Rice and beans.",5.5,[],{art:"plate"}),
+  I("x-maduro","extras","Tajadas Maduras","Ripe Plantains","Maduro frito.","Fried ripe plantains.",4.5,[],{art:"plate"}),
+  I("x-verde","extras","Tajadas Verdes","Green Plantains","Tajadas verdes crujientes.","Crispy green plantain chips.",4.5,[],{art:"cajita"}),
+  I("x-tortillas","extras","Tortillas x2","Tortillas x2","Dos tortillas de maíz hechas a mano.","Two handmade corn tortillas.",4.5,[],{art:"tortilla"}),
+  I("x-ensalada","extras","Ensalada","Salad","Lechuga, tomate, cebolla y pepino.","Lettuce, tomato, onion and cucumber.",3,[],{art:"plate"})
 ];
 const SOCIAL={tiktok:"https://www.tiktok.com/@el_rey_fritanguero_nica",instagram:"https://www.instagram.com/fritangas_managuitas_usa",facebook:"https://www.facebook.com/share/1F8cXYR9hw/"};
 const CLUB={goal:10,reward:15};

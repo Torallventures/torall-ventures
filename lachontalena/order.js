@@ -474,7 +474,8 @@ function cardHTML(it){
 }
 function renderOrderPage(){
   const root=$("#orderRoot"); if(!root) return;
-  root.innerHTML=D.CATS.map(c=>`<div class="cat" id="o-${c.id}"><div class="cat-head reveal"><div class="ico">${art(c.art)}</div><h2>${esc(N(c))}</h2><span class="note">${esc(N(c.note))}</span></div>
+  const pop=D.ITEMS.filter(i=>i.tag&&i.tag.es==="Más pedido");
+  root.innerHTML=(pop.length?`<div class="cat popular"><div class="cat-head reveal"><h2>🔥 ${T("Los más pedidos","Most ordered")}</h2></div><div class="ogrid">${pop.map(cardHTML).join("")}</div></div>`:"")+D.CATS.map(c=>`<div class="cat" id="o-${c.id}"><div class="cat-head reveal"><div class="ico">${art(c.art)}</div><h2>${esc(N(c))}</h2><span class="note">${esc(N(c.note))}</span></div>
     <div class="ogrid">${D.ITEMS.filter(i=>i.cat===c.id).map(cardHTML).join("")}</div></div>`).join("");
 }
 function renderMenuPage(){

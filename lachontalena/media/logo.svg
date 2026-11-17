@@ -1,0 +1,101 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000">
+  <defs>
+    <radialGradient id="sky" cx="50%" cy="45%" r="60%"><stop offset="0" stop-color="#BFE2F7"/><stop offset="1" stop-color="#8CC6EC"/></radialGradient>
+    <linearGradient id="tri" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#F4FAFE"/><stop offset=".55" stop-color="#DDEFFA"/><stop offset="1" stop-color="#BFE0F4"/></linearGradient>
+    <clipPath id="tc"><path d="M505 196 L326 566 L714 566 Z"/></clipPath>
+    <path id="arcTop" d="M 108 500 A 392 392 0 0 1 892 500"/>
+    <path id="arcBot" d="M 95 500 A 405 405 0 0 0 905 500"/>
+    <g id="flower">
+      <g fill="#FFFDF5" stroke="#E8DDB0" stroke-width="2">
+        <ellipse cx="0" cy="-26" rx="17" ry="27"/><ellipse cx="0" cy="-26" rx="17" ry="27" transform="rotate(72)"/>
+        <ellipse cx="0" cy="-26" rx="17" ry="27" transform="rotate(144)"/><ellipse cx="0" cy="-26" rx="17" ry="27" transform="rotate(216)"/>
+        <ellipse cx="0" cy="-26" rx="17" ry="27" transform="rotate(288)"/>
+      </g>
+      <g fill="#F6C21B"><ellipse cx="0" cy="-14" rx="6" ry="13"/><ellipse cx="0" cy="-14" rx="6" ry="13" transform="rotate(72)"/><ellipse cx="0" cy="-14" rx="6" ry="13" transform="rotate(144)"/><ellipse cx="0" cy="-14" rx="6" ry="13" transform="rotate(216)"/><ellipse cx="0" cy="-14" rx="6" ry="13" transform="rotate(288)"/></g>
+      <circle r="7" fill="#E9A10E"/>
+    </g>
+    <g id="spoon"><ellipse cx="0" cy="-30" rx="13" ry="20" fill="#1b1b1b"/><rect x="-3.5" y="-14" width="7" height="58" rx="3.5" fill="#1b1b1b"/></g>
+  </defs>
+
+  <!-- outer white edge + yellow ring -->
+  <circle cx="500" cy="500" r="497" fill="#fff"/>
+  <circle cx="500" cy="500" r="462" fill="#1b1b1b"/>
+  <circle cx="500" cy="500" r="455" fill="#F7D658"/>
+  <circle cx="500" cy="500" r="372" fill="#1b1b1b"/>
+  <circle cx="500" cy="500" r="366" fill="url(#sky)"/>
+
+  <!-- ring text -->
+  <text font-family="Lora, Georgia, serif" font-weight="700" font-size="64" fill="#1b1b1b" stroke="#1b1b1b" stroke-width="1.2" letter-spacing="1"><textPath href="#arcTop" startOffset="50%" text-anchor="middle">Fritanga La Chontaleña, USA</textPath></text>
+  <text font-family="Lora, Georgia, serif" font-weight="700" font-size="42" fill="#1b1b1b" stroke="#1b1b1b" stroke-width="2.4" letter-spacing="2.5" dominant-baseline="hanging"><textPath href="#arcBot" startOffset="50%" text-anchor="middle">AUTENTICA COMIDA NICARAGUENSE</textPath></text>
+  <use href="#spoon" transform="translate(90 492) rotate(-6) scale(.85)"/>
+  <use href="#spoon" transform="translate(910 492) rotate(6) scale(.85)"/>
+
+  <!-- triangle scene --><g transform="translate(515 566) scale(1.08) translate(-515 -566)">
+  <g clip-path="url(#tc)">
+    <rect x="300" y="180" width="440" height="400" fill="url(#tri)"/>
+    <!-- rainbow -->
+    <g fill="none" stroke-width="9">
+      <path d="M415 330 A 92 92 0 0 1 595 330" stroke="#E53935"/>
+      <path d="M424 330 A 83 83 0 0 1 586 330" stroke="#FB8C00"/>
+      <path d="M433 330 A 74 74 0 0 1 577 330" stroke="#FDD835"/>
+      <path d="M442 330 A 65 65 0 0 1 568 330" stroke="#43A047"/>
+      <path d="M451 330 A 56 56 0 0 1 559 330" stroke="#1E88E5"/>
+      <path d="M460 330 A 47 47 0 0 1 550 330" stroke="#8E24AA"/>
+    </g>
+    <!-- sun rays + cap -->
+    <g stroke="#FFFFFF" stroke-width="5" stroke-linecap="round" opacity=".95">
+      <path d="M505 392 L505 300"/><path d="M505 392 L450 312"/><path d="M505 392 L560 312"/>
+      <path d="M505 392 L415 350"/><path d="M505 392 L595 350"/><path d="M505 392 L400 395"/><path d="M505 392 L610 395"/>
+      <path d="M505 392 L430 445"/><path d="M505 392 L580 445"/>
+    </g>
+    <circle cx="505" cy="392" r="38" fill="#FFF6C9" opacity=".6"/>
+    <path d="M488 405 q-2-30 17-35 q20 2 19 32 q-8 6-36 3z" fill="#D32F3A"/>
+    <path d="M497 371 q8-12 17-2" fill="none" stroke="#D32F3A" stroke-width="5" stroke-linecap="round"/>
+    <!-- volcanoes -->
+    <path d="M326 520 L372 468 L398 492 L430 440 L470 486 L503 452 L540 490 L572 460 L606 494 L640 470 L714 528 L714 566 L326 566 Z" fill="#5FA83B"/>
+    <path d="M326 532 L372 480 L398 504 L430 452 L470 498 L503 464 L540 502 L572 472 L606 506 L640 482 L714 540 L714 566 L326 566 Z" fill="#3E8A2C"/>
+    <path d="M430 440 L452 466 L440 470 Z M503 452 L520 470 L508 474 Z M572 460 L590 478 L578 482 Z" fill="#9AD06A"/>
+    <!-- water -->
+    <path d="M326 534 Q420 522 505 534 T714 534 L714 566 L326 566 Z" fill="#7CC4EC"/>
+    <path d="M360 545 h70 M470 552 h80 M590 544 h70" stroke="#fff" stroke-width="5" stroke-linecap="round"/>
+  </g>
+  <path d="M505 196 L326 566 L714 566 Z" fill="none" stroke="#1b1b1b" stroke-width="10" stroke-linejoin="round"/></g>
+
+  <!-- flame -->
+  <path d="M500 640 q-18-20 -6-44 q4 14 12 16 q-2-18 10-30 q-2 20 12 32 q12 14-4 26 q-6-12-12-12 q-2 10-12 12z" fill="#F57C00"/>
+  <path d="M504 638 q-8-10 0-22 q4 10 10 10 q6 8-2 14z" fill="#FFC107"/>
+
+  <!-- crossed spatula + fork -->
+  <g stroke="#1b1b1b" stroke-linecap="round">
+    <line x1="455" y1="690" x2="590" y2="820" stroke-width="11"/>
+    <line x1="555" y1="690" x2="420" y2="820" stroke-width="11"/>
+  </g>
+  <g transform="translate(436 672) rotate(-45)" fill="#1b1b1b">
+    <rect x="-34" y="-46" width="68" height="64" rx="9"/>
+    <g fill="#8CC6EC"><rect x="-22" y="-36" width="7" height="42" rx="3"/><rect x="-7" y="-36" width="7" height="42" rx="3"/><rect x="8" y="-36" width="7" height="42" rx="3"/><rect x="23" y="-36" width="5" height="42" rx="2"/></g>
+  </g>
+  <g transform="translate(566 680) rotate(45)" fill="none" stroke="#1b1b1b" stroke-width="8" stroke-linecap="round">
+    <path d="M-24 -46 L-24 -10 Q-24 8 0 8 Q24 8 24 -10 L24 -46"/><path d="M0 -46 L0 8"/>
+  </g>
+
+  <!-- flowers -->
+  <use href="#flower" transform="translate(262 556) scale(1.55) rotate(10)"/>
+  <use href="#flower" transform="translate(300 470) scale(1.05) rotate(-15)"/>
+  <use href="#flower" transform="translate(738 470) scale(.85) rotate(20)"/>
+  <use href="#flower" transform="translate(722 520) scale(.7)"/>
+  <g fill="#3E8A2C"><path d="M220 590 q-30 10-42 40 q30-4 50-26z"/><path d="M320 600 q22 20 20 48 q-22-14-28-38z"/></g>
+
+  <!-- guardabarranco (turquoise-browed motmot) on branch -->
+  <path d="M610 330 Q700 312 780 330" stroke="#6D4C2F" stroke-width="7" fill="none" stroke-linecap="round"/>
+  <g transform="translate(676 286) scale(1.35)">
+    <path d="M10 22 Q40 70 46 150 L48 222" stroke="#1D6FA3" stroke-width="6" fill="none"/>
+    <ellipse cx="48" cy="236" rx="12" ry="17" fill="#1D6FA3"/><ellipse cx="48" cy="236" rx="5" ry="8" fill="#0D3F63"/>
+    <path d="M-30 4 Q-10 -26 26 -16 Q46 -6 40 18 Q30 44 0 40 Q-24 36 -30 4z" fill="#7CB342"/>
+    <path d="M-6 30 Q16 44 38 22 Q34 40 10 44z" fill="#F08A24"/>
+    <circle cx="-28" cy="-22" r="22" fill="#5DA9C9"/>
+    <path d="M-48 -32 Q-30 -46 -10 -30" stroke="#8EE2F2" stroke-width="7" fill="none" stroke-linecap="round"/>
+    <path d="M-48 -22 L-86 -14 L-48 -12z" fill="#1b1b1b"/>
+    <circle cx="-32" cy="-24" r="4.5" fill="#1b1b1b"/>
+    <path d="M-44 -14 Q-36 -6 -24 -10" stroke="#1b1b1b" stroke-width="5" fill="none"/>
+  </g>
+</svg>

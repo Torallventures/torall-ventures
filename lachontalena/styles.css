@@ -907,3 +907,14 @@ body.menu-open .mm-acct{opacity:1}
 }
 @media (max-width:960px){.hero-photo.hp-desk{display:none!important}}
 body.video-on .hero-photo{display:none!important}
+
+/* =================== v7: real logo + DoorDash photos =================== */
+.brand-logo{width:48px;height:48px;flex:none;filter:drop-shadow(0 2px 4px rgba(0,0,0,.18));transition:transform .6s var(--ease-out)}
+.logo:hover .brand-logo{transform:rotate(-10deg) scale(1.05)}
+footer .brand-logo{width:64px;height:64px}
+.curtain-logo{width:min(26vw,150px);margin:0 auto 1rem;display:block;filter:drop-shadow(0 8px 20px rgba(0,0,0,.3))}
+body.is-loading .curtain-logo{animation:logoIn 1s var(--ease-out) both}
+@keyframes logoIn{from{transform:scale(.6) rotate(-30deg);opacity:0}to{transform:none;opacity:1}}
+.photo-deco{border-radius:32px;overflow:hidden;box-shadow:14px 14px 0 var(--terra);rotate:4deg;aspect-ratio:4/3}
+.photo-deco img{width:100%;height:100%;object-fit:cover}
+@media (max-width:440px){.brand-logo{width:38px;height:38px}}
