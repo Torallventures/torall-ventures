@@ -1117,3 +1117,13 @@ body.video-on .hero-grid>div:first-child{max-width:820px}
 .co-sec .express{margin-top:0}
 .co-sec .or{margin:1rem 0 .4rem}
 .co-sec .card-box{margin-top:.4rem}
+/* v12: smoother transitions */
+.curtain .panel{height:51%;will-change:transform;backface-visibility:hidden}
+body.nav-up .nav .logo .brand-logo{transform:none}
+.nav{will-change:transform}
+@keyframes markIn{from{transform:translateY(24px);opacity:0}to{transform:none;opacity:1}}
+[data-search-slot]{min-height:44px}
+.menu-tabs .tabs{min-height:42px}
+.order-head .pickup-strip{min-height:36px}
+.lang button{min-width:34px;min-height:32px}
+@media (max-width:440px){.lang button{min-width:30px;min-height:32px;padding:.2rem .4rem}}

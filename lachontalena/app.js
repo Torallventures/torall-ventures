@@ -154,7 +154,10 @@ function splitAll(force){
 const first=!sess.get("lc-seen"); sess.set("lc-seen","1");
 function ready(){document.body.classList.remove("is-loading");document.body.classList.add("is-ready")}
 document.body.classList.toggle("first",first);
-setTimeout(ready, first?900:120);
+// reveal only after fonts + injected UI have settled, so nothing jumps while the curtain opens
+const settle=Promise.race([ (document.fonts&&document.fonts.ready)||Promise.resolve(), new Promise(r=>setTimeout(r,400)) ]);
+const minWait=new Promise(r=>setTimeout(r, first?900:60));
+Promise.all([settle,minWait]).then(()=>requestAnimationFrame(()=>requestAnimationFrame(ready)));
 window.addEventListener("pageshow",e=>{if(e.persisted){document.body.classList.remove("is-leaving","menu-open");ready()}});
 document.addEventListener("click",e=>{
   const a=e.target.closest("a[href]"); if(!a) return;
@@ -180,8 +183,10 @@ const onScroll=()=>{
   navAcc+=d;
   const lockd=document.body.classList.contains("menu-open")||document.documentElement.classList.contains("lc-lock");
   if(y<120||lockd){document.body.classList.remove("nav-up");return}
-  if(navAcc>14) document.body.classList.add("nav-up");
-  else if(navAcc<-10) document.body.classList.remove("nav-up");
+  const now=performance.now(); if(now-(onScroll.t||0)<250) return;
+  const up=document.body.classList.contains("nav-up");
+  if(!up&&navAcc>48){document.body.classList.add("nav-up");onScroll.t=now;navAcc=0}
+  else if(up&&navAcc<-36){document.body.classList.remove("nav-up");onScroll.t=now;navAcc=0}
 };
 addEventListener("scroll",onScroll,{passive:true});onScroll();
 const burger=$(".burger"); burger&&burger.addEventListener("click",()=>{const o=document.body.classList.toggle("menu-open");burger.setAttribute("aria-expanded",o)});
