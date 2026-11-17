@@ -169,7 +169,7 @@ document.addEventListener("click",e=>{
   e.preventDefault();
   document.body.classList.remove("menu-open");
   document.body.classList.add("is-leaving");
-  setTimeout(()=>{location.href=u.href},340);
+  setTimeout(()=>{location.href=u.href},560);
 });
 
 /* ---------------- Nav ---------------- */

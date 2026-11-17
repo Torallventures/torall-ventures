@@ -1127,3 +1127,11 @@ body.nav-up .nav .logo .brand-logo{transform:none}
 .order-head .pickup-strip{min-height:36px}
 .lang button{min-width:34px;min-height:32px}
 @media (max-width:440px){.lang button{min-width:30px;min-height:32px;padding:.2rem .4rem}}
+
+/* v13: logo + name on every page change */
+body.is-leaving .curtain .mark{display:block!important;opacity:1;animation:markPop .38s var(--ease-out) .12s both;transition:none}
+body.is-loading:not(.first) .curtain .mark{display:block!important;opacity:1;animation:none}
+body.is-loading:not(.first) .curtain-logo{animation:none}
+body.is-leaving .curtain-logo{animation:none}
+body.is-ready:not(.first) .curtain .mark{opacity:0;transform:translateY(-8px);transition:opacity .25s ease,transform .3s ease}
+@keyframes markPop{from{opacity:0;transform:scale(.92)}to{opacity:1;transform:none}}
