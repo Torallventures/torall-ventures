@@ -16,8 +16,8 @@ INDS=['Condos and HOAs','Restaurants','Construction','Real estate','Medical and 
 PAGES['tips']=('tips','Tips for business websites · Torall Ventures','Practical advice on websites, portals and online ordering for condos, restaurants, construction, real estate, medical, law, retail and hospitality.')
 for q in POSTS:PAGES['tips/'+q['slug']]=('tips/'+q['slug'],q['title']+' · Torall Ventures',q['ex'])
 # Analytics: paste the IDs here, then run build.py
-GA_ID=''        # Google Analytics 4 Measurement ID, looks like G-AB12CD34EF
-CLARITY_ID=''   # Microsoft Clarity project ID, looks like k9x2ab7cde
+GA_ID='G-TS4E56RJHK'        # Google Analytics 4 Measurement ID, looks like G-AB12CD34EF
+CLARITY_ID='zfq3kjrueh'   # Microsoft Clarity project ID, looks like k9x2ab7cde
 _gid=GA_ID or 'GTM-NFGVBSSV'
 GTAG=f'''<script async src="https://www.googletagmanager.com/gtag/js?id={_gid}"></script>
 <script>
