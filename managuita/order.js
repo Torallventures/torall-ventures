@@ -1,6 +1,7 @@
 /* Online ordering — customizer, cart, checkout (demo: no real payments) */
 (function(){
 "use strict";
+const track=(n,p)=>{try{window.LC_track&&window.LC_track(n,p)}catch(e){}};
 const D=window.LC_DATA; if(!D) return;
 const $=(s,c=document)=>c.querySelector(s), $$=(s,c=document)=>[...c.querySelectorAll(s)];
 const ls={get(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
@@ -123,6 +124,7 @@ function openCz(id,srcEl,editIndex){
   const base=editIndex!=null?cart[editIndex]:null;
   cs={id,qty:base?base.qty:1,note:base?base.note:"",edit:editIndex,src:srcEl,sel:{}};
   it.opts.forEach(g=>{cs.sel[g]=base&&base.sel[g]?[...base.sel[g]]:[...(D.G[g].def||[])]});
+  track("view_item",{item_id:id,item_name:it.es});
   renderCz(); cz.classList.add("open"); cz.setAttribute("aria-hidden","false"); lock(true);
   czs.scrollTop=0;
 }
@@ -177,7 +179,7 @@ czs.addEventListener("click",e=>{
     const miss=ITEM(cs.id).opts.find(g=>!groupState(g).ok);
     if(miss){const sec=$(`.grp[data-g="${miss}"]`,czs);sec.classList.add("bad");sec.scrollIntoView({behavior:"smooth",block:"center"});return}
     const line={uid:Date.now().toString(36),id:cs.id,qty:cs.qty,sel:cs.sel,note:(cs.note||"").trim()};
-    if(cs.edit!=null) cart[cs.edit]=line; else cart.push(line);
+    if(cs.edit!=null) cart[cs.edit]=line; else { cart.push(line); const it0=ITEM(cs.id); track("add_to_cart",{currency:"USD",value:linePrice(line),items:[{item_id:it0.id,item_name:it0.es,price:it0.price,quantity:line.qty}],note:line.note?1:0}); }
     const src=cs.src; save(); closeCz();
     showToast(cs.edit!=null?T("Pedido actualizado ✓","Order updated ✓"):T("¡Agregado a tu pedido! ✓","Added to your order! ✓"));
     if(cs.edit==null) flyFrom(src||fab); else renderDrawer();
@@ -213,6 +215,7 @@ function openCheckout(){
   const prev=ls.get("lc-pickup",null),u=user(),info=u?{name:u.name,phone:u.phone}:ls.get("lc-info",{});
   ck={redeem:true,join:true,tipCustom:"",step:1,mode:asapOK()?(prev&&prev.mode)||"asap":"later",day:prev&&prev.day||0,min:prev&&prev.min||null,name:info.name||"",phone:info.phone||"",email:info.email||"",sms:true,pay:"card",tip:0.15};
   if(ck.mode==="later"&&!dayAllowed(ck.day)) ck.day=firstDay();
+  track("begin_checkout",{currency:"USD",value:subtotal(),items:cart.map(l=>({item_id:l.id,item_name:(ITEM(l.id)||{}).es,quantity:l.qty}))});
   renderCo(); co.classList.add("open"); co.setAttribute("aria-hidden","false"); lock(true);
 }
 function closeCheckout(){co.classList.remove("open");co.setAttribute("aria-hidden","true");lock(false)}
@@ -324,6 +327,7 @@ function placeOrder(pay){
     const hist=orders(); hist.unshift({no:ck.order.no,store:st0.id,date:Date.now(),total:t.t,lines:cart.map(l=>({id:l.id,qty:l.qty,sel:l.sel,note:l.note}))}); ls.set("lc-orders",hist.slice(0,10));
     const u0=user(); if(u0) ls.set("lc-known-"+u0.phone.replace(/\D/g,""),u0);
     ck.order.guest=!u0;
+    track("purchase",{transaction_id:ck.order.no,currency:"USD",value:+t.t.toFixed(2),tax:+t.tax.toFixed(2),store:st0.id,pickup:ck.mode,payment:pay,demo:1,items:cart.map(l=>({item_id:l.id,item_name:(ITEM(l.id)||{}).es,quantity:l.qty}))});
     ls.set("lc-last-order",ck.order); cart=[]; save(); renderClub(); renderReorder();
     ck.step=4; renderCo();
   },pay==="card"?700:1100);
@@ -373,7 +377,7 @@ function renderClub(){
     f.addEventListener("submit",e=>{e.preventDefault();const n=f.cname.value.trim(),ph=f.cphone.value,err=$(".err",f);
       if(!n){err.hidden=false;err.textContent=T("Escribe tu nombre.","Enter your name.");return}
       if(ph.replace(/\D/g,"").length<10){err.hidden=false;err.textContent=T("Escribe un teléfono de 10 dígitos.","Enter a 10-digit phone.");return}
-      ls.set("lc-club",{name:n,phone:ph,stamps:1,sms:f.csms.checked});renderClub();
+      ls.set("lc-club",{name:n,phone:ph,stamps:1,sms:f.csms.checked});track("club_signup",{sms_optin:f.csms.checked?1:0});renderClub();
       showToast(T("¡Bienvenido al Club del Rey! Te regalamos tu primera corona 👑","Welcome to Club del Rey! Your first crown is on us 👑"));});
   }
 }
@@ -438,7 +442,7 @@ function renderAcct(){
   const first=$("input",as); if(first&&av.view!=="home") setTimeout(()=>first.focus(),350);
 }
 function finishLogin(u){
-  ls.set("lc-user",u);
+  ls.set("lc-user",u); track("login",{method:u.method});
   let c=club(); if(!c){c={name:u.name,phone:u.phone,stamps:0,sms:false};ls.set("lc-club",c)}
   // attach orders placed as guest
   av={view:"home"}; renderAcct(); renderAcctBtn(); renderClub(); renderReorder();
@@ -472,6 +476,7 @@ as.addEventListener("keydown",e=>{const t=e.target;if(t.dataset&&t.dataset.otp!=
 as.addEventListener("paste",e=>{const t=e.target;if(t.dataset&&t.dataset.otp!=null){const v=(e.clipboardData.getData("text")||"").replace(/\D/g,"").slice(0,6);if(v.length){e.preventDefault();$$("[data-otp]",as).forEach((i,k)=>i.value=v[k]||"");$$("[data-otp]",as)[Math.min(5,v.length-1)].dispatchEvent(new Event("input",{bubbles:true}))}}});
 
 function reorder(no){
+  track("reorder",{order:no});
   const o=orders().find(x=>x.no===no); if(!o) return;
   if(o.store&&storeById(o.store)&&o.store!==store().id){ls.set("lc-store",o.store);storeChanged(true)}
   let added=0,skipped=0;
@@ -538,7 +543,7 @@ function storeChanged(silent){
 sps.addEventListener("click",e=>{
   if(e.target.closest(".cz-x")){closeStores();return}
   const c=e.target.closest("[data-store]");
-  if(c){ls.set("lc-store",c.dataset.store);ls.set("lc-store-chosen",true);closeStores();storeChanged();return}
+  if(c){ls.set("lc-store",c.dataset.store);ls.set("lc-store-chosen",true);track("store_select",{store:c.dataset.store});closeStores();storeChanged();return}
   if(e.target.closest("[data-geo]")){
     if(!navigator.geolocation){spState.msg=T("Tu navegador no comparte la ubicación. Usa tu código postal.","Your browser can't share location. Use your ZIP code.");renderSp();return}
     spState.busy=true;renderSp();
@@ -658,6 +663,7 @@ function setQuery(v,immediate){
   sq=v; clearTimeout(sqT);
   const run=()=>{renderOrderPage();renderMenuPage();$$("[data-msclear]").forEach(b=>b.hidden=!sq);$$("[data-msearch]").forEach(i=>{if(i.value!==sq)i.value=sq});document.body.classList.toggle("searching",!!sq);if(window.LC_observe)window.LC_observe();if(window.LC_refreshTabs)window.LC_refreshTabs();const m=$("#orderRoot")||$("#menuRoot");if(sq&&m){const top=m.getBoundingClientRect().top;if(top>innerHeight*.6||top<0)scrollTo({top:scrollY+top-170,behavior:"smooth"})}};
   immediate?run():(sqT=setTimeout(run,140));
+  clearTimeout(setQuery.tt); if(v&&v.length>=3) setQuery.tt=setTimeout(()=>{const r=search(v);track("search",{search_term:v,results:r.res.length,corrected:r.didYouMean||""})},1200);
 }
 function mountSearch(){$$("[data-search-slot]").forEach(slot=>{slot.innerHTML=searchBox()})}
 document.addEventListener("input",e=>{if(e.target.matches("[data-msearch]"))setQuery(e.target.value)});

@@ -1,6 +1,14 @@
 /* Fritanga Managüita USA — site script (demo by Torall) */
 (function(){
 "use strict";
+const track=window.LC_track=(n,p)=>{try{p=Object.assign({site:"managuita_demo"},p||{});window.gtag&&gtag("event",n,p);window.clarity&&clarity("event",n)}catch(e){}};
+document.addEventListener("click",e=>{const a=e.target.closest("a,button");if(!a)return;const h=a.getAttribute("href")||"";
+  if(/^tel:/.test(h))track("call_click",{phone:h.slice(4)});
+  else if(/google\.com\/maps/.test(h))track("directions_click");
+  else if(/tiktok|instagram|facebook/.test(h))track("social_click",{network:(h.match(/tiktok|instagram|facebook/)||[""])[0]});
+  else if(/ordenar(\/|\.html)/.test(h))track("order_cta_click",{from:document.body.dataset.page,label:(a.textContent||"").trim().slice(0,40)});
+  else if(a.closest(".lang"))track("language_switch",{lang:a.dataset.l});
+},true);
 const $=(s,c=document)=>c.querySelector(s), $$=(s,c=document)=>[...c.querySelectorAll(s)];
 const store={get(k){try{return localStorage.getItem(k)}catch(e){return null}},set(k,v){try{localStorage.setItem(k,v)}catch(e){}}};
 const sess={get(k){try{return sessionStorage.getItem(k)}catch(e){return null}},set(k,v){try{sessionStorage.setItem(k,v)}catch(e){}}};
@@ -361,6 +369,7 @@ if(fbf){
     e.preventDefault();
     const err=$(".err",fbf);
     if(!rating){err.hidden=false;err.textContent=lang==="en"?"Please pick a star rating.":"Elige una calificación de estrellas.";return}
+    track("feedback_submit",{rating});
     const done=$(".fb-done");fbf.hidden=true;done.hidden=false;
     $(".fb-msg",done).textContent = rating>=4
       ? (lang==="en"?"We're so glad you enjoyed it. Would you share it on Google? It really helps a family business.":"Nos alegra muchísimo que te haya gustado. ¿Nos ayudas con una reseña en Google? Significa mucho para un negocio familiar.")
