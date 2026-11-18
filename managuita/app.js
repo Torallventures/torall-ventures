@@ -1,4 +1,4 @@
-/* Fritanga La Chontaleña — site script (demo by Torall) */
+/* Fritanga Managüita USA — site script (demo by Torall) */
 (function(){
 "use strict";
 const $=(s,c=document)=>c.querySelector(s), $$=(s,c=document)=>[...c.querySelectorAll(s)];
@@ -37,8 +37,8 @@ cajita:`<svg viewBox="0 0 200 200" aria-hidden="true">
 <path d="M30 60c20-14 30 6 44-6s26 8 40-4 28 6 40-4 18 4 16 14l-4 14H34z" fill="#4E7A3A" stroke="${INK}" stroke-width="3" stroke-linejoin="round"/>
 <path d="M50 52l6 26M78 48l4 30M108 46l2 32M136 48l-2 30" stroke="#2E4A2C" stroke-width="2"/>
 <rect x="62" y="108" width="76" height="40" rx="20" fill="#F5EBDA" stroke="${INK}" stroke-width="2.5"/>
-<text x="100" y="125" text-anchor="middle" font-family="Fraunces,serif" font-style="italic" font-size="12" fill="#B4472B">La</text>
-<text x="100" y="140" text-anchor="middle" font-family="Fraunces,serif" font-style="italic" font-size="13" font-weight="700" fill="${INK}">Chontaleña</text>
+<text x="100" y="125" text-anchor="middle" font-family="Fraunces,serif" font-style="italic" font-size="12" fill="#B4472B">Fritanga</text>
+<text x="100" y="140" text-anchor="middle" font-family="Fraunces,serif" font-style="italic" font-size="13" font-weight="700" fill="${INK}">Managüita</text>
 </svg>`,
 drink:`<svg viewBox="0 0 200 200" aria-hidden="true">
 <ellipse cx="100" cy="188" rx="46" ry="7" fill="${INK}" opacity=".15"/>

@@ -363,7 +363,7 @@ function renderClub(){
   `<form class="club-form" novalidate>
     <label class="fl"><span>${T("Nombre","Name")}</span><input name="cname" autocomplete="name"></label>
     <label class="fl"><span>${T("Teléfono","Phone")}</span><input name="cphone" type="tel" inputmode="tel" placeholder="(305) 555-0123"></label>
-    <label class="cbx consent"><input type="checkbox" name="csms"><span>${T("Sí, quiero recibir textos con especiales y recompensas de Fritanga La Chontaleña (hasta 4 al mes). Pueden aplicar tarifas de mensajes y datos. Responde STOP para cancelar o HELP para ayuda. No es requisito para unirte.","Yes, text me specials and rewards from Fritanga La Chontaleña (up to 4/month). Msg & data rates may apply. Reply STOP to cancel, HELP for help. Not required to join.")} <a href="terminos/#sms">${T("Términos","Terms")}</a> · <a href="privacidad/">${T("Privacidad","Privacy")}</a></span></label>
+    <label class="cbx consent"><input type="checkbox" name="csms"><span>${T("Sí, quiero recibir textos con especiales y recompensas de Fritanga Managüita USA (hasta 4 al mes). Pueden aplicar tarifas de mensajes y datos. Responde STOP para cancelar o HELP para ayuda. No es requisito para unirte.","Yes, text me specials and rewards from Fritanga Managüita USA (up to 4/month). Msg & data rates may apply. Reply STOP to cancel, HELP for help. Not required to join.")} <a href="terminos/#sms">${T("Términos","Terms")}</a> · <a href="privacidad/">${T("Privacidad","Privacy")}</a></span></label>
     <button class="btn solid" type="submit">${T("Unirme gratis","Join free")} <span class="arr">→</span></button>
     <p class="err" hidden></p>
   </form>`}`;

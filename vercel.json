@@ -7,12 +7,32 @@
   "redirects": [
     {
       "source": "/:slug(lachontale[^n/]+a)",
-      "destination": "/lachontalena/",
+      "destination": "/managuita/",
       "permanent": false
     },
     {
       "source": "/:slug(lachontale[^n/]+a)/:rest*",
-      "destination": "/lachontalena/:rest*",
+      "destination": "/managuita/:rest*",
+      "permanent": false
+    },
+    {
+      "source": "/managu%C3%ADta",
+      "destination": "/managuita/",
+      "permanent": false
+    },
+    {
+      "source": "/managüita",
+      "destination": "/managuita/",
+      "permanent": false
+    },
+    {
+      "source": "/managu%C3%BCita",
+      "destination": "/managuita/",
+      "permanent": false
+    },
+    {
+      "source": "/managu%C3%BCita/:rest*",
+      "destination": "/managuita/:rest*",
       "permanent": false
     }
   ]

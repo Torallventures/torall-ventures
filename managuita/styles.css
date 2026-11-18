@@ -1164,3 +1164,7 @@ body.is-ready:not(.first) .curtain .mark{opacity:0;transform:translateY(-8px);tr
   .of b{font-size:1.35rem}
   .item .p{font-size:1.4rem}
 }
+.logo b .usa{font-style:normal;font-family:var(--f-body);font-weight:800;font-size:.55em;letter-spacing:.12em;vertical-align:.35em;color:var(--terra);margin-left:.1em}
+.nav:not(.scrolled) .logo b .usa{color:var(--gold)}
+footer .logo b .usa{color:var(--gold)}
+.foot-word{font-size:clamp(3.4rem,13vw,11rem)}
