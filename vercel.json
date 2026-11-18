@@ -6,6 +6,16 @@
   "trailingSlash": true,
   "redirects": [
     {
+      "source": "/pricing",
+      "destination": "/contact/",
+      "permanent": false
+    },
+    {
+      "source": "/pricing/:rest*",
+      "destination": "/contact/",
+      "permanent": false
+    },
+    {
       "source": "/:slug(lachontale[^n/]+a)",
       "destination": "/managuita/",
       "permanent": false

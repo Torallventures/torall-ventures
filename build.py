@@ -8,7 +8,6 @@ PAGES={
 'industries':('industries','Industries we build for · Torall Ventures','Websites, apps and portals for condos and HOAs, restaurants, construction, real estate, medical, law, retail and hospitality.'),
 'services':('services','Websites, apps and custom software · Torall Ventures','Design and development, online ordering and booking, mobile apps, resident portals, admin dashboards and integrations.'),
 'process':('process','How a project works · Torall Ventures','Talk, prototype, build, launch. See how a project with Torall Ventures runs and answers to common questions.'),
-'pricing':('pricing','Pricing · Torall Ventures','Starter sites from $1,800, business sites from $4,500 and custom portals from $9,500. Fixed written quotes, no surprises.'),
 'contact':('contact','Contact us · Torall Ventures','Tell us about your project and get a written proposal within one business day. Call or text (213) 606-5711.'),
 'privacy':('privacy','Privacy Policy · Torall Ventures','What Torall Ventures collects through its website, why, and your choices.'),
 'terms':('terms','Terms of Use · Torall Ventures','The terms for using the Torall Ventures website and demo sites.')}
