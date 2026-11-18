@@ -15,12 +15,19 @@ import sys;sys.path.insert(0,R+'/_src');from tips import POSTS,DATE
 INDS=['Condos and HOAs','Restaurants','Construction','Real estate','Medical and wellness','Law and finance','Retail','Hospitality']
 PAGES['tips']=('tips','Tips for business websites · Torall Ventures','Practical advice on websites, portals and online ordering for condos, restaurants, construction, real estate, medical, law, retail and hospitality.')
 for q in POSTS:PAGES['tips/'+q['slug']]=('tips/'+q['slug'],q['title']+' · Torall Ventures',q['ex'])
-GTAG='''<script async src="https://www.googletagmanager.com/gtag/js?id=GTM-NFGVBSSV"></script>
+# Analytics: paste the IDs here, then run build.py
+GA_ID=''        # Google Analytics 4 Measurement ID, looks like G-AB12CD34EF
+CLARITY_ID=''   # Microsoft Clarity project ID, looks like k9x2ab7cde
+_gid=GA_ID or 'GTM-NFGVBSSV'
+GTAG=f'''<script async src="https://www.googletagmanager.com/gtag/js?id={_gid}"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
+  function gtag(){{dataLayer.push(arguments);}}
+  gtag('js', new Date());'''+(f"\n  gtag('config', '{GA_ID}');" if GA_ID else '')+'''
 </script>'''
+if CLARITY_ID:
+    GTAG+=f'''
+<script>(function(c,l,a,r,i,t,y){{c[a]=c[a]||function(){{(c[a].q=c[a].q||[]).push(arguments)}};t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);}})(window,document,"clarity","script","{CLARITY_ID}");</script>'''
 LD={"@context":"https://schema.org","@type":"ProfessionalService","name":"Torall Ventures","url":D+"/","telephone":"+1-213-606-5711","email":"info@torallventures.com","description":"Websites, mobile apps and custom software for businesses.","priceRange":"$$","address":{"@type":"PostalAddress","addressLocality":"Miami","addressRegion":"FL","addressCountry":"US"},"areaServed":"Miami, Florida"}
 import html as H
 tpl=open(R+'/_src/site.html').read()

@@ -368,18 +368,18 @@ html[lang=es] .rot{font-size:calc(var(--rs)*.9)}@media(max-width:700px){html[lan
 <div class="stp2" id="done" aria-live="polite"><div class="okb"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>Message sent</div><h3 id="dn">Thank you.</h3><p>We got your request. Expect a reply from info@torallventures.com within one business day, usually sooner. If you don’t see it, check your spam folder.</p><ul class="rec" id="rec"></ul><p class="fine">Need us sooner? <a href="tel:2136065711">Call or text (213) 606-5711</a>.</p></div></div></section>
 
 <section class="xp" data-pg="home"><h2>Where to next?</h2><div class="xpg"><a class="rv" href="/services/"><small>01</small><b>Services</b><span>Websites, mobile apps and custom software.</span><i>↗</i></a><a class="rv" style="--dl:.08s" href="/industries/"><small>02</small><b>Industries</b><span>Condos, restaurants, construction and more.</span><i>↗</i></a><a class="rv" style="--dl:.16s" href="/process/"><small>03</small><b>Process</b><span>How a project runs, from first call to launch.</span><i>↗</i></a><a class="rv" style="--dl:.18s" href="/work/"><small>04</small><b>Our work</b><span>Live sites you can click through.</span><i>↗</i></a><a class="rv" style="--dl:.32s" href="/contact/"><small>05</small><b>Contact</b><span>Tell us about your project and get a proposal.</span><i>↗</i></a></div></section>
-<section id="privacy" class="lg" data-pg="privacy"><h1>Privacy Policy</h1><p class="sub">Last updated November 12, 2026. This explains what Torall Ventures (“we”, “us”) collects through torallventures.com, why, and what you can do about it. It is written in plain language on purpose.</p>
+<section id="privacy" class="lg" data-pg="privacy"><h1>Privacy Policy</h1><p class="sub">Last updated November 18, 2026. This explains what Torall Ventures (“we”, “us”) collects through torallventures.com, why, and what you can do about it. It is written in plain language on purpose.</p>
 <div class="lgb"><h3>What we collect</h3>
 <p><b>Information you send us.</b> When you use the project request form, we receive what you type or choose: your name (optional), email address, the services you need, your business type, your timeline and budget range, an optional package choice, and your message. If you email or call us, we receive whatever you share.</p>
-<p><b>Information collected automatically.</b> We use the Google tag (Google Analytics) to understand how the site is used. It records pages viewed, how you arrived, approximate location (city level, derived from your IP address), device, browser and screen size, and uses cookies or similar identifiers to tell visits apart. Our hosting provider, Vercel, also keeps standard server logs, which include your IP address and the pages requested.</p>
+<p><b>Information collected automatically.</b> We use the Google tag (Google Analytics) to understand how the site is used. It records pages viewed, how you arrived, approximate location (city level, derived from your IP address), device, browser and screen size, and uses cookies or similar identifiers to tell visits apart. We also use Microsoft Clarity, which records how visitors scroll, click and move around pages (session replays and heatmaps) so we can see where the site is confusing. Clarity hides what you type into forms and does not capture payment details. Our hosting provider, Vercel, also keeps standard server logs, which include your IP address and the pages requested.</p>
 <p><b>Search data.</b> We use Google Search Console, which shows us combined, anonymous information about how people find the site in Google Search. It does not identify you.</p>
 <p><b>Our demo sites.</b> The sample sites in “Our work” (The Ardent Residences, Brasa &amp; Lime and Sunday Bean) are fictional. Anything you type or click there, including fake orders, reservations, votes and assistant questions, stays in your browser while the page is open and is not sent to us or stored. Please do not enter real personal or payment information in them.</p></div>
 <div class="lgb"><h3>How we use it</h3>
 <p>We use your form details to reply to you, prepare a proposal and run our business. We use analytics to improve the site and see which pages help visitors. We do not sell your information, and we do not use it for advertising profiles.</p></div>
 <div class="lgb"><h3>Who handles it</h3>
-<p>We rely on a few service providers: Formspree receives form submissions and forwards them to our email; Google provides analytics and search reporting; and Vercel hosts the site. They process information only to provide those services, under their own privacy terms. We may also disclose information if the law requires it.</p></div>
+<p>We rely on a few service providers: Formspree receives form submissions and forwards them to our email; Google provides analytics and search reporting; Microsoft provides Clarity usage analytics; and Vercel hosts the site. They process information only to provide those services, under their own privacy terms. We may also disclose information if the law requires it.</p></div>
 <div class="lgb"><h3>Cookies and your choices</h3>
-<p>The Google tag may set cookies. You can block or delete cookies in your browser settings, or install Google’s <a href="https://tools.google.com/dlpage/gaoptout" target="_blank" rel="noopener">Analytics opt-out add-on</a>. The site still works if you do.</p>
+<p>The Google tag and Microsoft Clarity may set cookies. You can block or delete cookies in your browser settings, or install Google’s <a href="https://tools.google.com/dlpage/gaoptout" target="_blank" rel="noopener">Analytics opt-out add-on</a>. Microsoft explains how Clarity handles data in the <a href="https://privacy.microsoft.com/privacystatement" target="_blank" rel="noopener">Microsoft Privacy Statement</a>. The site still works if you do.</p>
 <p>You can ask us to tell you what we hold about you, correct it or delete it by emailing <a href="mailto:info@torallventures.com">info@torallventures.com</a>. We will respond within a reasonable time.</p></div>
 <div class="lgb"><h3>How long we keep it</h3>
 <p>We keep project requests and related emails for as long as needed to respond and for our business records, usually no more than three years, then delete them. Analytics data is kept according to our Google Analytics retention settings.</p></div>
@@ -571,6 +571,9 @@ html[lang=es] .rot{font-size:calc(var(--rs)*.9)}@media(max-width:700px){html[lan
 <script>
 const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)],rm=matchMedia('(prefers-reduced-motion:reduce)').matches;
 /* EN/ES: Spanish copy comes from /es.js (loaded in <head> only when Spanish is chosen) */
+/* analytics events (Google Analytics + Microsoft Clarity); safe no-ops until the tags are on */
+const track=(n,p)=>{try{window.gtag&&gtag('event',n,p||{});window.clarity&&clarity('event',n)}catch(e){}};
+document.addEventListener('click',e=>{const a=e.target.closest&&e.target.closest('a[href="/contact/"]');if(a)track('free_sample_click',{link_text:a.textContent.trim().slice(0,60)})},true);
 const LANG=window.ES?'es':'en',T=s=>LANG=='es'&&ES[s]||s;
 const trN=n=>{const v=n.nodeValue,k=v.replace(/\s+/g,' ').trim();if(!k)return;const t=ES[k];if(t&&t!==k)n.nodeValue=v.match(/^\s*/)[0]+t+v.match(/\s*$/)[0]};
 const trA=e=>{for(const a of['placeholder','aria-label','title','alt']){const v=e.getAttribute(a);if(v&&ES[v.trim()])e.setAttribute(a,ES[v.trim()])}};
@@ -656,7 +659,7 @@ function load(){const s2=src();url.textContent=slug(nm());op.href=s2;if(!started
 fr.addEventListener('load',()=>vw.classList.remove('ld'));
 inp.addEventListener('input',()=>{url.textContent=slug(nm());clearTimeout(tm);tm=setTimeout(load,650)});
 inp.addEventListener('keydown',e=>{if(e.key=='Enter'){clearTimeout(tm);load();inp.blur()}});
-bs.forEach(b=>b.addEventListener('click',()=>{bs.forEach(x=>{x.classList.toggle('on',x===b);x.setAttribute('aria-checked',x===b)});k=b.dataset.k;t=b.dataset.t;clearTimeout(tm);load()}));
+bs.forEach(b=>b.addEventListener('click',()=>{track('preview_type',{type:b.dataset.t});bs.forEach(x=>{x.classList.toggle('on',x===b);x.setAttribute('aria-checked',x===b)});k=b.dataset.k;t=b.dataset.t;clearTimeout(tm);load()}));
 go.addEventListener('click',()=>{const m=$('#ms');if(m&&!m.value)m.value=LANG=='es'?`Muestra gratis para ${nm()} (${T(t)}).`:`Free sample for ${nm()} (${t}).`});
 const io=new IntersectionObserver(es=>{if(es.some(e=>e.isIntersecting)){started=true;io.disconnect();fit();load()}},{rootMargin:'400px'});io.observe(sec);
 addEventListener('resize',fit);fit();
@@ -701,7 +704,7 @@ let err=$('#serr');if(!err){err=document.createElement('p');err.id='serr';err.st
 const lbl=btn.textContent;btn.disabled=true;btn.textContent=T('Sending...');
 try{const r=await fetch('https://formspree.io/f/mwloprbq',{method:'POST',headers:{'Accept':'application/json','Content-Type':'application/json'},body:JSON.stringify(data)});if(!r.ok)throw 0}
 catch(e){btn.disabled=false;btn.textContent=lbl;err.innerHTML=T('Something went wrong sending that. Please try again, or email')+' <a href="mailto:info@torallventures.com" style="text-decoration:underline">info@torallventures.com</a>.';return}
-btn.disabled=false;btn.textContent=lbl;window.__plan=null;$('#dn').textContent=T('Thank you')+(nm?', '+nm.split(' ')[0]:'')+'.';
+btn.disabled=false;btn.textContent=lbl;window.__plan=null;track('generate_lead',{business:data.business||'',needs:data.needs||''});$('#dn').textContent=T('Thank you')+(nm?', '+nm.split(' ')[0]:'')+'.';
 $('#rec').innerHTML=[['Needs',data.needs],['Business',data.business],['Timeline',data.timeline],['Budget',data.budget],['Email',em.value]].map(r=>`<li>${T(r[0])}<span>${r[1]}</span></li>`).join('');goP(4)};
 /* demo */
 const win=$('.win'),dc=$('#dcur');win.appendChild(dc);const SC=$$('.scn'),TB=$$('.tb'),DUR=12500,CAP=['Move-in applications','Building announcements','Service requests','Amenity reservations','Online ordering'];
