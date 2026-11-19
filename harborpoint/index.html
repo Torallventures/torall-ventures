@@ -960,6 +960,91 @@ body:not(.mgmt) .run-top{top:68px}
 .bc-drop.over{border-color:var(--tide);background:#eef8f7;color:var(--tide)}
 .insp-empty{text-align:center;color:var(--mu);padding:40px 10px}.insp-empty svg{margin:0 auto 10px;opacity:.5}.insp-empty b{display:block;color:#0f1e26;margin-bottom:4px}.insp-empty p{font-size:13px}
 .bld-insp .field label{font-size:12.5px}
+
+/* =================== Applications v2: forms home + form inbox =================== */
+.hl-new{color:#d6455a}
+.fx-sec{margin-bottom:26px}
+.fx-sec h3{display:flex;align-items:center;gap:8px;font-family:var(--sans);font-size:13px;font-weight:750;color:var(--mu);margin:0 0 10px;letter-spacing:.02em}
+.fx-list{display:flex;flex-direction:column;background:#fff;border:1px solid var(--bd);border-radius:20px;overflow:visible}
+.fx-list.pinned{border-color:#ead9b4;background:linear-gradient(180deg,#fffdf8,#fff);box-shadow:0 18px 40px -30px rgba(200,161,90,.6)}
+.fx{position:relative;display:grid;grid-template-columns:52px minmax(0,1fr) 92px 130px 120px 40px 40px;align-items:center;gap:14px;padding:16px 18px;border-bottom:1px solid #f0f3f5;cursor:pointer;transition:background .25s}
+.fx:last-child{border-bottom:0}
+.fx:first-child{border-radius:20px 20px 0 0}.fx:last-child{border-radius:0 0 20px 20px}.fx:only-child{border-radius:20px}
+.fx::before{content:"";position:absolute;left:0;top:18px;bottom:18px;width:3px;border-radius:0 3px 3px 0;background:var(--fc);transform:scaleY(0);transition:transform .35s var(--ease)}
+.fx:hover{background:#fafcfc}.fx:hover::before{transform:scaleY(1)}
+.fx:focus-visible{outline:2.5px solid var(--brass);outline-offset:-3px}
+.fx .fc-ico{width:48px;height:48px;border-radius:14px;transition:transform .5s var(--ease)}
+.fx:hover .fc-ico{transform:rotate(-6deg) scale(1.05)}
+.fx-t{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.fx-t b{font-size:15.5px;font-weight:750}
+.fx-main small{display:block;color:var(--mu);font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.fx-new{font-size:11.5px;font-weight:800;color:#fff;background:#d6455a;border-radius:99px;padding:1px 8px;animation:pop .5s var(--ease)}
+.fx-stat b{display:block;font-family:var(--serif);font-size:26px;font-weight:600;line-height:1}.fx-stat small,.fx-last small{color:var(--mu);font-size:12px}
+.fx-last b{display:block;font-size:13.5px}
+.fx-spark .spark{height:34px;margin:0}
+.pin{width:36px;height:36px;border-radius:10px;border:0;background:none;color:#b3c0c5;cursor:pointer;display:grid;place-items:center;transition:color .25s,background .25s,transform .35s var(--ease)}
+.pin:hover{background:#f4f7f8;color:var(--abyss)}
+.pin.on{color:var(--brass)}.pin.on svg{fill:var(--brass)}
+.pin.burst{animation:pinBurst .5s var(--ease)}
+@keyframes pinBurst{30%{transform:scale(1.35) rotate(-18deg)}60%{transform:scale(.9)}}
+.fx-menu{right:0;top:calc(100% + 4px);width:220px}
+@media (max-width:1000px){.fx{grid-template-columns:48px minmax(0,1fr) 40px 40px}.fx-stat,.fx-spark,.fx-last{display:none}}
+/* form inbox page */
+.fi{animation:wsIn .5s var(--ease)}
+.fi-head{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap;margin-bottom:18px}
+.crumb-back{flex-basis:100%;display:inline-flex;align-items:center;gap:6px;border:0;background:none;color:var(--mu);font-weight:650;cursor:pointer;padding:0;margin-bottom:-6px;width:max-content}
+.crumb-back svg{transform:rotate(180deg)}.crumb-back:hover{color:var(--tx)}
+.fi-title{display:flex;align-items:center;gap:14px}
+.fi-title .fc-ico{width:54px;height:54px;font-size:24px;border-radius:16px;box-shadow:0 12px 30px -14px var(--fc)}
+.fi-stats{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px}
+.fi-stat{display:flex;align-items:center;gap:10px;border:1px solid var(--bd);background:#fff;border-radius:14px;padding:9px 14px;cursor:pointer;transition:border-color .25s,box-shadow .25s,transform .3s var(--ease)}
+.fi-stat b{font-family:var(--serif);font-size:22px;font-weight:600;line-height:1}
+.fi-stat:hover{transform:translateY(-2px)}
+.fi-stat.on{border-color:var(--fc);box-shadow:0 0 0 3px color-mix(in srgb,var(--fc) 16%,transparent)}
+.fi-inbox{display:grid;grid-template-columns:340px minmax(0,1fr);background:#fff;border:1px solid var(--bd);border-radius:22px;overflow:hidden;height:calc(100vh - 290px);min-height:520px}
+@media (max-width:1000px){.fi-inbox{grid-template-columns:1fr;height:auto}.fi-items{max-height:300px}}
+.fi-list{border-right:1px solid #eef2f4;display:flex;flex-direction:column;min-height:0;background:#fbfcfc}
+.fi-search{display:flex;align-items:center;gap:8px;margin:12px;padding:0 12px;border:1px solid var(--bd);border-radius:12px;background:#fff;color:var(--mu)}
+.fi-search input{flex:1;border:0;outline:0;padding:9px 0;background:none}
+.fi-items{overflow:auto;flex:1}
+.fi-it{position:relative;display:flex;gap:12px;width:100%;text-align:left;border:0;background:none;padding:13px 16px;cursor:pointer;border-bottom:1px solid #f0f3f5;transition:background .2s}
+.fi-it:hover{background:#f3f7f7}
+.fi-it.on{background:#fff;box-shadow:inset 3px 0 0 var(--fc)}
+.fi-it.unread b{font-weight:800}.fi-it.unread::after{content:"";position:absolute;right:16px;bottom:18px;width:8px;height:8px;border-radius:50%;background:var(--fc)}
+.fi-it-t{flex:1;min-width:0;display:flex;flex-direction:column;gap:3px;align-items:flex-start}
+.fi-it-t .row{width:100%}.fi-it-t b{font-size:14.5px}.fi-it-t small{color:var(--mu);font-size:12px}
+.fi-it-s{font-size:12.5px;color:var(--mu)}
+.fi-doc{overflow:auto;min-height:0;background:linear-gradient(180deg,#f6f8f9,#fff 140px)}
+.doc-bar{position:sticky;top:0;z-index:3;display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;padding:12px 22px;background:rgba(255,255,255,.9);backdrop-filter:blur(10px);border-bottom:1px solid #eef2f4}
+.doc-bar .icon-btn:disabled{opacity:.3;cursor:default}
+.appdoc{max-width:760px;margin:26px auto 40px;padding:0 26px;animation:docIn .5s var(--ease)}
+@keyframes docIn{from{opacity:0;transform:translateY(14px)}}
+.ad-h{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap;padding-bottom:22px;margin-bottom:8px;border-bottom:1px solid #eef2f4}
+.ad-who{display:flex;align-items:center;gap:16px}
+.ad-who h2{font-family:var(--serif);font-size:38px;font-weight:600;line-height:1;color:var(--abyss)}
+.ad-who p{margin:6px 0 0;color:var(--mu)}
+.ad-meta{text-align:right}.ad-meta small{display:block;color:var(--mu);margin-top:6px}
+.badge.big{font-size:13px;padding:6px 14px}
+.ad-sec{padding:22px 0;border-bottom:1px solid #f0f3f5;animation:slideUp .5s var(--ease) both;animation-delay:calc(var(--i,6) * 60ms)}
+.ad-sec h3{display:flex;align-items:center;gap:10px;font-family:var(--sans);font-size:14px;font-weight:750;color:var(--tx);margin-bottom:14px}
+.ad-sec h3 span{width:24px;height:24px;border-radius:8px;display:grid;place-items:center;background:color-mix(in srgb,var(--fc) 14%,#fff);color:var(--fc);font-size:12px;font-weight:800}
+.ad-sec dl{display:grid;grid-template-columns:1fr 1fr;gap:16px 28px;margin:0}
+.ad-sec dl div{min-width:0}
+.ad-sec dt{font-size:12.5px;color:var(--mu);font-weight:650;margin-bottom:3px}
+.ad-sec dd{margin:0;font-size:15px;font-weight:550;overflow-wrap:anywhere}
+.ad-checks{list-style:none;padding:0;margin:0}.ad-checks li{display:flex;gap:6px;align-items:center;font-size:14px;padding:2px 0}.ad-checks svg{color:#1d7a50}
+.note-sec textarea{width:100%;min-height:90px;border:1.5px solid var(--bd);border-radius:14px;padding:12px;resize:vertical;font-size:14.5px;transition:border-color .2s,box-shadow .2s}
+.note-sec textarea:focus{outline:0;border-color:var(--fc);box-shadow:0 0 0 4px color-mix(in srgb,var(--fc) 14%,transparent)}
+.note-sec textarea.need{border-color:#d6455a;animation:shake .4s}
+@media (max-width:700px){.ad-sec dl{grid-template-columns:1fr}.ad-who h2{font-size:30px}.ad-meta{text-align:left}}
+.fi-table{background:#fff;border:1px solid var(--bd);border-radius:20px;overflow:auto;max-height:calc(100vh - 290px)}
+.fi-table table{border-collapse:separate;border-spacing:0;width:max-content;min-width:100%}
+.fi-table th{position:sticky;top:0;z-index:2;background:#f8fafb;font-size:12px;font-weight:700;color:var(--mu);text-align:left;padding:12px 16px;border-bottom:1px solid var(--bd);white-space:nowrap}
+.fi-table td{padding:12px 16px;border-bottom:1px solid #f0f3f5;font-size:13.5px;white-space:nowrap;max-width:260px;overflow:hidden;text-overflow:ellipsis}
+.fi-table th:first-child,.fi-table td:first-child{position:sticky;left:0;background:#fff;z-index:1;box-shadow:1px 0 0 #eef2f4}
+.fi-table th:first-child{z-index:3;background:#f8fafb}
+.fi-table tr{cursor:pointer;transition:background .2s}.fi-table tbody tr:hover td{background:#f8fbfb}
+.fi-table tr.unread td:first-child b{font-weight:800}
+.fi-table small{display:block;color:var(--mu)}
 </style>
 </head>
 <body>
@@ -1411,7 +1496,12 @@ function renderShell() {
   renderCartBadge();
 }
 function renderCartBadge() { const n = cart.reduce((a, x) => a + x.qty, 0); const el = $("#cartCount"); if (el.textContent !== String(n)) { el.classList.remove("bump"); void el.offsetWidth; el.classList.add("bump"); } el.textContent = n; el.hidden = n === 0; }
-function currentRoute() { const h = location.hash.replace("#", ""); return ROUTES.includes(h) ? h : "home"; }
+function currentRoute() {
+  const h = location.hash.replace("#", "");
+  if (h.startsWith("app-")) { WS.apps.open = h.slice(4); WS.apps.building = null; adminTab = "applications"; return "management"; }
+  if (h === "management" && typeof WS !== "undefined") { WS.apps.open = null; }
+  return ROUTES.includes(h) ? h : "home";
+}
 function route() {
   const r = currentRoute();
   $$("#navLinks a").forEach(a => a.classList.toggle("active", a.dataset.r === r));
@@ -1894,6 +1984,7 @@ const SECTIONS = [
 ];
 const SEC = Object.fromEntries(SECTIONS.flatMap(g => g.items).map(([k, l, i, c]) => [k, {label:l, icon:i, color:c}]));
 Object.assign(ICONS, {
+  pin:'<path d="M9 4h6l-1 6 4 3v2h-5v5l-1 1-1-1v-5H6v-2l4-3z"/>', dots:'<circle cx="5" cy="12" r="1.4"/><circle cx="12" cy="12" r="1.4"/><circle cx="19" cy="12" r="1.4"/>',
   form:'<rect x="5" y="3" width="14" height="18" rx="2"/><path d="M9 8h6M9 12h6M9 16h3"/>',
   home:'<path d="M4 11 12 4l8 7v9h-5v-6H9v6H4z"/>', receipt:'<path d="M6 3h12v18l-3-2-3 2-3-2-3 2V3Z"/><path d="M9 8h6M9 12h6"/>', box:'<path d="m12 3 8 4.5v9L12 21l-8-4.5v-9L12 3Z"/><path d="m4 7.5 8 4.5 8-4.5M12 12v9"/>',
   inbox:'<path d="M4 13 6.5 5h11L20 13v6H4z"/><path d="M4 13h5l1 2h4l1-2h5"/>', chart:'<path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/>', spark:'<path d="M12 3v4M12 17v4M3 12h4M17 12h4M6 6l2.5 2.5M15.5 15.5 18 18M6 18l2.5-2.5M15.5 8.5 18 6"/>',
@@ -1947,7 +2038,7 @@ function pageManagement(v) {
   renderTab(true);
 }
 function bindShell(v) {
-  $$("[data-tab]", v).forEach(b => b.onclick = () => switchTab(b.dataset.tab));
+  $$("[data-tab]", v).forEach(b => b.onclick = () => { if (b.dataset.tab === "applications" && (WS.apps.open || WS.apps.building)) { WS.apps.building = null; if (location.hash !== "#management") { location.hash = "management"; adminTab = "applications"; save("adminTab", adminTab); return; } } if (b.dataset.tab !== "applications" && location.hash.startsWith("#app-")) { adminTab = b.dataset.tab; save("adminTab", adminTab); WS.apps.open = null; location.hash = "management"; return; } switchTab(b.dataset.tab); });
   $("#wsToggle").onclick = () => { if (innerWidth <= 900) { $("#ws").classList.toggle("rail-open"); return; } WS.collapsed = !WS.collapsed; save("wsCollapsed", WS.collapsed); $("#ws").classList.toggle("collapsed", WS.collapsed); };
   $("#wsScrim").onclick = () => $("#ws").classList.remove("rail-open");
   $("#wsSite").onclick = () => go("home");
@@ -1981,7 +2072,7 @@ function renderTab(first) {
 function refresh() { const body = $("#wsBody"); if (!body) return; const y = body.scrollTop; body.classList.remove("ws-enter"); VIEWS[adminTab](body); body.querySelectorAll("[data-count]").forEach(el => { el.textContent = el.dataset.count; el.dataset.counted = 1; el.dataset.rvw = 1; }); wireMotion(body); body.scrollTop = y; updateCounts(); }
 function skeleton() { return `<div class="skel"><div class="sk sk-h"></div><div class="sk sk-s"></div><div class="sk-row">${"<div class='sk sk-card'></div>".repeat(4)}</div><div class="sk-row two"><div class="sk sk-big"></div><div class="sk sk-big"></div></div></div>`; }
 function updateCounts() {
-  const c = {orders:load("orders", []).filter(o => o.status === "Received").length, reservations:load("reservations", []).filter(r => r.status === "pending").length, feedback:load("feedback", []).filter(f => f.status === "New").length, aria:load("chats", []).filter(x => x.status === "Unreviewed").length, applications:load("submissions", []).filter(x => x.status === "Submitted").length};
+  const c = {orders:load("orders", []).filter(o => o.status === "Received").length, reservations:load("reservations", []).filter(r => r.status === "pending").length, feedback:load("feedback", []).filter(f => f.status === "New").length, aria:load("chats", []).filter(x => x.status === "Unreviewed").length, applications:load("submissions", []).filter(x => !x.read).length};
   $$("[data-cnt]").forEach(el => { const n = c[el.dataset.cnt] || 0; el.textContent = n || ""; el.hidden = !n; });
 }
 function pageHead(title, sub, actions = "") { return `<div class="ws-head"><div><h1 class="ws-h1">${esc(title)}</h1>${sub ? `<p class="ws-sub">${sub}</p>` : ""}</div><div class="row">${actions}</div></div>`; }
@@ -2503,23 +2594,23 @@ function seedForms() {
   const tenant = [F("page", "Owner details"), F("text", "Owner full name"), F("text", "Unit number"), F("email", "Owner email"), F("phone", "Owner phone"), F("page", "Tenant & lease"), F("textarea", "Tenant names (one per line)"), F("email", "Primary tenant email"), F("date", "Lease start date"), F("date", "Lease end date"), F("file", "Signed lease"), F("signature", "Owner signature")];
   return [
     {id:"move", name:"Move-in / Move-out", desc:"Reserve the service elevator and register your move.", color:"#2f6fed", glyph:"⇄", mins:4, published:true, fields:move},
-    {id:"pet", name:"Pet registration", desc:"Register a dog, cat or other pet living in your unit.", color:"#f07f3c", glyph:"✿", mins:3, published:true, fields:pet},
-    {id:"parking", name:"Parking permit", desc:"Get a garage permit for a resident or long-term guest vehicle.", color:"#1e8f87", glyph:"P", mins:3, published:true, fields:park},
+    {id:"pet", name:"Pet registration", desc:"Register a dog, cat or other pet living in your unit.", color:"#f07f3c", glyph:"✿", mins:3, published:true, pinned:true, pinOrder:1, fields:pet},
+    {id:"parking", name:"Vehicle & parking permit", desc:"Register a car and get a garage permit for a resident or long-term guest.", color:"#1e8f87", glyph:"P", mins:3, published:true, pinned:true, pinOrder:2, fields:park},
     {id:"contractor", name:"Contractor access", desc:"Approve contractors to work in your unit.", color:"#8b5cf6", glyph:"⚒", mins:5, published:true, fields:contractor},
-    {id:"tenant", name:"Tenant registration", desc:"Owners: register a new lease and tenants.", color:"#c8a15a", glyph:"⌂", mins:4, published:true, fields:tenant}
+    {id:"tenant", name:"Apartment lease application", desc:"Owners: register a new lease and the tenants moving in.", color:"#c8a15a", glyph:"⌂", mins:4, published:true, fields:tenant}
   ];
 }
 function seedSubmissions(forms) {
   const names = [["Maya Rivera","1205","maya.rivera@example.com","(555) 010-4411"],["Daniel Chen","2302","daniel.chen@example.com","(555) 010-2290"],["Sofia Martinez","810","sofia.martinez@example.com","(555) 010-7781"],["Omar Okafor","1508","omar.okafor@example.com","(555) 010-3355"],["Grace Kim","2710","grace.kim@example.com","(555) 010-9012"],["Mateo Torres","605","mateo.torres@example.com","(555) 010-6620"]];
-  const plan = [["pet","Submitted",0],["move","Under review",1],["parking","Approved",2],["contractor","Needs info",3],["move","Submitted",4],["tenant","Approved",5],["pet","Rejected",1]];
+  const plan = [["pet","Submitted",0],["move","Under review",1],["parking","Approved",2],["contractor","Needs info",3],["move","Submitted",4],["tenant","Approved",5],["pet","Rejected",1],["parking","Submitted",3],["pet","Under review",4],["tenant","Submitted",2],["parking","Under review",5],["pet","Approved",5]];
   const sample = (f, who) => { const a = {}; const order = f.fields.filter(x => x.type !== "page"); let ri = 0;
     order.forEach(fl => { const t = fl.type; if (ri < 4 && ["text","email","phone"].includes(t) && f.id !== "tenant" || (f.id === "tenant" && ri < 4 && ["text","email","phone"].includes(t))) { a[fl.id] = who[ri++]; return; }
       a[fl.id] = t === "radio" || t === "select" ? fl.options[0] : t === "checkbox" ? fl.options.slice() : t === "date" ? ymd(addDays(new Date(), 5 + ri * 3)) : t === "number" ? "2" : t === "file" ? {name:"document.pdf", size:182000} : t === "signature" ? "sig:" + who[0] : t === "textarea" ? "Kitchen backsplash replacement and new under-cabinet lighting." : fl.label.includes("pet") || fl.label.includes("Pet") ? "Biscuit" : fl.label === "Breed" ? "Golden Retriever" : fl.label === "Make" ? "Toyota" : fl.label === "Model" ? "RAV4" : fl.label === "Color" ? "Silver" : fl.label === "License plate" ? "HPD 4821" : fl.label.includes("company") ? "Bayline Movers" : "Sample answer"; });
     return a; };
   return plan.map(([fid2, status, wi], i) => { const f = forms.find(x => x.id === fid2); const who = names[wi]; const d = addDays(new Date(), -i * 2 - 1); d.setHours(9 + i, 15);
-    return {id:uid(), ref:"APP-" + (3100 + i * 7), formId:fid2, name:who[0], unit:who[1], email:who[2], status, date:d.toISOString(), answers:sample(f, who), token:uid(), log:[{date:d.toISOString(), text:"Submitted online"}], note:status === "Needs info" ? "Please upload a certificate of insurance that lists Harbor Point as additional insured." : ""}; });
+    return {id:uid(), ref:"APP-" + (3100 + i * 7), formId:fid2, name:who[0], unit:who[1], email:who[2], status, date:d.toISOString(), answers:sample(f, who), token:uid(), read:i > 3, log:[{date:d.toISOString(), text:"Submitted online"}], note:status === "Needs info" ? "Please upload a certificate of insurance that lists Harbor Point as additional insured." : ""}; });
 }
-function ensureForms() { if (!load("forms", null)) { const f = seedForms(); save("forms", f); save("submissions", seedSubmissions(f)); } }
+function ensureForms() { if (!load("forms", null) || load("formsV", 0) < 2) { const f = seedForms(); save("forms", f); save("submissions", seedSubmissions(f)); save("formsV", 2); } }
 const formById = id => load("forms", []).find(f => f.id === id);
 function visibleFields(form, answers) { return form.fields.filter(f => !f.showIf || answers[f.showIf.field] === f.showIf.equals); }
 function formPages(form, answers) { const pages = []; let cur = null; visibleFields(form, answers).forEach(f => { if (f.type === "page") { cur = {title:f.label, fields:[]}; pages.push(cur); } else { if (!cur) { cur = {title:"Details", fields:[]}; pages.push(cur); } cur.fields.push(f); } }); return pages.filter(p => p.fields.length); }
@@ -2631,56 +2722,127 @@ function renderAppDone(v) {
   $("#appsBack").onclick = () => { run.done = null; pageApplications(v); wireMotion(v); };
 }
 
-/* ---------- management: submissions + builder ---------- */
-WS.apps = {tab:"subs", status:"All", form:"All", q:"", building:null, selField:null};
+/* ---------- management: forms home → form inbox (own page) → builder ---------- */
+WS.apps = {open:null, sel:null, view:"inbox", filter:"all", sort:"recent", q:"", sq:"", sstatus:"All", building:null, selField:null};
+const subsOf = id => load("submissions", []).filter(s => s.formId === id).sort((a, b) => new Date(b.date) - new Date(a.date));
+function subSpark(id) { const subs = subsOf(id); const now = new Date(); const vals = Array.from({length:14}, (_, i) => subs.filter(s => { const d = (now - new Date(s.date)) / 864e5; return d >= 13 - i && d < 14 - i; }).length); return vals; }
+function openForm(id) { location.hash = "app-" + id; }
+function openSubmission(id) { const s = load("submissions", []).find(x => x.id === id); if (!s) return; WS.apps.sel = id; WS.apps.view = "inbox"; if (WS.apps.open === s.formId && $("#wsBody") && adminTab === "applications") { refresh(); return; } openForm(s.formId); }
 VIEWS.applications = body => {
   ensureForms(); const st = WS.apps;
   if (st.building) return renderBuilder(body);
-  const forms = load("forms", []), subs = load("submissions", []).sort((a, b) => new Date(b.date) - new Date(a.date));
-  const head = pageHead("Applications", `${subs.filter(s => s.status === "Submitted").length} new · ${subs.filter(s => ["Under review","Needs info"].includes(s.status)).length} in progress · ${forms.filter(f => f.published).length} forms live`, `${seg("atab", [["subs", `${icon("inbox", 15)} Submissions`], ["forms", `${icon("grid", 15)} Forms`]], st.tab)}<button class="btn btn-dark btn-sm" type="button" id="aNewForm">${icon("plus", 15)} New form</button>`);
-  if (st.tab === "forms") {
-    body.innerHTML = `${head}<div class="fb-grid stagger">${forms.map(f => { const n = subs.filter(s => s.formId === f.id).length; const q = f.fields.filter(x => x.type !== "page").length; return `<div class="fb-card" style="--fc:${f.color}" data-ff="${f.id}"><div class="fb-top"><span class="fc-ico">${esc(f.glyph)}</span><label class="switch" data-stop title="${f.published ? "Published" : "Unpublished"}"><input type="checkbox" data-pub="${f.id}" ${f.published ? "checked" : ""}><span></span></label></div><h3>${esc(f.name)}</h3><p>${esc(f.desc)}</p>
-      <div class="fb-stats"><span><b>${q}</b> questions</span><span><b>${n}</b> submissions</span></div><div class="fb-actions"><button class="btn btn-dark btn-sm" type="button" data-build="${f.id}">Edit form</button><button class="btn btn-ghost btn-sm" type="button" data-prev="${f.id}">Preview</button></div></div>`; }).join("")}</div>`;
-    $$("[data-build]", body).forEach(b => b.onclick = e => { e.stopPropagation(); st.building = b.dataset.build; st.selField = null; VIEWS.applications(body); wireMotion(body); });
-    $$("[data-prev]", body).forEach(b => b.onclick = e => { e.stopPropagation(); previewForm(formById(b.dataset.prev)); });
-    $$("[data-pub]", body).forEach(c => c.onchange = () => { const l = load("forms", []); l.find(f => f.id === c.dataset.pub).published = c.checked; save("forms", l); toast(c.checked ? "Form published to residents" : "Form unpublished"); });
-  } else {
-    const q = st.q.toLowerCase(); const base = subs.filter(s => (st.form === "All" || s.formId === st.form) && (!q || [s.ref, s.name, s.unit, s.email].join(" ").toLowerCase().includes(q)));
-    const list = base.filter(s => st.status === "All" || s.status === st.status);
-    body.innerHTML = `${head}<div class="ws-toolbar"><div class="search-in">${icon("search", 16)}<input id="aq" placeholder="Search by reference, name or unit" value="${esc(st.q)}"></div>${seg("ast", [["All", `All <i>${base.length}</i>`], ...APP_STATUSES.map(s => [s, `${s} <i>${base.filter(x => x.status === s).length}</i>`])], st.status)}<select class="sel" id="aform" aria-label="Form"><option value="All">All forms</option>${forms.map(f => `<option value="${f.id}" ${st.form === f.id ? "selected" : ""}>${esc(f.name)}</option>`).join("")}</select></div>
-      ${list.length ? `<div class="dtable rv-up"><div class="dt-head app"><span>Reference</span><span>Form</span><span>Applicant</span><span>Submitted</span><span>Status</span></div><div class="dt-body stagger">${list.map(s => { const f = forms.find(x => x.id === s.formId) || {name:"Deleted form", color:"#64748b", glyph:"?"}; return `<div class="dt-row app" data-s="${s.id}"><span><b class="mono">${esc(s.ref)}</b></span><span class="who"><span class="fc-ico xs" style="--fc:${f.color}">${esc(f.glyph)}</span>${esc(f.name)}</span><span class="who">${avatar(s.name, 28)}<span><b>${esc(s.name)}</b><small>Unit ${esc(s.unit)}</small></span></span><span class="muted small">${rel(s.date)}</span><span>${chip(s.status, APP_CLS[s.status])}</span></div>`; }).join("")}</div></div>`
-        : emptyState("applications", "No applications match", "New submissions from residents will appear here.")}`;
-    const rer = () => { VIEWS.applications(body); wireMotion(body); };
-    const aq = $("#aq"); aq.oninput = () => { st.q = aq.value; const pos = aq.selectionStart; rer(); const n = $("#aq"); n.focus(); n.setSelectionRange(pos, pos); };
-    $$('[data-seg="ast"]', body).forEach(b => b.onclick = () => { st.status = b.dataset.v; rer(); });
-    $("#aform").onchange = e => { st.form = e.target.value; rer(); };
-    $$("[data-s]", body).forEach(r => r.onclick = () => openSubmission(r.dataset.s));
-  }
-  $$('[data-seg="atab"]', body).forEach(b => b.onclick = () => { st.tab = b.dataset.v; VIEWS.applications(body); wireMotion(body); });
-  $("#aNewForm").onclick = () => { const l = load("forms", []); fid = Date.now() % 100000; const f = {id:"form" + uid().slice(0, 5), name:"Untitled form", desc:"Describe what this form is for.", color:"#2f6fed", glyph:"✦", mins:2, published:false, fields:[...residentBlock(), F("page", "Questions"), F("textarea", "Your request")]}; l.push(f); save("forms", l); st.building = f.id; st.selField = null; st.tab = "forms"; VIEWS.applications(body); wireMotion(body); toast("New form created"); };
+  if (st.open && formById(st.open)) return renderFormInbox(body, formById(st.open));
+  st.open = null; renderFormsHome(body);
 };
-function openSubmission(id) {
-  const s = load("submissions", []).find(x => x.id === id); if (!s) return; const f = formById(s.formId);
-  const pages = f ? formPages(f, s.answers) : [];
-  openSlide(`${slideHead(`<span class="mono">${esc(s.ref)}</span>`, `${esc(f ? f.name : "Application")} · submitted ${dt(s.date)}`, chip(s.status, APP_CLS[s.status]))}
-    <div class="slide-b">
-      <div class="pipeline app">${["Submitted","Under review","Approved"].map((x, i) => { const idx = s.status === "Approved" ? 2 : ["Under review","Needs info"].includes(s.status) ? 1 : s.status === "Rejected" ? -1 : 0; return `<span class="pipe ${s.status === "Rejected" ? "" : i < idx ? "done" : i === idx ? "on" : ""}"><i>${i < idx ? icon("check", 12) : i + 1}</i><span>${x}</span></span>`; }).join('<span class="pipe-line"></span>')}</div>
-      <div class="card-s who-card">${avatar(s.name, 44)}<div><b>${esc(s.name)}</b><small>Unit ${esc(s.unit)} · ${esc(s.email || "no email")}</small></div></div>
-      ${s.note ? `<div class="alert alert-warn small" style="margin-bottom:14px">Requested from resident: ${esc(s.note)}</div>` : ""}
-      ${pages.map(p => `<h4>${esc(p.title)}</h4><div class="card-s answers">${p.fields.map(fl => { const v = s.answers[fl.id]; return `<div class="ans"><span>${esc(fl.label)}</span><div>${fl.type === "signature" ? sigImg(v, s.name) : fl.type === "file" && v ? `<span class="file-chip">${v.thumb ? `<img src="${esc(v.thumb)}" alt="">` : icon("receipt", 16)}${esc(v.name || "File")}<small>${v.size ? Math.round(v.size / 1024) + " KB" : ""}</small></span>` : esc(answerText(fl, v))}</div></div>`; }).join("")}</div>`).join("") || `<p class="muted">This form no longer exists, but the submission is kept.</p>`}
-      <h4>Message to applicant</h4><div class="field"><textarea id="sMsg" placeholder="Optional. Included in the email when you change the status."></textarea></div>
-      <h4>Timeline</h4><ol class="tl">${(s.log || []).map(l => `<li><i></i><div><p>${esc(l.text)}</p><small>${dt(l.date)}</small></div></li>`).join("")}</ol>
+function formRow(f) {
+  const subs = subsOf(f.id), fresh = subs.filter(s => !s.read).length, last = subs[0];
+  return `<div class="fx" data-open="${f.id}" style="--fc:${f.color}" tabindex="0" role="button" aria-label="Open ${esc(f.name)}">
+    <span class="fc-ico">${esc(f.glyph)}</span>
+    <div class="fx-main"><div class="fx-t"><b>${esc(f.name)}</b>${f.published ? "" : `<span class="badge b-gray">Draft</span>`}${fresh ? `<span class="fx-new">${fresh} new</span>` : ""}</div><small>${esc(f.desc)}</small></div>
+    <div class="fx-stat"><b>${subs.length}</b><small>submissions</small></div>
+    <div class="fx-spark">${spark(subSpark(f.id), f.color)}</div>
+    <div class="fx-last"><small>Last submission</small><b>${last ? rel(last.date) : "—"}</b></div>
+    <button type="button" class="pin ${f.pinned ? "on" : ""}" data-pin="${f.id}" title="${f.pinned ? "Unpin" : "Pin to top"}" aria-pressed="${!!f.pinned}">${icon("pin", 17)}</button>
+    <div class="ws-pop-wrap" data-stop><button type="button" class="icon-btn" data-menu="${f.id}" aria-label="More">${icon("dots", 17)}</button>
+      <div class="ws-pop fx-menu" id="fm-${f.id}"><button type="button" data-fa="open" data-f="${f.id}">${icon("inbox", 15)} Open submissions</button><button type="button" data-fa="edit" data-f="${f.id}">${icon("form", 15)} Edit form</button><button type="button" data-fa="preview" data-f="${f.id}">${icon("ext", 15)} Preview</button><button type="button" data-fa="pub" data-f="${f.id}">${icon(f.published ? "x" : "check", 15)} ${f.published ? "Unpublish" : "Publish"}</button><button type="button" data-fa="dup" data-f="${f.id}">${icon("plus", 15)} Duplicate</button></div></div>
+  </div>`;
+}
+function renderFormsHome(body) {
+  const st = WS.apps; let forms = load("forms", []); const subs = load("submissions", []);
+  const q = st.q.toLowerCase();
+  const lastOf = f => (subsOf(f.id)[0] || {}).date || "1970";
+  const sorters = {recent:(a, b) => lastOf(b).localeCompare(lastOf(a)), name:(a, b) => a.name.localeCompare(b.name), most:(a, b) => subsOf(b.id).length - subsOf(a.id).length};
+  let list = forms.filter(f => !q || (f.name + " " + f.desc).toLowerCase().includes(q));
+  if (st.filter === "pinned") list = list.filter(f => f.pinned); if (st.filter === "live") list = list.filter(f => f.published); if (st.filter === "drafts") list = list.filter(f => !f.published);
+  list.sort(sorters[st.sort]);
+  const pinned = list.filter(f => f.pinned).sort((a, b) => (a.pinOrder || 0) - (b.pinOrder || 0)), others = list.filter(f => !f.pinned);
+  const unread = subs.filter(s => !s.read).length;
+  body.innerHTML = `${pageHead("Forms", `${forms.length} forms · ${subs.length} submissions · <b class="hl-new">${unread} unread</b>`, `<button class="btn btn-dark btn-sm" type="button" id="aNewForm">${icon("plus", 15)} New form</button>`)}
+    <div class="ws-toolbar"><div class="search-in">${icon("search", 16)}<input id="aq" placeholder="Search forms" value="${esc(st.q)}"></div>
+      ${seg("aflt", [["all", `All <i>${forms.length}</i>`], ["pinned", `${icon("pin", 13)} Pinned <i>${forms.filter(f => f.pinned).length}</i>`], ["live", "Live"], ["drafts", "Drafts"]], st.filter)}
+      <select class="sel" id="asort" aria-label="Sort"><option value="recent" ${st.sort === "recent" ? "selected" : ""}>Last submission</option><option value="most" ${st.sort === "most" ? "selected" : ""}>Most submissions</option><option value="name" ${st.sort === "name" ? "selected" : ""}>Name A–Z</option></select></div>
+    ${!list.length ? emptyState("applications", st.filter === "pinned" ? "No pinned forms yet" : "No forms match", st.filter === "pinned" ? "Pin the forms you use most and they'll stay at the top." : "Try a different search.") : ""}
+    ${pinned.length ? `<div class="fx-sec"><h3>${icon("pin", 15)} Pinned</h3><div class="fx-list pinned stagger">${pinned.map(formRow).join("")}</div></div>` : ""}
+    ${others.length ? `<div class="fx-sec">${pinned.length ? `<h3>All forms</h3>` : ""}<div class="fx-list stagger">${others.map(formRow).join("")}</div></div>` : ""}`;
+  const rer = () => { renderFormsHome(body); wireMotion(body); };
+  const aq = $("#aq"); aq.oninput = () => { st.q = aq.value; const pos = aq.selectionStart; rer(); const n = $("#aq"); n.focus(); n.setSelectionRange(pos, pos); };
+  $$('[data-seg="aflt"]', body).forEach(b => b.onclick = () => { st.filter = b.dataset.v; rer(); });
+  $("#asort").onchange = e => { st.sort = e.target.value; rer(); };
+  $$("[data-open]", body).forEach(r => { r.onclick = e => { if (e.target.closest("[data-pin],[data-stop]")) return; openForm(r.dataset.open); }; r.onkeydown = e => { if (e.key === "Enter" && e.target === r) openForm(r.dataset.open); }; });
+  $$("[data-pin]", body).forEach(b => b.onclick = e => { e.stopPropagation(); const l = load("forms", []); const f = l.find(x => x.id === b.dataset.pin); f.pinned = !f.pinned; f.pinOrder = Date.now(); save("forms", l); b.classList.add("burst"); toast(f.pinned ? `${f.name} pinned to the top` : `${f.name} unpinned`); setTimeout(rer, 260); });
+  $$("[data-menu]", body).forEach(b => b.onclick = e => { e.stopPropagation(); const m = $("#fm-" + b.dataset.menu); const open = !m.classList.contains("open"); $$(".ws-pop.open").forEach(p => p.classList.remove("open")); if (open) m.classList.add("open"); });
+  $$("[data-fa]", body).forEach(b => b.onclick = e => { e.stopPropagation(); $$(".ws-pop.open").forEach(p => p.classList.remove("open")); const id = b.dataset.f, a = b.dataset.fa; const l = load("forms", []); const f = l.find(x => x.id === id);
+    if (a === "open") openForm(id); if (a === "edit") { st.building = id; st.selField = null; rer(); } if (a === "preview") previewForm(f);
+    if (a === "pub") { f.published = !f.published; save("forms", l); toast(f.published ? "Published to residents" : "Unpublished"); rer(); }
+    if (a === "dup") { const c = JSON.parse(JSON.stringify(f)); c.id = "form" + uid().slice(0, 5); c.name += " (copy)"; c.published = false; c.pinned = false; l.push(c); save("forms", l); toast("Form duplicated as a draft"); rer(); } });
+  $("#aNewForm").onclick = newForm;
+}
+function newForm() { const l = load("forms", []); const f = {id:"form" + uid().slice(0, 5), name:"Untitled form", desc:"Describe what this form is for.", color:"#2f6fed", glyph:"✦", mins:2, published:false, pinned:false, fields:[...residentBlock(), F("page", "Questions"), F("textarea", "Your request")]}; f.fields.forEach(x => x.id = "f" + uid().slice(0, 6)); l.push(f); save("forms", l); WS.apps.building = f.id; WS.apps.selField = null; refresh(); toast("New form created"); }
+
+function renderFormInbox(body, form) {
+  const st = WS.apps; const all = subsOf(form.id); const q = st.sq.toLowerCase();
+  const list = all.filter(s => (st.sstatus === "All" || s.status === st.sstatus) && (!q || [s.ref, s.name, s.unit, s.email].join(" ").toLowerCase().includes(q)));
+  if (!list.some(s => s.id === st.sel)) st.sel = list[0]?.id || null;
+  const sel = all.find(s => s.id === st.sel);
+  if (sel && !sel.read) { const l = load("submissions", []); const x = l.find(y => y.id === sel.id); x.read = true; save("submissions", l); sel.read = true; setTimeout(updateCounts, 50); }
+  const counts = Object.fromEntries(APP_STATUSES.map(s => [s, all.filter(x => x.status === s).length]));
+  body.innerHTML = `<div class="fi" style="--fc:${form.color}">
+    <div class="fi-head">
+      <button type="button" class="crumb-back" id="fiBack">${icon("chev", 14)} Forms</button>
+      <div class="fi-title"><span class="fc-ico">${esc(form.glyph)}</span><div><h1 class="ws-h1">${esc(form.name)}</h1><p class="ws-sub">${all.length} submissions · ${all.filter(s => !s.read).length} unread · ${form.published ? "Live for residents" : "Draft"}</p></div>
+        <button type="button" class="pin ${form.pinned ? "on" : ""}" id="fiPin" title="${form.pinned ? "Unpin" : "Pin to top"}">${icon("pin", 17)}</button></div>
+      <div class="row">${seg("fiview", [["inbox", `${icon("inbox", 15)} Inbox`], ["table", `${icon("grid", 15)} Table`]], st.view)}<button class="btn btn-ghost btn-sm" type="button" id="fiPrev">Preview</button><button class="btn btn-dark btn-sm" type="button" id="fiEdit">${icon("form", 15)} Edit form</button></div>
     </div>
-    <div class="slide-f wrap-f"><button class="btn btn-ghost btn-sm" type="button" data-sa="Under review">Start review</button><button class="btn btn-ghost btn-sm" type="button" data-sa="Needs info">Request info</button><span style="flex:1"></span><button class="btn btn-danger btn-sm" type="button" data-sa="Rejected">Reject</button><button class="btn btn-dark btn-sm" type="button" data-sa="Approved">${icon("check", 14)} Approve</button></div>`, true);
+    <div class="fi-stats stagger">${APP_STATUSES.map(s => `<button type="button" class="fi-stat ${st.sstatus === s ? "on" : ""}" data-fs="${s}"><span class="badge ${APP_CLS[s]}">${s}</span><b>${counts[s]}</b></button>`).join("")}<button type="button" class="fi-stat ${st.sstatus === "All" ? "on" : ""}" data-fs="All"><span class="badge b-gray">All</span><b>${all.length}</b></button></div>
+    ${st.view === "table" ? fiTable(form, list) : `<div class="fi-inbox">
+      <aside class="fi-list"><div class="fi-search">${icon("search", 15)}<input id="sq" placeholder="Search applicants" value="${esc(st.sq)}"></div>
+        <div class="fi-items" id="fiItems">${list.map(s => `<button type="button" class="fi-it ${s.id === st.sel ? "on" : ""} ${s.read ? "" : "unread"}" data-sid="${s.id}">${avatar(s.name, 38)}<span class="fi-it-t"><span class="row between"><b>${esc(s.name)}</b><small>${rel(s.date)}</small></span><span class="fi-it-s">Unit ${esc(s.unit)} · <span class="mono">${esc(s.ref)}</span></span><span class="badge ${APP_CLS[s.status]}">${esc(s.status)}</span></span></button>`).join("") || `<div class="col-empty" style="margin:14px">No applicants in this view.</div>`}</div></aside>
+      <section class="fi-doc" id="fiDoc">${sel ? subDoc(form, sel, list) : emptyState("applications", "No submissions yet", form.published ? "When residents submit this form, their applications appear here." : "Publish this form so residents can submit it.")}</section></div>`}
+  </div>`;
+  $("#fiBack").onclick = () => { location.hash = "management"; };
+  $("#fiEdit").onclick = () => { st.building = form.id; st.selField = null; refresh(); };
+  $("#fiPrev").onclick = () => previewForm(form);
+  $("#fiPin").onclick = () => { const l = load("forms", []); const f = l.find(x => x.id === form.id); f.pinned = !f.pinned; f.pinOrder = Date.now(); save("forms", l); toast(f.pinned ? "Pinned to the top of Forms" : "Unpinned"); refresh(); };
+  $$('[data-seg="fiview"]', body).forEach(b => b.onclick = () => { st.view = b.dataset.v; refresh(); });
+  $$("[data-fs]", body).forEach(b => b.onclick = () => { st.sstatus = b.dataset.fs; st.sel = null; refresh(); });
+  const sq = $("#sq"); if (sq) sq.oninput = () => { st.sq = sq.value; const pos = sq.selectionStart; refresh(); const n = $("#sq"); n.focus(); n.setSelectionRange(pos, pos); };
+  $$("[data-sid]", body).forEach(b => b.onclick = () => { st.sel = b.dataset.sid; refresh(); });
+  $$("[data-row]", body).forEach(r => r.onclick = () => { st.sel = r.dataset.row; st.view = "inbox"; refresh(); });
+  if (sel && st.view === "inbox") wireDoc(form, sel, list);
+}
+function subDoc(form, s, list) {
+  const pages = formPages(form, s.answers); const i = list.findIndex(x => x.id === s.id);
+  return `<div class="doc-bar"><div class="row"><button class="icon-btn" type="button" id="dPrev" ${i <= 0 ? "disabled" : ""} title="Previous (↑)">${icon("up", 16)}</button><button class="icon-btn" type="button" id="dNext" ${i >= list.length - 1 ? "disabled" : ""} title="Next (↓)">${icon("down", 16)}</button><small class="muted">${i + 1} of ${list.length}</small></div>
+      <div class="row"><button class="btn btn-ghost btn-sm" type="button" data-sa="Needs info">Request info</button><button class="btn btn-danger btn-sm" type="button" data-sa="Rejected">Reject</button><button class="btn btn-dark btn-sm" type="button" data-sa="Approved">${icon("check", 14)} Approve</button></div></div>
+    <article class="appdoc" key="${s.id}">
+      <header class="ad-h"><div class="ad-who">${avatar(s.name, 56)}<div><h2>${esc(s.name)}</h2><p>Unit ${esc(s.unit)} · ${esc(s.email || "no email")}</p></div></div>
+        <div class="ad-meta"><span class="badge ${APP_CLS[s.status]} big">${esc(s.status)}</span><small><span class="mono">${esc(s.ref)}</span> · submitted ${dt(s.date)}</small></div></header>
+      ${s.note && s.status === "Needs info" ? `<div class="alert alert-warn small">Waiting on the resident: ${esc(s.note)}</div>` : ""}
+      ${pages.map((p, pi) => `<section class="ad-sec" style="--i:${pi}"><h3><span>${pi + 1}</span>${esc(p.title)}</h3><dl>${p.fields.map(fl => { const v = s.answers[fl.id]; return `<div><dt>${esc(fl.label)}</dt><dd>${fl.type === "signature" ? sigImg(v, s.name) : fl.type === "file" && v ? `<span class="file-chip">${v.thumb ? `<img src="${esc(v.thumb)}" alt="">` : icon("receipt", 16)}${esc(v.name || "File")}<small>${v.size ? Math.round(v.size / 1024) + " KB" : ""}</small></span>` : fl.type === "checkbox" && Array.isArray(v) ? `<ul class="ad-checks">${v.map(x => `<li>${icon("check", 13)} ${esc(x)}</li>`).join("")}</ul>` : esc(answerText(fl, v))}</dd></div>`; }).join("")}</dl></section>`).join("")}
+      <section class="ad-sec"><h3><span>${icon("clock", 12)}</span>Activity</h3><ol class="tl">${(s.log || []).map(l => `<li><i></i><div><p>${esc(l.text)}</p><small>${dt(l.date)}</small></div></li>`).join("")}</ol></section>
+      <section class="ad-sec note-sec"><h3><span>${icon("reply", 12)}</span>Message to applicant</h3><textarea id="sMsg" placeholder="Optional. Sent with the email when you approve, reject or request info."></textarea></section>
+    </article>`;
+}
+function wireDoc(form, s, list) {
+  const i = list.findIndex(x => x.id === s.id); const go = d => { const n = list[i + d]; if (n) { WS.apps.sel = n.id; refresh(); const el = $(`[data-sid="${n.id}"]`); if (el) el.scrollIntoView({block:"nearest"}); } };
+  $("#dPrev").onclick = () => go(-1); $("#dNext").onclick = () => go(1);
+  document.onkeydown = e => { if (!$("#fiDoc") || /INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName) || $("#cmdk.open") || $("#modal.open")) return; if (e.key === "ArrowDown") { e.preventDefault(); go(1); } if (e.key === "ArrowUp") { e.preventDefault(); go(-1); } };
   $$("[data-sa]").forEach(b => b.onclick = () => {
-    const to = b.dataset.sa; const msg = $("#sMsg").value.trim();
-    if (to === "Needs info" && !msg) { $("#sMsg").focus(); return toast("Tell the resident what's missing"); }
-    const go2 = () => { const l = load("submissions", []); const x = l.find(y => y.id === id); x.status = to; if (to === "Needs info") x.note = msg; x.log = [{date:new Date().toISOString(), text:`Status changed to ${to}${msg ? ` · "${msg}"` : ""}`}, ...(x.log || [])]; save("submissions", l);
-      if (x.email) sendDemoEmail(x.email, `${f ? f.name : "Application"} ${x.ref}: ${to}`, `Hi ${x.name},\n\nYour ${f ? f.name.toLowerCase() : "application"} (${x.ref}) is now "${to}".${msg ? `\n\nNote from Management: ${msg}` : ""}\n\n— Harbor Point Management`);
-      toast(`${x.ref} marked ${to.toLowerCase()}`); refresh(); openSubmission(id); };
-    if (to === "Rejected") askConfirm(`Reject ${s.ref}? The applicant will be emailed.`, go2, "Reject", true); else go2();
+    const to = b.dataset.sa, msg = $("#sMsg").value.trim();
+    if (to === "Needs info" && !msg) { $("#sMsg").focus(); $("#sMsg").classList.add("need"); return toast("Write what the resident needs to send"); }
+    const apply = () => { const l = load("submissions", []); const x = l.find(y => y.id === s.id); x.status = to; if (to === "Needs info") x.note = msg; x.log = [{date:new Date().toISOString(), text:`${to}${msg ? ` · "${msg}"` : ""}`}, ...(x.log || [])]; save("submissions", l);
+      if (x.email) sendDemoEmail(x.email, `${form.name} ${x.ref}: ${to}`, `Hi ${x.name},\n\nYour ${form.name.toLowerCase()} application (${x.ref}) is now "${to}".${msg ? `\n\nNote from Management: ${msg}` : ""}\n\n— Harbor Point Management`);
+      toast(`${x.name.split(" ")[0]}'s application ${to === "Needs info" ? "needs more info" : to.toLowerCase()}`); refresh(); };
+    if (to === "Rejected") askConfirm(`Reject ${s.name}'s application? They'll be emailed.`, apply, "Reject", true); else apply();
   });
 }
+function fiTable(form, list) {
+  const cols = form.fields.filter(f => !["page","signature"].includes(f.type)).slice(0, 8);
+  return `<div class="fi-table rv-up"><table><thead><tr><th>Applicant</th><th>Status</th><th>Submitted</th>${cols.map(c => `<th>${esc(c.label)}</th>`).join("")}</tr></thead><tbody>
+    ${list.map(s => `<tr data-row="${s.id}" class="${s.read ? "" : "unread"}"><td><span class="who">${avatar(s.name, 26)}<span><b>${esc(s.name)}</b><small class="mono">${esc(s.ref)}</small></span></span></td><td>${chip(s.status, APP_CLS[s.status])}</td><td class="muted">${rel(s.date)}</td>${cols.map(c => `<td>${esc(answerText(c, s.answers[c.id]))}</td>`).join("")}</tr>`).join("") || `<tr><td colspan="${cols.length + 3}" class="muted" style="padding:30px;text-align:center">No submissions in this view.</td></tr>`}
+  </tbody></table></div>`;
+}
+
 function previewForm(form) {
   const saved = {form:run.form, step:run.step, answers:run.answers, done:run.done};
   Object.assign(run, {form:form.id, step:0, answers:{}, done:null, preview:true});
@@ -2721,7 +2883,7 @@ function renderBuilderInner(body) {
       : `<div class="insp-empty">${icon("box", 26)}<b>Select a field</b><p>Click any field in the form to edit its question, options, required setting and conditional logic.</p></div>`}</aside>
     </div></div>`;
   const persist = (fn, re = true) => { const l = load("forms", []); const fm = l.find(f => f.id === form.id); fn(fm); save("forms", l); if (re) { renderBuilder(body); } };
-  $("#bBack").onclick = () => { st.building = null; VIEWS.applications(body); wireMotion(body); };
+  $("#bBack").onclick = () => { st.building = null; refresh(); };
   $("#bName").onchange = e => persist(fm => fm.name = e.target.value.trim() || "Untitled form");
   $("#bDesc").onchange = e => persist(fm => fm.desc = e.target.value.trim());
   $$("[data-color]", body).forEach(b => b.onclick = () => persist(fm => fm.color = b.dataset.color));
